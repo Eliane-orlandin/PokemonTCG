@@ -39,16 +39,16 @@
                     </VBox.margin>
                     <children>
                         <Button fx:id="btnHome" alignment="BASELINE_LEFT" onAction="#showHome" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button, menu-button-active" text="⌂  Home" />
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button, menu-button-active" text="🏠  INÍCIO" />
                         
                         <Button fx:id="btnSearch" alignment="BASELINE_LEFT" onAction="#showSearch" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🔍  Search API" />
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🔍  BUSCAR" />
                         
                         <Button fx:id="btnCatalog" alignment="BASELINE_LEFT" onAction="#showCatalog" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🗂  My Collection" />
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🗂  MINHA COLEÇÃO" />
                         
                         <Button fx:id="btnExport" alignment="BASELINE_LEFT" onAction="#showExport" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="⇡  Exports" />
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="📑  EXPORTAR" />
                     </children>
                 </VBox>
                 

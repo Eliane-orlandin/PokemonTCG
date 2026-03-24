@@ -67,8 +67,8 @@ public class CardItemController {
             entry.setCardId(currentCardId);
             entry.setCardName(lblName.getText());
             entry.setImageUrl(currentImageUrl);
-            entry.setSeriesId((currentSeriesId != null) ? currentSeriesId : "unknown");
-            entry.setSeriesName((currentSeriesName != null) ? currentSeriesName : "Expansion");
+            entry.setSeriesId((currentSeriesId == null || currentSeriesId.isEmpty()) ? "base" : currentSeriesId);
+            entry.setSeriesName((currentSeriesName == null || currentSeriesName.isEmpty()) ? "Expansão" : currentSeriesName);
             entry.setQuantity(1);
             
             repository.save(entry);
@@ -82,23 +82,26 @@ public class CardItemController {
 
     private void updateTypeBadge(String type) {
         if (type == null) return;
-        lblType.setText(type.toUpperCase());
         
         // Definindo cores de fundo baseadas no tipo (estilo Pokémon TCG)
         String bgColor = "#F5F5F5"; // Padrão
         String textColor = "#9E9E9E";
+        String displayType = type.toUpperCase();
         
         switch (type.toLowerCase()) {
-            case "fire": bgColor = "#FF7043"; textColor = "white"; break;
-            case "water": bgColor = "#42A5F5"; textColor = "white"; break;
-            case "lightning": bgColor = "#FFEE58"; textColor = "#FBC02D"; break;
-            case "grass": bgColor = "#66BB6A"; textColor = "white"; break;
-            case "psychic": bgColor = "#AB47BC"; textColor = "white"; break;
-            case "darkness": bgColor = "#263238"; textColor = "white"; break;
-            case "dragon": bgColor = "#FB8C00"; textColor = "white"; break;
-            case "colorless": bgColor = "#F5F5F5"; textColor = "#9E9E9E"; break;
+            case "fire": bgColor = "#FF7043"; textColor = "white"; displayType = "FOGO"; break;
+            case "water": bgColor = "#42A5F5"; textColor = "white"; displayType = "ÁGUA"; break;
+            case "lightning": bgColor = "#FFEE58"; textColor = "#FBC02D"; displayType = "ELÉTRICO"; break;
+            case "grass": bgColor = "#66BB6A"; textColor = "white"; displayType = "PLANTA"; break;
+            case "psychic": bgColor = "#AB47BC"; textColor = "white"; displayType = "PSÍQUICO"; break;
+            case "darkness": bgColor = "#263238"; textColor = "white"; displayType = "NOTURNO"; break;
+            case "dragon": bgColor = "#FB8C00"; textColor = "white"; displayType = "DRAGÃO"; break;
+            case "colorless": bgColor = "#F5F5F5"; textColor = "#9E9E9E"; displayType = "INCOLOR"; break;
+            case "metal": bgColor = "#B0BEC5"; textColor = "white"; displayType = "METAL"; break;
+            case "fighting": bgColor = "#B87333"; textColor = "white"; displayType = "LUTADOR"; break;
         }
         
+        lblType.setText(displayType);
         lblType.setStyle(String.format("-fx-background-color: %s; -fx-text-fill: %s; -fx-background-radius: 6; -fx-padding: 3 10; -fx-font-weight: bold; -fx-font-size: 9;", bgColor, textColor));
     }
 }
