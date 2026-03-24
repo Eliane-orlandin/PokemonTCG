@@ -20,9 +20,16 @@ public class ExportService {
     private final CsvExporter csvExporter;
 
     public ExportService() {
-        this.repository = new CatalogRepository();
-        this.jsonExporter = new JsonExporter();
-        this.csvExporter = new CsvExporter();
+        this(new CatalogRepository(), new JsonExporter(), new CsvExporter());
+    }
+
+    /**
+     * Construtor para injeção de dependência (facilita testes).
+     */
+    public ExportService(CatalogRepository repository, JsonExporter jsonExporter, CsvExporter csvExporter) {
+        this.repository = repository;
+        this.jsonExporter = jsonExporter;
+        this.csvExporter = csvExporter;
     }
 
     /**

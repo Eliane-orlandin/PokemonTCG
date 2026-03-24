@@ -19,6 +19,13 @@ public class CardService {
     }
 
     /**
+     * Construtor para injeção de dependência (facilita testes).
+     */
+    public CardService(TcgDexClient apiClient) {
+        this.apiClient = apiClient;
+    }
+
+    /**
      * Busca cards pelo nome, utilizando o cache para evitar chamadas duplicadas.
      */
     @SuppressWarnings("unchecked")

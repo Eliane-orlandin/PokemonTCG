@@ -21,6 +21,13 @@ public class CatalogService {
     }
 
     /**
+     * Construtor para injeção de dependência (facilita testes).
+     */
+    public CatalogService(CatalogRepository repository) {
+        this.repository = repository;
+    }
+
+    /**
      * Adiciona um card que foi buscado na API para dentro do catálogo local.
      */
     public void addCardToCatalog(Card card, int quantity, String notes) {

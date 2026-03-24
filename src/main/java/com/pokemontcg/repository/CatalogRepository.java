@@ -19,6 +19,10 @@ public class CatalogRepository {
     // O SQLite não tem tipo data, então salvamos como String ISO-8601
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+    protected Connection getConnection() throws SQLException {
+        return DatabaseManager.getConnection();
+    }
+
     /**
      * Salva um novo card ou incrementa a quantidade se já existir.
      */
@@ -27,7 +31,7 @@ public class CatalogRepository {
         
         if (existing.isPresent()) {
             CatalogEntry toUpdate = existing.get();
-            toUpdate.setQuantity(toUpdate.getQuantity() + 1);
+            toUpdate.setQuantity(toUpdate.getQuantity() + entry.getQuantity());
             toUpdate.setUpdatedAt(LocalDateTime.now());
             update(toUpdate);
             System.out.println("[App] Quantidade incrementada para: " + toUpdate.getCardName() + " (Qtd: " + toUpdate.getQuantity() + ")");
@@ -37,7 +41,7 @@ public class CatalogRepository {
         String sql = "INSERT INTO catalog (card_id, card_name, series_id, series_name, type, rarity, image_url, quantity, language, notes, added_at, updated_at) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseManager.getConnection();
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             mapEntryToStatement(entry, pstmt, true);
@@ -62,7 +66,7 @@ public class CatalogRepository {
         String sql = "UPDATE catalog SET card_name = ?, series_id = ?, series_name = ?, type = ?, rarity = ?, image_url = ?, quantity = ?, language = ?, notes = ?, updated_at = ? " +
                      "WHERE card_id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, entry.getCardName());
@@ -90,7 +94,7 @@ public class CatalogRepository {
     public void delete(String cardId) {
         String sql = "DELETE FROM catalog WHERE card_id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, cardId);
@@ -108,7 +112,7 @@ public class CatalogRepository {
         List<CatalogEntry> entries = new ArrayList<>();
         String sql = "SELECT * FROM catalog ORDER BY card_name ASC";
 
-        try (Connection conn = DatabaseManager.getConnection();
+        try (Connection conn = this.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -128,7 +132,7 @@ public class CatalogRepository {
     public Optional<CatalogEntry> findByCardId(String cardId) {
         String sql = "SELECT * FROM catalog WHERE card_id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
+        try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, cardId);

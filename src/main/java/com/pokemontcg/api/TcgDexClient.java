@@ -17,8 +17,14 @@ public class TcgDexClient {
     private final TCGdex sdk;
 
     public TcgDexClient() {
-        // Inicializa para português
-        this.sdk = new TCGdex("pt");
+        this(new TCGdex("pt"));
+    }
+
+    /**
+     * Construtor para injeção de dependência (facilita testes).
+     */
+    public TcgDexClient(TCGdex sdk) {
+        this.sdk = sdk;
     }
 
     /**

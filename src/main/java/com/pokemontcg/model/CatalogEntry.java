@@ -1,5 +1,6 @@
 package com.pokemontcg.model;
 
+import com.opencsv.bean.CsvBindByName;
 import java.time.LocalDateTime;
 
 /**
@@ -9,19 +10,42 @@ import java.time.LocalDateTime;
  */
 public class CatalogEntry {
     
-    private Integer id;           // Auto-incremento do banco
-    private String cardId;        // ID único (ex: swsh1-1) 
-    private String cardName;      // Nome amigável do Pokémon
-    private String seriesId;      // ID da série (ex: base)
-    private String seriesName;    // Nome da série
-    private String type;          // Tipo (ex: Fire) 
-    private String rarity;        // Raridade (ex: Rare Holo)
-    private String imageUrl;      // Link para a imagem
-    private int quantity;         // Quantos cards você possui
-    private String language;      // Idioma do card (default: 'pt')
-    private String notes;         // Suas observações
-    private LocalDateTime addedAt; // Quando foi cadastrado
-    private LocalDateTime updatedAt; // Última alteração
+    @CsvBindByName(column = "ID")
+    private Integer id;
+
+    @CsvBindByName(column = "Card ID")
+    private String cardId;
+
+    @CsvBindByName(column = "Nome")
+    private String cardName;
+
+    @CsvBindByName(column = "Série")
+    private String seriesName;
+
+    @CsvBindByName(column = "Tipo")
+    private String type;
+
+    @CsvBindByName(column = "Raridade")
+    private String rarity;
+
+    @CsvBindByName(column = "Quantidade")
+    private int quantity;
+
+    @CsvBindByName(column = "Idioma")
+    private String language;
+
+    @CsvBindByName(column = "Observações")
+    private String notes;
+
+    @CsvBindByName(column = "Data de Adição")
+    private LocalDateTime addedAt;
+
+    @CsvBindByName(column = "Última Atualização")
+    private LocalDateTime updatedAt;
+    
+    // Campo sem cabeçalho explícito (não exportamos link interno se preferir)
+    private String seriesId;
+    private String imageUrl;
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
