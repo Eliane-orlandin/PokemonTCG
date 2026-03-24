@@ -54,6 +54,7 @@ public class CatalogController {
                 
                 CatalogRowController controller = loader.getController();
                 controller.setRowData(entry);
+                controller.setOnDeleteCallback(() -> loadCatalogFromDatabase()); // Atualiza a lista ao deletar
                 
                 vboxCatalogRows.getChildren().add(rowNode);
                 

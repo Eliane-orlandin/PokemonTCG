@@ -39,8 +39,7 @@
         
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
             <children>
-                <Label text="✏" style="-fx-font-size: 14; -fx-text-fill: #78909C; -fx-cursor: hand;" />
-                <Label text="⋮" style="-fx-font-size: 18; -fx-text-fill: #52bf2c; -fx-font-weight: bold; -fx-cursor: hand;" />
+                <Label onMouseClicked="#handleDelete" text="🗑" style="-fx-font-size: 14; -fx-text-fill: #EF5350; -fx-cursor: hand;" />
             </children>
         </HBox>
     </children>

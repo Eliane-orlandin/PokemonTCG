@@ -20,8 +20,16 @@ public class CatalogRowController {
     @FXML private Label lblType;
     @FXML private Label lblRarity;
     @FXML private Label lblQty;
+    private CatalogEntry entry;
+    private Runnable onDeleteCallback;
+    private com.pokemontcg.repository.CatalogRepository repository = new com.pokemontcg.repository.CatalogRepository();
+
+    public void setOnDeleteCallback(Runnable callback) {
+        this.onDeleteCallback = callback;
+    }
 
     public void setRowData(CatalogEntry entry) {
+        this.entry = entry; // Store the entry
         lblName.setText(entry.getCardName());
         lblSetId.setText(entry.getCardId());
         lblSetName.setText(entry.getSeriesName());
@@ -39,6 +47,21 @@ public class CatalogRowController {
         
         // Estilização do badge de tipo
         updateTypeBadge(entry.getType());
+    }
+
+    @FXML
+    public void handleDelete() {
+        if (entry != null && entry.getCardId() != null) {
+            System.out.println("[DEBUG] CatalogRowController: Removendo card -> " + entry.getCardName());
+            try {
+                repository.delete(entry.getCardId());
+                if (onDeleteCallback != null) {
+                    onDeleteCallback.run();
+                }
+            } catch (Exception e) {
+                System.err.println("[DEBUG] Erro ao deletar: " + e.getMessage());
+            }
+        }
     }
 
     private void updateTypeBadge(String type) {
