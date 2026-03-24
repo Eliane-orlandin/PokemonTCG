@@ -4,25 +4,25 @@
 */
 
 .root {
-    -fx-bg-main: #F5F6FA;
-    -fx-bg-sidebar: #FFFFFF;
-    -fx-primary: #C2185B;
-    -fx-accent: #E91E63;
-    -fx-text-dark: #263238;
-    -fx-text-muted: #78909C;
-    -fx-lavender-gradient: linear-gradient(to right, #E1BEE7, #F8BBD0);
-    -fx-border-color: #ECEFF1;
+    -app-bg-main: #F5F6FA;
+    -app-bg-sidebar: #FFFFFF;
+    -app-primary: #C2185B;
+    -app-accent: #E91E63;
+    -app-text-dark: #263238;
+    -app-text-muted: #78909C;
+    -app-lavender-gradient: linear-gradient(to right, #E1BEE7, #F8BBD0);
+    -app-border-color: #ECEFF1;
 }
 
 .root-pane {
-    -fx-background-color: -fx-bg-main;
+    -fx-background-color: -app-bg-main;
     -fx-font-family: "Segoe UI", "Roboto", "Helvetica", "Arial";
 }
 
 /* --- SIDEBAR --- */
 .sidebar {
-    -fx-background-color: -fx-bg-sidebar;
-    -fx-border-color: -fx-border-color;
+    -fx-background-color: -app-bg-sidebar;
+    -fx-border-color: -app-border-color;
     -fx-border-width: 0 1 0 0;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);
 }
@@ -32,13 +32,13 @@
 }
 
 .app-title {
-    -fx-text-fill: -fx-text-dark;
+    -fx-text-fill: -app-text-dark;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
 }
 
 .app-subtitle {
-    -fx-text-fill: -fx-text-muted;
+    -fx-text-fill: -app-text-muted;
     -fx-font-size: 11px;
     -fx-text-transform: uppercase;
 }
@@ -46,7 +46,7 @@
 /* Botões do Menu Lateral */
 .menu-button {
     -fx-background-color: transparent;
-    -fx-text-fill: -fx-text-muted;
+    -fx-text-fill: -app-text-muted;
     -fx-font-size: 14px;
     -fx-font-weight: 500;
     -fx-alignment: center-left;
@@ -57,19 +57,19 @@
 
 .menu-button:hover {
     -fx-background-color: #F8F9FB;
-    -fx-text-fill: -fx-primary;
+    -fx-text-fill: -app-primary;
 }
 
 .menu-button-active {
     -fx-background-color: #F3E5F5;
-    -fx-text-fill: -fx-primary;
+    -fx-text-fill: -app-primary;
     -fx-font-weight: bold;
     -fx-background-radius: 12;
 }
 
 /* Botão Especial "Add New Card" */
 .add-card-button {
-    -fx-background-color: -fx-primary;
+    -fx-background-color: -app-primary;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
@@ -80,7 +80,7 @@
 }
 
 .add-card-button:hover {
-    -fx-background-color: -fx-accent;
+    -fx-background-color: -app-accent;
 }
 
 /* --- HEADER --- */
@@ -89,7 +89,7 @@
 }
 
 .header-title {
-    -fx-text-fill: -fx-primary;
+    -fx-text-fill: -app-primary;
     -fx-font-size: 24px;
     -fx-font-weight: 900;
 }
@@ -97,7 +97,7 @@
 .search-field {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 20;
-    -fx-border-color: -fx-border-color;
+    -fx-border-color: -app-border-color;
     -fx-border-radius: 20;
     -fx-padding: 8 15;
 }
@@ -127,19 +127,19 @@
 }
 
 .card-title {
-    -fx-text-fill: -fx-text-muted;
+    -fx-text-fill: -app-text-muted;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
 .card-value {
-    -fx-text-fill: -fx-text-dark;
+    -fx-text-fill: -app-text-dark;
     -fx-font-size: 36px;
     -fx-font-weight: 900;
 }
 
 .card-increment {
-    -fx-text-fill: -fx-primary;
+    -fx-text-fill: -app-primary;
     -fx-font-size: 12px;
     -fx-background-color: #FCE4EC;
     -fx-padding: 2 8;

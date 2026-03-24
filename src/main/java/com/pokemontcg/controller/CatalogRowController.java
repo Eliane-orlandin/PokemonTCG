@@ -6,7 +6,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Controlador para uma linha individual da tabela de catálogo.
@@ -21,8 +20,6 @@ public class CatalogRowController {
     @FXML private Label lblType;
     @FXML private Label lblRarity;
     @FXML private Label lblQty;
-
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
     public void setRowData(CatalogEntry entry) {
         lblName.setText(entry.getCardName());

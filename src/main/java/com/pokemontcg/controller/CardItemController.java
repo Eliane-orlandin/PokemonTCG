@@ -3,7 +3,6 @@ package com.pokemontcg.controller;
 import com.pokemontcg.model.CatalogEntry;
 import com.pokemontcg.repository.CatalogRepository;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,7 +42,7 @@ public class CardItemController {
         }
         
         this.currentImageUrl = imageUrl;
-        this.currentSeriesId = seriesId;
+        this.currentSeriesId = (seriesId != null) ? seriesId : "unknown";
         this.currentSeriesName = (seriesName != null) ? seriesName : "Expansion"; 
         
         lblName.setText(name);
@@ -51,7 +50,6 @@ public class CardItemController {
         lblRarity.setText(rarity);
         
         updateTypeBadge(type);
-// ...
         
         if (imageUrl != null && !imageUrl.isEmpty()) {
             new Thread(() -> {
@@ -69,8 +67,8 @@ public class CardItemController {
             entry.setCardId(currentCardId);
             entry.setCardName(lblName.getText());
             entry.setImageUrl(currentImageUrl);
-            entry.setSeriesId(currentSeriesId);
-            entry.setSeriesName(currentSeriesName);
+            entry.setSeriesId((currentSeriesId != null) ? currentSeriesId : "unknown");
+            entry.setSeriesName((currentSeriesName != null) ? currentSeriesName : "Expansion");
             entry.setQuantity(1);
             
             repository.save(entry);
