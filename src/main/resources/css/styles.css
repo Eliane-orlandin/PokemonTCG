@@ -1,75 +1,160 @@
 /* 
-    Sistema de Cores Moderno - Pokemon TCG Premium UI 
-    - Fundo Escuro: #121212
-    - Sidebar: #1E1E1E
-    - Realce (Acento): #FF3E3E (Vermelho Pokemon)
-    - Secundário: #3E72FF (Azul Clássico)
+    Sistema de Cores Premium - Pokemon TCG Professional UI 
+    Baseado no design "Museum-Grade Catalog" 
 */
 
+.root {
+    -fx-bg-main: #F5F6FA;
+    -fx-bg-sidebar: #FFFFFF;
+    -fx-primary: #C2185B;
+    -fx-accent: #E91E63;
+    -fx-text-dark: #263238;
+    -fx-text-muted: #78909C;
+    -fx-lavender-gradient: linear-gradient(to right, #E1BEE7, #F8BBD0);
+    -fx-border-color: #ECEFF1;
+}
+
 .root-pane {
-    -fx-background-color: #121212;
+    -fx-background-color: -fx-bg-main;
     -fx-font-family: "Segoe UI", "Roboto", "Helvetica", "Arial";
 }
 
-/* Sidebar Estilo Glassmorphism */
+/* --- SIDEBAR --- */
 .sidebar {
-    -fx-background-color: #1E1E1E;
-    -fx-border-color: #2C2C2C;
+    -fx-background-color: -fx-bg-sidebar;
+    -fx-border-color: -fx-border-color;
     -fx-border-width: 0 1 0 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);
+}
+
+.app-logo-container {
+    -fx-padding: 0 0 40 0;
 }
 
 .app-title {
-    -fx-text-fill: #FF3E3E;
+    -fx-text-fill: -fx-text-dark;
     -fx-font-weight: bold;
-    -fx-font-size: 24px;
+    -fx-font-size: 20px;
 }
 
 .app-subtitle {
-    -fx-text-fill: #808080;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 11px;
+    -fx-text-transform: uppercase;
 }
 
-/* Menu de Botões Laterais */
+/* Botões do Menu Lateral */
 .menu-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 15px;
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
     -fx-alignment: center-left;
-    -fx-padding: 0 15 0 15;
-    -fx-background-radius: 8;
+    -fx-padding: 12 15 12 15;
+    -fx-background-radius: 12;
     -fx-cursor: hand;
-    -fx-transition: 0.3s;
 }
 
 .menu-button:hover {
-    -fx-background-color: #2C2C2C;
-    -fx-text-fill: #FF3E3E;
+    -fx-background-color: #F8F9FB;
+    -fx-text-fill: -fx-primary;
 }
 
-.menu-button:pressed {
-    -fx-background-color: #3C3C3C;
+.menu-button-active {
+    -fx-background-color: #F3E5F5;
+    -fx-text-fill: -fx-primary;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
 }
 
-/* Rodapé e Outros Labels */
-.version-label {
-    -fx-text-fill: #404040;
-    -fx-font-size: 12px;
-}
-
-/* Área de Conteúdo Central */
-.content-area {
-    -fx-background-color: #121212;
-    -fx-padding: 30;
-}
-
-.screen-title {
+/* Botão Especial "Add New Card" */
+.add-card-button {
+    -fx-background-color: -fx-primary;
     -fx-text-fill: white;
-    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 15 25;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(194, 24, 91, 0.3), 10, 0, 0, 5);
+}
+
+.add-card-button:hover {
+    -fx-background-color: -fx-accent;
+}
+
+/* --- HEADER --- */
+.header-pane {
+    -fx-padding: 20 40;
+}
+
+.header-title {
+    -fx-text-fill: -fx-primary;
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+}
+
+.search-field {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 20;
+    -fx-border-color: -fx-border-color;
+    -fx-border-radius: 20;
+    -fx-padding: 8 15;
+}
+
+/* --- ÁREA DE CONTEÚDO --- */
+.content-area {
+    -fx-background-color: transparent;
+    -fx-padding: 20 40 40 40;
+}
+
+/* ScrollPane Transparente */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Cards de Resumo (Pulse) */
+.pulse-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 20;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 15, 0, 0, 0);
+}
+
+.card-title {
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
-.screen-subtitle {
-    -fx-text-fill: #A0A0A0;
-    -fx-font-size: 14px;
+.card-value {
+    -fx-text-fill: -fx-text-dark;
+    -fx-font-size: 36px;
+    -fx-font-weight: 900;
+}
+
+.card-increment {
+    -fx-text-fill: -fx-primary;
+    -fx-font-size: 12px;
+    -fx-background-color: #FCE4EC;
+    -fx-padding: 2 8;
+    -fx-background-radius: 10;
+}
+
+/* Cards da Galeria de Busca (card_item.fxml) */
+.card-item-container {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 15, 0, 0, 5);
+}
+
+.card-item-container:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(194, 24, 91, 0.2), 25, 0, 0, 10);
+    -fx-translate-y: -10;
 }

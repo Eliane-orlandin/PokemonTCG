@@ -61,7 +61,11 @@ public class TcgDexClient {
         card.setId(resume.getId());
         card.setLocalId(resume.getLocalId());
         card.setName(resume.getName());
-        card.setImage(resume.getImage() + "/low.jpg");
+        if (resume.getImage() != null) {
+            card.setImage(resume.getImage() + "/low.jpg");
+        } else {
+            card.setImage(""); 
+        }
         return card;
     }
 

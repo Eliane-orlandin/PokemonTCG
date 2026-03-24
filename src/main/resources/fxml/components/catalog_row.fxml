@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 12 20; -fx-border-color: #F8F9FB; -fx-border-width: 0 0 1 0;" 
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.pokemontcg.controller.CatalogRowController">
+    <children>
+        <CheckBox fx:id="checkSelect" />
+        
+        <!-- Info Principal com Miniatura -->
+        <HBox spacing="12" alignment="CENTER_LEFT" prefWidth="250">
+            <children>
+                <StackPane style="-fx-background-color: #ECEFF1; -fx-background-radius: 6;" prefWidth="35" prefHeight="48">
+                    <children>
+                        <ImageView fx:id="imgMini" fitWidth="35" fitHeight="48" preserveRatio="true" />
+                    </children>
+                </StackPane>
+                <VBox>
+                    <children>
+                        <Label fx:id="lblName" text="Card Name" style="-fx-font-weight: bold; -fx-text-fill: #263238; -fx-font-size: 13;" />
+                        <Label fx:id="lblSetId" text="SET • ID" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        
+        <Label fx:id="lblSetName" text="Set Name Expansion" prefWidth="150" style="-fx-text-fill: #546E7A; -fx-font-size: 12;" />
+        
+        <Label fx:id="lblType" text="FIRE" style="-fx-background-color: #FF7043; -fx-text-fill: white; -fx-font-size: 9; -fx-font-weight: bold; -fx-padding: 3 12; -fx-background-radius: 12;" />
+        
+        <Label fx:id="lblRarity" text="✪ Ultra Rare" prefWidth="120" style="-fx-text-fill: #C2185B; -fx-font-size: 12; -fx-font-weight: 500;" />
+        
+        <Label fx:id="lblQty" text="01" prefWidth="40" style="-fx-font-weight: 800; -fx-text-fill: #263238; -fx-font-size: 13;" />
+        
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
+            <children>
+                <Label text="✏" style="-fx-font-size: 14; -fx-text-fill: #78909C; -fx-cursor: hand;" />
+                <Label text="⋮" style="-fx-font-size: 18; -fx-text-fill: #52bf2c; -fx-font-weight: bold; -fx-cursor: hand;" />
+            </children>
+        </HBox>
+    </children>
+</HBox>

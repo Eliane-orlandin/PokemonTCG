@@ -3,61 +3,98 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainLayout" prefHeight="700.0" prefWidth="1000.0" 
+<BorderPane fx:id="mainLayout" prefHeight="700.0" prefWidth="1200.0" 
             stylesheets="@../css/styles.css" styleClass="root-pane" 
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="com.pokemontcg.controller.MainController">
     
-    <!-- Barra Lateral (Sidebar) -->
+    <!-- BARRA LATERAL (SIDEBAR) -->
     <left>
-        <VBox prefWidth="240.0" spacing="10.0" styleClass="sidebar">
+        <VBox prefWidth="260.0" styleClass="sidebar">
             <padding>
-                <Insets bottom="30.0" left="20.0" right="20.0" top="40.0" />
+                <Insets bottom="30.0" left="25.0" right="25.0" top="40.0" />
             </padding>
             <children>
-                <!-- Título/Logo do App -->
-                <Label styleClass="app-title" text="POKÉMON">
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
-                </Label>
-                <Label styleClass="app-subtitle" text="TCG Catalog" />
-                
-                <VBox spacing="15.0" styleClass="menu-container">
-                    <VBox.margin>
-                        <Insets top="40.0" />
-                    </VBox.margin>
+                <!-- Logo e Título do App -->
+                <VBox styleClass="app-logo-container">
                     <children>
-                        <!-- Botões do Menu -->
-                        <Button fx:id="btnSearch" alignment="BASELINE_LEFT" onAction="#showSearch" 
-                                prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="🔍  Buscar Cards" />
-                        
-                        <Button fx:id="btnCatalog" alignment="BASELINE_LEFT" onAction="#showCatalog" 
-                                prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="🗃️  Meu Catálogo" />
-                        
-                        <Button fx:id="btnExport" alignment="BASELINE_LEFT" onAction="#showExport" 
-                                prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="📄  Exportar Tudo" />
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="▣" styleClass="app-title" style="-fx-text-fill: #C2185B; -fx-font-size: 28;"/>
+                            <VBox>
+                                <Label styleClass="app-title" text="TCG Archive" />
+                                <Label styleClass="app-subtitle" text="MUSEUM-GRADE CATALOG" />
+                            </VBox>
+                        </HBox>
                     </children>
                 </VBox>
                 
-                <VBox VBox.vgrow="ALWAYS" /> <!-- Espaçador para empurrar o rodapé -->
+                <!-- Menu de Navegação -->
+                <VBox spacing="8.0" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                    <children>
+                        <Button fx:id="btnHome" alignment="BASELINE_LEFT" onAction="#showHome" 
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button, menu-button-active" text="⌂  Home" />
+                        
+                        <Button fx:id="btnSearch" alignment="BASELINE_LEFT" onAction="#showSearch" 
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🔍  Search API" />
+                        
+                        <Button fx:id="btnCatalog" alignment="BASELINE_LEFT" onAction="#showCatalog" 
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🗂  My Collection" />
+                        
+                        <Button fx:id="btnExport" alignment="BASELINE_LEFT" onAction="#showExport" 
+                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="⇡  Exports" />
+                    </children>
+                </VBox>
                 
-                <!-- Rodapé da Sidebar -->
-                <Label styleClass="version-label" text="v1.0.0" />
+                <!-- Botões Inferiores -->
+                <VBox spacing="10">
+                    <children>
+                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="⚙  Settings" />
+                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="?  Support" />
+                        
+                        <Button styleClass="add-card-button" text="+ Add New Card" prefWidth="210.0">
+                            <VBox.margin>
+                                <Insets top="20" />
+                            </VBox.margin>
+                        </Button>
+                    </children>
+                </VBox>
             </children>
         </VBox>
     </left>
     
-    <!-- Área Central: Onde as telas de Busca e Catálogo serão carregadas -->
+    <!-- ÁREA CENTRAL -->
     <center>
-        <StackPane fx:id="contentArea" styleClass="content-area">
-            <!-- Inicialmente vazio. Será preenchido via MainController -->
-        </StackPane>
+        <VBox>
+            <children>
+                <!-- Cabeçalho (Header) -->
+                <HBox alignment="CENTER_LEFT" styleClass="header-pane">
+                    <children>
+                        <Label styleClass="header-title" text="PokéCatalog TCG" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER" spacing="20">
+                            <children>
+                                <TextField promptText="Search archive..." styleClass="search-field" prefWidth="250" />
+                                <Label text="🔔" style="-fx-font-size: 18; -fx-text-fill: #78909C;" />
+                                <Label text="⚙" style="-fx-font-size: 18; -fx-text-fill: #78909C;" />
+                                <Label text="👤" style="-fx-font-size: 24; -fx-text-fill: #263238;" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                
+                <!-- Conteúdo Dinâmico -->
+                <StackPane fx:id="contentArea" styleClass="content-area" VBox.vgrow="ALWAYS">
+                    <!-- As telas serão injetadas aqui -->
+                </StackPane>
+            </children>
+        </VBox>
     </center>
     
 </BorderPane>

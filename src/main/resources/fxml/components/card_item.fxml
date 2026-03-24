@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+
+<VBox spacing="10" styleClass="card-item-container" fx:id="cardRoot"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.pokemontcg.controller.CardItemController"
+      style="-fx-cursor: hand; -fx-padding: 10;">
+    <children>
+        <!-- Container da Imagem com bordas arredondadas -->
+        <StackPane fx:id="imageContainer" prefWidth="180" prefHeight="250" style="-fx-background-color: #ECEFF1; -fx-background-radius: 15;">
+            <children>
+                <ImageView fx:id="cardImage" fitWidth="180" fitHeight="250" preserveRatio="true" />
+            </children>
+        </StackPane>
+        
+        <!-- Detalhes da Carta -->
+        <HBox alignment="CENTER_LEFT">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label fx:id="lblSetId" text="SET ID • 000/000" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                <Label fx:id="lblName" text="Pokémon Name" style="-fx-font-weight: 800; -fx-font-size: 15; -fx-text-fill: #263238;" />
+            </VBox>
+            <Button onAction="#handleAddToCollection" text="+" 
+                    style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 50; -fx-min-width: 30; -fx-min-height: 30; -fx-padding: 0; -fx-cursor: hand;" />
+        </HBox>
+        
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <children>
+                <Label fx:id="lblType" text="TYPE" style="-fx-background-color: #F5F5F5; -fx-text-fill: #9E9E9E; -fx-font-weight: bold; -fx-font-size: 9; -fx-padding: 3 10; -fx-background-radius: 6;" />
+                <Label fx:id="lblRarity" text="Rarity" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

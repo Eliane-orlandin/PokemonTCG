@@ -1,7 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-  <Label text="📄 EXPORTAR TUDO" styleClass="screen-title" />
-  <Label text="Em breve: Opções de exportação JSON e CSV" styleClass="screen-subtitle" />
-</VBox>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
+          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <content>
+        <VBox spacing="30.0" styleClass="content-area">
+            <children>
+                <!-- Cabeçalho -->
+                <VBox spacing="5">
+                    <Label text="Exportar Coleção" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #263238;" />
+                    <Label text="Gerencie seus dados de curadoria. Selecione o formato ideal para backup ou integração." style="-fx-text-fill: #78909C; -fx-font-size: 14;" />
+                </VBox>
+
+                <!-- Cards de Opções -->
+                <HBox spacing="30">
+                    <children>
+                        <!-- Card JSON -->
+                        <VBox prefWidth="350" style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 15, 0, 0, 0);">
+                            <children>
+                                <StackPane alignment="CENTER" prefWidth="60" prefHeight="60" maxWidth="60" style="-fx-background-color: #F3E5F5; -fx-background-radius: 12;">
+                                    <Label text="{ }" style="-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: #C2185B;" />
+                                    <VBox.margin><Insets bottom="20" /></VBox.margin>
+                                </StackPane>
+                                <Label text="Exportar como JSON" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #263238;" />
+                                <Label text="Ideal para integração com outras ferramentas, desenvolvedores e backups estruturados." wrapText="true" style="-fx-text-fill: #78909C; -fx-font-size: 12;">
+                                    <VBox.margin><Insets top="10" bottom="25" /></VBox.margin>
+                                </Label>
+                                <Button text="Exportar  ⇣" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 25; -fx-cursor: hand;" />
+                            </children>
+                        </VBox>
+
+                        <!-- Card CSV -->
+                        <VBox prefWidth="350" style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 15, 0, 0, 0);">
+                            <children>
+                                <StackPane alignment="CENTER" prefWidth="60" prefHeight="60" maxWidth="60" style="-fx-background-color: #FFF3E0; -fx-background-radius: 12;">
+                                    <Label text="▥" style="-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: #E65100;" />
+                                    <VBox.margin><Insets bottom="20" /></VBox.margin>
+                                </StackPane>
+                                <Label text="Exportar como CSV" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #263238;" />
+                                <Label text="Formato universal para planilhas. Perfeito para análise de mercado no Excel ou Google Sheets." wrapText="true" style="-fx-text-fill: #78909C; -fx-font-size: 12;">
+                                    <VBox.margin><Insets top="10" bottom="25" /></VBox.margin>
+                                </Label>
+                                <Button text="Exportar  ⇣" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 25; -fx-cursor: hand;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <!-- Tabela de Últimas Exportações -->
+                <VBox spacing="15">
+                    <Label text="Últimas exportações" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #263238;" />
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 15;">
+                        <children>
+                            <HBox spacing="20" style="-fx-padding: 15 20; -fx-border-color: #ECEFF1; -fx-border-width: 0 0 1 0;">
+                                <children>
+                                    <Label text="NOME DO ARQUIVO" prefWidth="300" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 10;" />
+                                    <Label text="DATA DE CRIAÇÃO" prefWidth="250" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 10;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label text="AÇÕES" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 10;" />
+                                </children>
+                            </HBox>
+                            
+                            <!-- Exemplo 1 -->
+                            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 15 20; -fx-border-color: #F8F9FB; -fx-border-width: 0 0 1 0;">
+                                <children>
+                                    <Label text="📄  colecao_2026_05_10.json" prefWidth="300" style="-fx-text-fill: #263238;" />
+                                    <Label text="10 de maio, 2026 • 14:32" prefWidth="250" style="-fx-text-fill: #78909C;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label text="⇣" style="-fx-font-size: 18; -fx-text-fill: #C2185B; -fx-cursor: hand;" />
+                                </children>
+                            </HBox>
+
+                            <!-- Exemplo 2 -->
+                            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 15 20;">
+                                <children>
+                                    <Label text="📄  inventory_full_master.csv" prefWidth="300" style="-fx-text-fill: #263238;" />
+                                    <Label text="08 de maio, 2026 • 09:15" prefWidth="250" style="-fx-text-fill: #78909C;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label text="⇣" style="-fx-font-size: 18; -fx-text-fill: #C2185B; -fx-cursor: hand;" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                </VBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

@@ -3,72 +3,96 @@ package com.pokemontcg.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Controlador principal da janela (Main Frame).
- * Comentários explicativos: Esta classe orquestra a navegação entre as 
- * sub-telas (Busca, Catálogo, Exportação) dentro da área central (StackPane).
+ * Orquestra a navegação entre as telas de Dashboard (Home), Busca, 
+ * Coleção Pessoal e Exportação.
  */
 public class MainController {
 
-    // O StackPane central definido no main.fxml
-    @FXML
-    private StackPane contentArea;
+    @FXML private StackPane contentArea;
+    
+    // Botões da Sidebar para controle de estado visual
+    @FXML private Button btnHome;
+    @FXML private Button btnSearch;
+    @FXML private Button btnCatalog;
+    @FXML private Button btnExport;
+
+    private List<Button> menuButtons;
 
     /**
-     * Chamada automaticamente quando o FXML é carregado. 
-     * Vamos iniciar mostrando a tela de busca por padrão.
+     * Inicializa a aplicação carregando a Dashboard (Home).
      */
     @FXML
     public void initialize() {
-        showSearch();
+        menuButtons = Arrays.asList(btnHome, btnSearch, btnCatalog, btnExport);
+        showHome();
     }
 
     /**
-     * Carrega a tela de busca na área central.
+     * Carrega o Dashboard / Home.
      */
+    @FXML
+    public void showHome() {
+        System.out.println("[DEBUG] MainController: Navegando para HOME");
+        loadView("/fxml/home.fxml", btnHome);
+    }
+
     @FXML
     public void showSearch() {
-        loadView("/fxml/search.fxml");
+        System.out.println("[DEBUG] MainController: Navegando para BUSCA");
+        loadView("/fxml/search.fxml", btnSearch);
     }
 
-    /**
-     * Carrega a tela do catálogo pessoal.
-     */
     @FXML
     public void showCatalog() {
-        loadView("/fxml/catalog.fxml");
+        System.out.println("[DEBUG] MainController: Navegando para CATALOGO");
+        loadView("/fxml/catalog.fxml", btnCatalog);
     }
 
-    /**
-     * Carrega a tela de opções de exportação.
-     */
     @FXML
     public void showExport() {
-        loadView("/fxml/export.fxml");
+        System.out.println("[DEBUG] MainController: Navegando para EXPORTACAO");
+        loadView("/fxml/export.fxml", btnExport);
     }
 
     /**
-     * Método auxiliar genérico para carregar qualquer arquivo FXML 
-     * e injetá-lo na área de conteúdo central.
+     * Carrega o FXML e atualiza o estilo do botão selecionado.
      */
-    private void loadView(String fxmlPath) {
+    private void loadView(String fxmlPath, Button activeButton) {
+        System.out.println("[DEBUG] MainController: Carregando FXML -> " + fxmlPath);
         try {
-            // Carregamos o arquivo FXML da pasta de recursos
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Node view = loader.load();
             
-            // Limpamos o que estava antes e mostramos a nova tela
             contentArea.getChildren().setAll(view);
+            updateActiveButton(activeButton);
             
-            System.out.println("[Menu] Tela carregada com sucesso: " + fxmlPath);
+            System.out.println("[DEBUG] MainController: FXML carregado com sucesso!");
             
         } catch (IOException e) {
-            System.err.println("Erro crítico: Não foi possível carregar a tela " + fxmlPath);
+            System.err.println("Erro ao carregar FXML: " + fxmlPath);
             e.printStackTrace();
-            // Aqui poderíamos mostrar um aviso visual para o usuário
+        }
+    }
+
+    /**
+     * Remove o estilo 'active' de todos e adiciona apenas no botão clicado.
+     */
+    private void updateActiveButton(Button active) {
+        if (menuButtons == null || active == null) return;
+        
+        for (Button btn : menuButtons) {
+            btn.getStyleClass().remove("menu-button-active");
+            if (btn == active) {
+                btn.getStyleClass().add("menu-button-active");
+            }
         }
     }
 }

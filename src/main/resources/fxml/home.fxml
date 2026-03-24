@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
+          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="com.pokemontcg.controller.HomeController">
+    <content>
+        <VBox spacing="30.0" styleClass="content-area">
+            <children>
+                <!-- (...) -->
+                <HBox alignment="BOTTOM_LEFT">
+                    <children>
+                        <VBox spacing="5">
+                            <Label text="Collection Pulse" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #263238;" />
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="LAST UPDATED: JUST NOW" style="-fx-text-fill: #78909C; -fx-font-size: 12; -fx-font-weight: bold;" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="25">
+                    <children>
+                        <!-- Card 1: Total Artifacts -->
+                        <VBox prefWidth="300" styleClass="pulse-card">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="🗂" style="-fx-font-size: 24; -fx-text-fill: #C2185B;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label text="+0% THIS MONTH" styleClass="card-increment" />
+                                </HBox>
+                                <Label text="Total Artifacts" styleClass="card-title">
+                                    <VBox.margin><Insets top="40"/></VBox.margin>
+                                </Label>
+                                <Label fx:id="lblTotalCards" text="0" styleClass="card-value" />
+                            </children>
+                        </VBox>
+
+                        <!-- Card 2: Dominant Element -->
+                        <VBox prefWidth="300" styleClass="pulse-card">
+                            <children>
+                                <Label text="🔥" style="-fx-font-size: 24; -fx-text-fill: #FF5722;" />
+                                <Label text="Dominant Element" styleClass="card-title">
+                                    <VBox.margin><Insets top="15"/></VBox.margin>
+                                </Label>
+                                <Label fx:id="lblDominantType" text="Fire Type" styleClass="card-value" />
+                                <Label fx:id="lblDominantCount" text="0 CARDS CATALOGED" style="-fx-text-fill: #C2185B; -fx-font-size: 11; -fx-font-weight: bold;" />
+                            </children>
+                        </VBox>
+
+                        <!-- Card 3: Recent Additions -->
+                        <VBox prefWidth="350" styleClass="pulse-card">
+                            <children>
+                                <Label text="Recent Additions" styleClass="card-title" />
+                                <VBox spacing="15">
+                                    <VBox.margin><Insets top="20"/></VBox.margin>
+                                    <children>
+                                        <HBox spacing="15" alignment="CENTER_LEFT">
+                                            <StackPane style="-fx-background-color: #ECEFF1; -fx-background-radius: 8;" prefWidth="45" prefHeight="45">
+                                                <Label text="🔥" />
+                                            </StackPane>
+                                            <VBox>
+                                                <Label text="Charizard G LV.X" style="-fx-font-weight: bold; -fx-text-fill: #263238;" />
+                                                <Label text="ADDED 2H AGO" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                                            </VBox>
+                                        </HBox>
+                                        <HBox spacing="15" alignment="CENTER_LEFT">
+                                            <StackPane style="-fx-background-color: #ECEFF1; -fx-background-radius: 8;" prefWidth="45" prefHeight="45">
+                                                <Label text="💧" />
+                                            </StackPane>
+                                            <VBox>
+                                                <Label text="Mewtwo VSTAR" style="-fx-font-weight: bold; -fx-text-fill: #263238;" />
+                                                <Label text="ADDED 5H AGO" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                                            </VBox>
+                                        </HBox>
+                                        <Button text="VIEW FULL LOG →" style="-fx-background-color: transparent; -fx-text-fill: #C2185B; -fx-font-weight: bold; -fx-padding: 0; -fx-cursor: hand;" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <!-- Galeria Curada -->
+                <VBox spacing="20">
+                    <children>
+                        <HBox alignment="BOTTOM_LEFT">
+                            <children>
+                                <Label text="Curated Gallery" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #263238;" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <HBox spacing="10">
+                                    <Label text="∷" style="-fx-font-size: 20; -fx-text-fill: #263238;" />
+                                    <Label text="≡" style="-fx-font-size: 20; -fx-text-fill: #78909C;" />
+                                </HBox>
+                            </children>
+                        </HBox>
+                        
+                        <!-- Grid de Cartas (Exemplo Estático) -->
+                        <FlowPane hgap="25" vgap="25">
+                            <children>
+                                <!-- Card Item Mockup -->
+                                <VBox spacing="10">
+                                    <StackPane prefWidth="180" prefHeight="250" style="-fx-background-color: #ECEFF1; -fx-background-radius: 15;">
+                                        <Label text="Charizard Image" style="-fx-text-fill: #78909C;" />
+                                    </StackPane>
+                                    <Label text="SWSH04 • 025/185" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                                    <Label text="Pikachu VMAX" style="-fx-font-weight: 800; -fx-font-size: 16; -fx-text-fill: #263238;" />
+                                    <HBox spacing="5" alignment="CENTER_LEFT">
+                                        <Label text="ELECTRIC" style="-fx-background-color: #FFF9C4; -fx-text-fill: #FBC02D; -fx-font-weight: bold; -fx-font-size: 9; -fx-padding: 2 8; -fx-background-radius: 5;" />
+                                        <Label text="Ultra Rare" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                                    </HBox>
+                                </VBox>
+                                
+                                <VBox spacing="10">
+                                    <StackPane prefWidth="180" prefHeight="250" style="-fx-background-color: #ECEFF1; -fx-background-radius: 15;">
+                                        <Label text="Lugia Image" style="-fx-text-fill: #78909C;" />
+                                    </StackPane>
+                                    <Label text="SILVER • 186/195" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                                    <Label text="Lugia VSTAR" style="-fx-font-weight: 800; -fx-font-size: 16; -fx-text-fill: #263238;" />
+                                    <HBox spacing="5" alignment="CENTER_LEFT">
+                                        <Label text="COLORLESS" style="-fx-background-color: #F5F5F5; -fx-text-fill: #9E9E9E; -fx-font-weight: bold; -fx-font-size: 9; -fx-padding: 2 8; -fx-background-radius: 5;" />
+                                        <Label text="Secret Rare" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                                    </HBox>
+                                </VBox>
+                            </children>
+                        </FlowPane>
+                    </children>
+                </VBox>
+
+                <!-- Banner de Exportação -->
+                <HBox alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF; -fx-background-radius: 20; -fx-padding: 30; -fx-border-color: #F8BBD0; -fx-border-width: 2; -fx-border-radius: 20;">
+                    <children>
+                        <VBox spacing="5">
+                            <Label text="Ready to export your collection?" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #263238;" />
+                            <Label text="Generate high-fidelity PDF spreadsheets or JSON data for trading." style="-fx-text-fill: #78909C;" />
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <HBox spacing="15">
+                            <Button text="Download JSON" style="-fx-background-color: transparent; -fx-border-color: #ECEFF1; -fx-border-radius: 10; -fx-padding: 10 20; -fx-text-fill: #263238; -fx-font-weight: bold;" />
+                            <Button text="Export PDF Catalog" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20;" />
+                        </HBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>
