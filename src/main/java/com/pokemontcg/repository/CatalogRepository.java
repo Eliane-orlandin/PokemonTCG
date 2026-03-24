@@ -23,16 +23,20 @@ public class CatalogRepository {
      * Salva um novo card ou incrementa a quantidade se já existir.
      */
     public void save(CatalogEntry entry) {
+        System.out.println("[DEBUG] CatalogRepository: Tentando salvar card_id -> " + entry.getCardId());
         Optional<CatalogEntry> existing = findByCardId(entry.getCardId());
         
         if (existing.isPresent()) {
             CatalogEntry toUpdate = existing.get();
+            System.out.println("[DEBUG] CatalogRepository: Card já existe! Quantidade atual: " + toUpdate.getQuantity());
             toUpdate.setQuantity(toUpdate.getQuantity() + 1);
             toUpdate.setUpdatedAt(LocalDateTime.now());
             update(toUpdate);
-            System.out.println("[DB] Quantidade incrementada para: " + entry.getCardName());
+            System.out.println("[DEBUG] CatalogRepository: Quantidade incrementada para: " + toUpdate.getQuantity());
             return;
         }
+
+        System.out.println("[DEBUG] CatalogRepository: Card novo. Realizando INSERT.");
 
         String sql = "INSERT INTO catalog (card_id, card_name, series_id, series_name, type, rarity, image_url, quantity, language, notes, added_at, updated_at) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
