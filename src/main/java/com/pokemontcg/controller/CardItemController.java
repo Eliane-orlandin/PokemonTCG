@@ -35,13 +35,10 @@ public class CardItemController {
     /**
      * Define os dados da carta no componente.
      */
-    public void setCardData(String name, String setId, String imageUrl, String type, String rarity, String seriesId, String seriesName) {
+    public void setCardData(String name, String cardId, String displaySetId, String imageUrl, String type, String rarity, String seriesId, String seriesName) {
         System.out.println("[DEBUG] CardItemController: Configurando dados para -> " + name);
-        if (setId != null && setId.contains(" • ")) {
-            this.currentCardId = setId.split(" • ")[0];
-        } else {
-            this.currentCardId = setId;
-        }
+        this.currentCardId = cardId;
+        lblSetId.setText(displaySetId);
         
         this.currentImageUrl = imageUrl;
         this.currentSeriesId = (seriesId != null) ? seriesId : "base";
@@ -50,7 +47,6 @@ public class CardItemController {
         this.currentRarity = rarity;
         
         lblName.setText(name);
-        lblSetId.setText(setId);
         lblRarity.setText(rarity);
         
         updateTypeBadge(type);

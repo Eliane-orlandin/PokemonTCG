@@ -66,11 +66,6 @@ public class CatalogRepository {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, entry.getCardName());
-            pstmt.setString(2, entry.getCardId()); // Espera ai, corrigindo o mapeamento
-            // Note: Na verdade o Update é por CardID pois é o nosso identificador unico da API.
-            
-            // Re-mapeando corretamente para o UPDATE
-            pstmt.setString(1, entry.getCardName());
             pstmt.setString(2, entry.getSeriesId());
             pstmt.setString(3, entry.getSeriesName());
             pstmt.setString(4, entry.getType());

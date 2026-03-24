@@ -100,7 +100,8 @@ public class SearchController {
 
                 controller.setCardData(
                     cardName,
-                    displaySetId,
+                    card.getId(), // ID Único Real (ex: swsh1-1)
+                    displaySetId,  // String de Exibição (ex: swsh1 • 1)
                     card.getImage(),
                     type,
                     rarity,
