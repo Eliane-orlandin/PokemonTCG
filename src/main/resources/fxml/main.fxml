@@ -52,19 +52,7 @@
                     </children>
                 </VBox>
                 
-                <!-- Botões Inferiores -->
-                <VBox spacing="10">
-                    <children>
-                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="⚙  Configurações" />
-                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="?  Suporte" />
-                        
-                        <Button onAction="#showSearch" styleClass="add-card-button" text="+ Adicionar Novo Card" prefWidth="210.0">
-                            <VBox.margin>
-                                <Insets top="20" />
-                            </VBox.margin>
-                        </Button>
-                    </children>
-                </VBox>
+                <!-- Botões Inferiores Removidos -->
             </children>
         </VBox>
     </left>
