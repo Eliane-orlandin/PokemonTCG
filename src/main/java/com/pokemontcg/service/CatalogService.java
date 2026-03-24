@@ -26,33 +26,26 @@ public class CatalogService {
     public void addCardToCatalog(Card card, int quantity, String notes) {
         if (card == null) return;
         
-        // Se a quantidade for inválida, forçamos para o mínimo de 1
-        int validQuantity = Math.max(1, quantity);
+        CatalogEntry entry = new CatalogEntry();
+        entry.setCardId(card.getId());
+        entry.setCardName(card.getName());
+        entry.setSeriesId(card.getSeriesId());
+        entry.setSeriesName(card.getSeriesName());
+        entry.setImageUrl(card.getImage());
+        entry.setType(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : "Colorless");
+        entry.setRarity(card.getRarity());
+        entry.setQuantity(quantity);
+        entry.setNotes(notes);
+        
+        saveEntry(entry);
+    }
 
-        // Verifica se o card já está no catálogo
-        if (repository.existsByCardId(card.getId())) {
-            // Se já existe, apenas atualizamos a quantidade
-            Optional<CatalogEntry> existing = repository.findByCardId(card.getId());
-            if (existing.isPresent()) {
-                CatalogEntry entry = existing.get();
-                entry.setQuantity(entry.getQuantity() + validQuantity);
-                repository.update(entry);
-            }
-        } else {
-            // Se é novo, criamos uma nova entrada ('ficha técnica') completa
-            CatalogEntry newEntry = new CatalogEntry();
-            newEntry.setCardId(card.getId());
-            newEntry.setCardName(card.getName());
-            newEntry.setSeriesId(card.getSeriesId());
-            newEntry.setSeriesName(card.getSeriesName());
-            newEntry.setImageUrl(card.getImage());
-            newEntry.setQuantity(validQuantity);
-            newEntry.setNotes(notes);
-            newEntry.setAddedAt(LocalDateTime.now());
-            newEntry.setUpdatedAt(LocalDateTime.now());
-
-            repository.save(newEntry);
-        }
+    /**
+     * Salva uma entrada do catálogo delegando ao repositório.
+     * O repositório já contém a lógica de 'upsert' (incrementar se existir).
+     */
+    public void saveEntry(CatalogEntry entry) {
+        repository.save(entry);
     }
 
     /**

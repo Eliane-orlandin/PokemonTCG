@@ -1,6 +1,7 @@
 package com.pokemontcg.controller;
 
 import com.pokemontcg.model.CatalogEntry;
+import com.pokemontcg.service.CatalogService;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -22,7 +23,7 @@ public class CatalogRowController {
     @FXML private Label lblQty;
     private CatalogEntry entry;
     private Runnable onDeleteCallback;
-    private com.pokemontcg.repository.CatalogRepository repository = new com.pokemontcg.repository.CatalogRepository();
+    private CatalogService catalogService = new CatalogService();
 
     public void setOnDeleteCallback(Runnable callback) {
         this.onDeleteCallback = callback;
@@ -54,7 +55,7 @@ public class CatalogRowController {
         if (entry != null && entry.getCardId() != null) {
             System.out.println("[DEBUG] CatalogRowController: Removendo card -> " + entry.getCardName());
             try {
-                repository.delete(entry.getCardId());
+                catalogService.removeCardFromCatalog(entry.getCardId());
                 if (onDeleteCallback != null) {
                     onDeleteCallback.run();
                 }

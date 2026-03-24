@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
+          fx:controller="com.pokemontcg.controller.ExportController"
           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <VBox spacing="30.0" styleClass="content-area">
@@ -29,7 +30,7 @@
                                 <Label text="Ideal para integração com outras ferramentas, desenvolvedores e backups estruturados." wrapText="true" style="-fx-text-fill: #78909C; -fx-font-size: 12;">
                                     <VBox.margin><Insets top="10" bottom="25" /></VBox.margin>
                                 </Label>
-                                <Button text="Exportar  ⇣" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 25; -fx-cursor: hand;" />
+                                <Button onAction="#handleExportJson" text="Exportar  ⇣" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 25; -fx-cursor: hand;" />
                             </children>
                         </VBox>
 
@@ -44,7 +45,7 @@
                                 <Label text="Formato universal para planilhas. Perfeito para análise de mercado no Excel ou Google Sheets." wrapText="true" style="-fx-text-fill: #78909C; -fx-font-size: 12;">
                                     <VBox.margin><Insets top="10" bottom="25" /></VBox.margin>
                                 </Label>
-                                <Button text="Exportar  ⇣" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 25; -fx-cursor: hand;" />
+                                <Button onAction="#handleExportCsv" text="Exportar  ⇣" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 25; -fx-cursor: hand;" />
                             </children>
                         </VBox>
                     </children>

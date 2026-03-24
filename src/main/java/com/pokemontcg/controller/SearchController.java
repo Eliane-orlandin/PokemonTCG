@@ -2,6 +2,8 @@ package com.pokemontcg.controller;
 
 import com.pokemontcg.api.TcgDexClient;
 import com.pokemontcg.model.Card;
+import com.pokemontcg.service.CardService;
+import com.pokemontcg.service.CatalogService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,11 +24,12 @@ public class SearchController {
     @FXML private Label lblStatus;
     @FXML private FlowPane flowResults;
 
-    private TcgDexClient tcgClient;
+    private final CardService cardService;
+    private final CatalogService catalogService;
 
-    @FXML
-    public void initialize() {
-        this.tcgClient = new TcgDexClient();
+    public SearchController() {
+        this.cardService = new CardService();
+        this.catalogService = new CatalogService();
     }
 
     /**
@@ -47,9 +50,9 @@ public class SearchController {
 
         new Thread(() -> {
             try {
-                System.out.println("[DEBUG] SearchController: Chamando API TCGdex...");
-                List<Card> results = tcgClient.searchByName(query);
-                System.out.println("[DEBUG] SearchController: API retornou " + results.size() + " resultados");
+                System.out.println("[DEBUG] SearchController: Chamando CardService...");
+                List<Card> results = cardService.searchByName(query);
+                System.out.println("[DEBUG] SearchController: Service retornou " + results.size() + " resultados");
                 
                 Platform.runLater(() -> {
                     if (results.isEmpty()) {

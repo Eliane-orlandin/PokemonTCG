@@ -1,7 +1,7 @@
 package com.pokemontcg.controller;
 
 import com.pokemontcg.model.CatalogEntry;
-import com.pokemontcg.repository.CatalogRepository;
+import com.pokemontcg.service.CatalogService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,11 +19,14 @@ public class CatalogController {
 
     @FXML private VBox vboxCatalogRows;
 
-    private CatalogRepository catalogRepository;
+    private final CatalogService catalogService;
+    
+    public CatalogController() {
+        this.catalogService = new CatalogService();
+    }
 
     @FXML
     public void initialize() {
-        this.catalogRepository = new CatalogRepository();
         loadCatalogFromDatabase();
     }
 
@@ -33,7 +36,7 @@ public class CatalogController {
     private void loadCatalogFromDatabase() {
         new Thread(() -> {
             try {
-                List<CatalogEntry> entries = catalogRepository.findAll();
+                List<CatalogEntry> entries = catalogService.getAllCardsInCatalog();
                 
                 Platform.runLater(() -> {
                     vboxCatalogRows.getChildren().clear();

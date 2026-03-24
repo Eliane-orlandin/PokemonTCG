@@ -1,13 +1,13 @@
 package com.pokemontcg.controller;
 
 import com.pokemontcg.model.CatalogEntry;
-import com.pokemontcg.repository.CatalogRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import com.pokemontcg.service.CatalogService;
 
 /**
  * Controlador para o componente individual de cada carta (Card Item).
@@ -30,7 +30,7 @@ public class CardItemController {
     private String currentType;
     private String currentRarity;
 
-    private CatalogRepository repository = new CatalogRepository();
+    private CatalogService catalogService = new CatalogService();
 
     /**
      * Define os dados da carta no componente.
@@ -73,7 +73,7 @@ public class CardItemController {
             entry.setRarity(currentRarity);
             entry.setQuantity(1);
             
-            repository.save(entry);
+            catalogService.saveEntry(entry);
             
             System.out.println("[DEBUG] CardItemController: Card salvo no SQLite com sucesso!");
         } catch (Exception e) {
