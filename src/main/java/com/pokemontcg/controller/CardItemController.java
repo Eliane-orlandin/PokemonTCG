@@ -27,6 +27,8 @@ public class CardItemController {
     private String currentSeriesId;
     private String currentSeriesName;
     private String currentImageUrl;
+    private String currentType;
+    private String currentRarity;
 
     private CatalogRepository repository = new CatalogRepository();
 
@@ -42,8 +44,10 @@ public class CardItemController {
         }
         
         this.currentImageUrl = imageUrl;
-        this.currentSeriesId = (seriesId != null) ? seriesId : "unknown";
-        this.currentSeriesName = (seriesName != null) ? seriesName : "Expansion"; 
+        this.currentSeriesId = (seriesId != null) ? seriesId : "base";
+        this.currentSeriesName = (seriesName != null) ? seriesName : "Expansão"; 
+        this.currentType = type;
+        this.currentRarity = rarity;
         
         lblName.setText(name);
         lblSetId.setText(setId);
@@ -69,6 +73,8 @@ public class CardItemController {
             entry.setImageUrl(currentImageUrl);
             entry.setSeriesId((currentSeriesId == null || currentSeriesId.isEmpty()) ? "base" : currentSeriesId);
             entry.setSeriesName((currentSeriesName == null || currentSeriesName.isEmpty()) ? "Expansão" : currentSeriesName);
+            entry.setType(currentType);
+            entry.setRarity(currentRarity);
             entry.setQuantity(1);
             
             repository.save(entry);

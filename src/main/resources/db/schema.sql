@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS catalog (
     card_name     TEXT    NOT NULL,        -- Nome do Card para exibição rápida
     series_id     TEXT    NOT NULL,        -- ID da Série (ex: base)
     series_name   TEXT    NOT NULL,        -- Nome da Série
+    type          TEXT,                   -- Tipo do Pokémon (ex: Fire, Water)
+    rarity        TEXT,                   -- Raridade (ex: Rare Holo)
     image_url     TEXT,                   -- Link da imagem do card
     quantity      INTEGER NOT NULL DEFAULT 1, -- Quantos cards você tem
     language      TEXT    NOT NULL DEFAULT 'pt', -- Idioma do card

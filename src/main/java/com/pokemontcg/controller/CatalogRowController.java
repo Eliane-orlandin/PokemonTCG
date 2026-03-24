@@ -27,8 +27,7 @@ public class CatalogRowController {
         lblSetName.setText(entry.getSeriesName());
         lblQty.setText(String.format("%02d", entry.getQuantity()));
         
-        // Raridade baseada no entry (usando um campo dummy se não existir no model interno por enquanto)
-        lblRarity.setText("✪ Rare Holo"); 
+        lblRarity.setText(entry.getRarity() != null ? entry.getRarity() : "Unknown"); 
         
         // Carregar imagem miniatura
         if (entry.getImageUrl() != null && !entry.getImageUrl().isEmpty()) {
@@ -39,16 +38,33 @@ public class CatalogRowController {
         }
         
         // Estilização do badge de tipo
-        updateTypeBadge("Fire"); // Dummy para teste inicial
+        updateTypeBadge(entry.getType());
     }
 
     private void updateTypeBadge(String type) {
-        lblType.setText(type.toUpperCase());
-        String color = "#78909C"; // Gray default
-        if (type.equalsIgnoreCase("fire")) color = "#FF7043";
-        else if (type.equalsIgnoreCase("water")) color = "#42A5F5";
-        else if (type.equalsIgnoreCase("lightning")) color = "#FBC02D";
-        
+        if (type == null) {
+            lblType.setText("???");
+            lblType.setStyle("-fx-background-color: #78909C; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 3 12; -fx-font-weight: bold; -fx-font-size: 9;");
+            return;
+        }
+
+        String displayType = type.toUpperCase();
+        String color = "#78909C"; // Cinza padrão
+
+        switch (type.toLowerCase()) {
+            case "fire": color = "#FF7043"; displayType = "FOGO"; break;
+            case "water": color = "#42A5F5"; displayType = "ÁGUA"; break;
+            case "lightning": color = "#FBC02D"; displayType = "ELÉTRICO"; break;
+            case "grass": color = "#66BB6A"; displayType = "PLANTA"; break;
+            case "psychic": color = "#AB47BC"; displayType = "PSÍQUICO"; break;
+            case "darkness": color = "#263238"; displayType = "NOTURNO"; break;
+            case "dragon": color = "#FB8C00"; displayType = "DRAGÃO"; break;
+            case "colorless": color = "#B0BEC5"; displayType = "INCOLOR"; break;
+            case "metal": color = "#90A4AE"; displayType = "METAL"; break;
+            case "fighting": color = "#B87333"; displayType = "LUTADOR"; break;
+        }
+
+        lblType.setText(displayType);
         lblType.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 3 12; -fx-font-weight: bold; -fx-font-size: 9;");
     }
 }

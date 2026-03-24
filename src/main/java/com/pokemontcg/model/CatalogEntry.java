@@ -14,12 +14,20 @@ public class CatalogEntry {
     private String cardName;      // Nome amigável do Pokémon
     private String seriesId;      // ID da série (ex: base)
     private String seriesName;    // Nome da série
+    private String type;          // Tipo (ex: Fire) 
+    private String rarity;        // Raridade (ex: Rare Holo)
     private String imageUrl;      // Link para a imagem
     private int quantity;         // Quantos cards você possui
     private String language;      // Idioma do card (default: 'pt')
     private String notes;         // Suas observações
     private LocalDateTime addedAt; // Quando foi cadastrado
     private LocalDateTime updatedAt; // Última alteração
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public String getRarity() { return rarity; }
+    public void setRarity(String rarity) { this.rarity = rarity; }
 
     // Construtor vazio (Necessário para frameworks de mapeamento se usados no futuro)
     public CatalogEntry() {
