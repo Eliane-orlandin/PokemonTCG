@@ -62,20 +62,30 @@ public class DatabaseManager {
     }
 
     /**
-     * Realiza uma cópia simples de backup do arquivo .db atual.
-     * Comentário: Mantemos uma cópia .bak para facilitar a recuperação em caso de falha.
+     * Realiza backups rotativos (mantém os últimos 3).
+     * Requisito RNF-06: Cópia automática mantendo os últimos 3 backups.
      */
     private static void performBackup() {
         Path dbPath = Paths.get(DB_NAME);
-        if (Files.exists(dbPath)) {
-            try {
-                Path backupPath = Paths.get(DB_NAME + ".bak");
-                Files.copy(dbPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Backup automático realizado: " + backupPath.toAbsolutePath());
-            } catch (Exception e) {
-                // Não travamos o app se o backup falhar, apenas avisamos no log
-                System.err.println("Aviso: Falha ao criar backup automático: " + e.getMessage());
+        if (!Files.exists(dbPath)) return;
+
+        try {
+            // Rotacionar backups existentes: 2 -> 3, 1 -> 2
+            for (int i = 2; i >= 1; i--) {
+                Path oldSource = Paths.get(DB_NAME + ".bak" + i);
+                if (Files.exists(oldSource)) {
+                    Path newDest = Paths.get(DB_NAME + ".bak" + (i + 1));
+                    Files.move(oldSource, newDest, StandardCopyOption.REPLACE_EXISTING);
+                }
             }
+
+            // Criar o backup mais recente como .bak1
+            Path backupPath = Paths.get(DB_NAME + ".bak1");
+            Files.copy(dbPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
+            
+            System.out.println("[Database] Backup rotativo realizado com sucesso (.bak1, .bak2, .bak3)");
+        } catch (Exception e) {
+            System.err.println("Aviso: Falha ao realizar backup rotativo: " + e.getMessage());
         }
     }
 

@@ -49,6 +49,31 @@ public class CardService {
 
         return results;
     }
+    /**
+     * Busca cards baseados na série (expansion) com uso de cache.
+     * Requisito RF-01.3
+     */
+    @SuppressWarnings("unchecked")
+    public List<Card> searchBySeries(String seriesName) {
+        if (seriesName == null || seriesName.trim().isEmpty()) {
+            return new java.util.ArrayList<>();
+        }
+
+        String cacheKey = "SERIES_" + seriesName.toLowerCase();
+
+        // 1. Tenta recuperar do cache
+        if (CacheManager.has(cacheKey)) {
+            return (List<Card>) CacheManager.get(cacheKey);
+        }
+
+        // 2. Se não estiver no cache, busca na API
+        List<Card> results = apiClient.searchBySeries(seriesName);
+
+        // 3. Salva no cache
+        CacheManager.put(cacheKey, results);
+
+        return results;
+    }
 
     /**
      * Busca os detalhes completos de um card específico.

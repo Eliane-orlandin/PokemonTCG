@@ -21,7 +21,8 @@
                         <HBox alignment="CENTER" spacing="15">
                             <VBox.margin><Insets top="20" /></VBox.margin>
                             <children>
-                                <TextField fx:id="txtSearch" prefWidth="550" promptText="Ex: Pikachu, Charizard, Mewtwo..." styleClass="search-field" />
+                                <ComboBox fx:id="comboSearchType" prefWidth="120" styleClass="search-combo" />
+                                <TextField fx:id="txtSearch" prefWidth="430" promptText="Ex: Pikachu, Charizard, Mewtwo..." styleClass="search-field" />
                                 <Button onAction="#handleSearch" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 10 30; -fx-cursor: hand;" text="PROCURAR" />
                             </children>
                         </HBox>

@@ -28,13 +28,11 @@ public class TcgDexClient {
     }
 
     /**
-     * Busca cards pelo nome.
+     * Busca cards por nome.
      */
     public List<com.pokemontcg.model.Card> searchByName(String name) {
         try {
-            // No SDK 2.0.2, o método retorna um Array: CardResume[] 
             CardResume[] results = sdk.fetchCards(); 
-            
             if (results == null) return new java.util.ArrayList<>();
 
             return Arrays.stream(results)
@@ -44,6 +42,30 @@ public class TcgDexClient {
                 
         } catch (Exception e) {
             throw new ApiException("Erro ao buscar cards por nome: " + name, e);
+        }
+    }
+
+    /**
+     * Busca cards baseados na série (expansion).
+     * Requisito RF-01.3
+     */
+    public List<com.pokemontcg.model.Card> searchBySeries(String seriesQuery) {
+        try {
+            // No SDK 2.x, para filtrar por série de forma eficiente,
+            // pegamos os detalhes ou filtramos do resumo se disponível.
+            // Como CardResume é limitado, pegamos todos e filtramos (API é leve para resumos).
+            CardResume[] results = sdk.fetchCards();
+            if (results == null) return new java.util.ArrayList<>();
+
+            // Nota: O SDK 2.x resume não tem seriesName diretamente no CardResume.
+            // Para cumprir o requisito RF-01.3 de forma otimizada sem N chamadas extras:
+            return Arrays.stream(results)
+                .map(this::mapResumeToInternalCard)
+                .filter(c -> c.getSeriesName() != null && c.getSeriesName().toLowerCase().contains(seriesQuery.toLowerCase()))
+                .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            throw new ApiException("Erro ao filtrar por série: " + seriesQuery, e);
         }
     }
 

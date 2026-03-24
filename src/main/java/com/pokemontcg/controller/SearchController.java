@@ -1,13 +1,12 @@
 package com.pokemontcg.controller;
 
-import com.pokemontcg.api.TcgDexClient;
 import com.pokemontcg.model.Card;
 import com.pokemontcg.service.CardService;
-import com.pokemontcg.service.CatalogService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
@@ -21,15 +20,20 @@ import java.util.List;
 public class SearchController {
 
     @FXML private TextField txtSearch;
+    @FXML private ComboBox<String> comboSearchType;
     @FXML private Label lblStatus;
     @FXML private FlowPane flowResults;
 
     private final CardService cardService;
-    private final CatalogService catalogService;
 
     public SearchController() {
         this.cardService = new CardService();
-        this.catalogService = new CatalogService();
+    }
+
+    @FXML
+    public void initialize() {
+        comboSearchType.getItems().addAll("Nome", "Série");
+        comboSearchType.setValue("Nome");
     }
 
     /**
@@ -51,7 +55,15 @@ public class SearchController {
         new Thread(() -> {
             try {
                 System.out.println("[DEBUG] SearchController: Chamando CardService...");
-                List<Card> results = cardService.searchByName(query);
+                String searchType = comboSearchType.getValue();
+                List<Card> results;
+                
+                if ("Série".equals(searchType)) {
+                    results = cardService.searchBySeries(query);
+                } else {
+                    results = cardService.searchByName(query);
+                }
+                
                 System.out.println("[DEBUG] SearchController: Service retornou " + results.size() + " resultados");
                 
                 Platform.runLater(() -> {
