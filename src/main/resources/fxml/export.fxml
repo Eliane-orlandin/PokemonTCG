@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+  <Label text="📄 EXPORTAR TUDO" styleClass="screen-title" />
+  <Label text="Em breve: Opções de exportação JSON e CSV" styleClass="screen-subtitle" />
+</VBox>

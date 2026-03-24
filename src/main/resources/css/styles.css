@@ -1,0 +1,75 @@
+/* 
+    Sistema de Cores Moderno - Pokemon TCG Premium UI 
+    - Fundo Escuro: #121212
+    - Sidebar: #1E1E1E
+    - Realce (Acento): #FF3E3E (Vermelho Pokemon)
+    - Secundário: #3E72FF (Azul Clássico)
+*/
+
+.root-pane {
+    -fx-background-color: #121212;
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica", "Arial";
+}
+
+/* Sidebar Estilo Glassmorphism */
+.sidebar {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #2C2C2C;
+    -fx-border-width: 0 1 0 0;
+}
+
+.app-title {
+    -fx-text-fill: #FF3E3E;
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+
+.app-subtitle {
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Menu de Botões Laterais */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 15px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 15 0 15;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-transition: 0.3s;
+}
+
+.menu-button:hover {
+    -fx-background-color: #2C2C2C;
+    -fx-text-fill: #FF3E3E;
+}
+
+.menu-button:pressed {
+    -fx-background-color: #3C3C3C;
+}
+
+/* Rodapé e Outros Labels */
+.version-label {
+    -fx-text-fill: #404040;
+    -fx-font-size: 12px;
+}
+
+/* Área de Conteúdo Central */
+.content-area {
+    -fx-background-color: #121212;
+    -fx-padding: 30;
+}
+
+.screen-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.screen-subtitle {
+    -fx-text-fill: #A0A0A0;
+    -fx-font-size: 14px;
+}

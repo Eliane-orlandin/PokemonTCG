@@ -1,48 +1,54 @@
 package com.pokemontcg;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.scene.control.Label;
 
 /**
- * Ponto de entrada principal da aplicação Pokémon TCG Catalog.
- * Comentários explicativos: Esta classe herda de Application (Base do JavaFX).
- * Por enquanto, ela apenas abre uma janela simples para testarmos se o ambiente 
- * está configurado corretamente.
+ * Ponto de entrada oficial da aplicação Pokémon TCG Catalog (Versão Visual).
+ * Comentários explicativos: Esta classe agora carrega o arquivo FXML principal 
+ * e aplica o conjunto de estilos CSS ao aplicativo.
  */
 public class Main extends Application {
 
-    // Método que o JavaFX chama para 'dar vida' à janela
     @Override
     public void start(Stage primaryStage) {
         
-        // Inicializa o banco de dados antes de carregar a tela
+        // 1. Inicializa o banco de dados antes de tudo
         try {
             com.pokemontcg.repository.DatabaseManager.initDatabase();
         } catch (Exception e) {
-            System.err.println("Erro crítico ao carregar banco de dados: " + e.getMessage());
-            // Em uma fase mais avançada, mostraremos um Alert aqui
+            System.err.println("Erro crítico no banco de dados: " + e.getMessage());
         }
 
-        // Texto simples para vermos na tela
-        Label label = new Label("Pokémon TCG Catalog — Banco de Dados Conectado!");
-        
-        // Container que alinha as coisas na tela
-        StackPane root = new StackPane();
-        root.getChildren().add(label);
-        
-        // Define o tamanho da cena/janela
-        Scene scene = new Scene(root, 600, 400);
-        
-        // Configurações finais da janela (Janela Principal)
-        primaryStage.setTitle("Pokémon TCG Catalog - Versão 1.0 (Setup)");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        try {
+            // 2. Carrega o Layout Principal da Navegação (Nave Mãe)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+            Parent root = loader.load();
+            
+            // 3. Define a Janela e o Tamanho base (1000x700 como planejado)
+            Scene scene = new Scene(root, 1000, 700);
+            
+            // 4. Configurações Finais do Stage (Janela)
+            primaryStage.setTitle("POKÉMON TCG — Catalog v1.0");
+            primaryStage.setScene(scene);
+            
+            // Impede que a janela fique menor que o ideal
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            
+            primaryStage.show();
+            
+            System.out.println("[App] Interface gráfica iniciada com sucesso!");
+            
+        } catch (Exception e) {
+            System.err.println("Erro fatal ao carregar a interface gráfica:");
+            e.printStackTrace();
+        }
     }
 
-    // O método main clássico que inicia o JavaFX
     public static void main(String[] args) {
         launch(args);
     }
