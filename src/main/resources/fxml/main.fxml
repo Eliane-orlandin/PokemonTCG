@@ -25,8 +25,8 @@
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Label text="▣" styleClass="app-title" style="-fx-text-fill: #C2185B; -fx-font-size: 28;"/>
                             <VBox>
-                                <Label styleClass="app-title" text="TCG Archive" />
-                                <Label styleClass="app-subtitle" text="MUSEUM-GRADE CATALOG" />
+                                <Label styleClass="app-title" text="Acervo TCG" />
+                                <Label styleClass="app-subtitle" text="CATÁLOGO PREMIUM" />
                             </VBox>
                         </HBox>
                     </children>
@@ -55,10 +55,10 @@
                 <!-- Botões Inferiores -->
                 <VBox spacing="10">
                     <children>
-                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="⚙  Settings" />
-                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="?  Support" />
+                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="⚙  Configurações" />
+                        <Button alignment="BASELINE_LEFT" prefHeight="40.0" prefWidth="210.0" styleClass="menu-button" text="?  Suporte" />
                         
-                        <Button styleClass="add-card-button" text="+ Add New Card" prefWidth="210.0">
+                        <Button onAction="#showSearch" styleClass="add-card-button" text="+ Adicionar Novo Card" prefWidth="210.0">
                             <VBox.margin>
                                 <Insets top="20" />
                             </VBox.margin>
@@ -76,11 +76,11 @@
                 <!-- Cabeçalho (Header) -->
                 <HBox alignment="CENTER_LEFT" styleClass="header-pane">
                     <children>
-                        <Label styleClass="header-title" text="PokéCatalog TCG" />
+                        <Label styleClass="header-title" text="PokéCatálogo TCG" />
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER" spacing="20">
                             <children>
-                                <TextField promptText="Search archive..." styleClass="search-field" prefWidth="250" />
+                                <TextField promptText="Pesquisar no acervo..." styleClass="search-field" prefWidth="250" />
                                 <Label text="🔔" style="-fx-font-size: 18; -fx-text-fill: #78909C;" />
                                 <Label text="⚙" style="-fx-font-size: 18; -fx-text-fill: #78909C;" />
                                 <Label text="👤" style="-fx-font-size: 24; -fx-text-fill: #263238;" />
