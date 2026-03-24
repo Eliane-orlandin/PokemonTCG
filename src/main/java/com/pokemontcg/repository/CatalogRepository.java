@@ -20,9 +20,20 @@ public class CatalogRepository {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     /**
-     * Salva um novo card no catálogo.
+     * Salva um novo card ou incrementa a quantidade se já existir.
      */
     public void save(CatalogEntry entry) {
+        Optional<CatalogEntry> existing = findByCardId(entry.getCardId());
+        
+        if (existing.isPresent()) {
+            CatalogEntry toUpdate = existing.get();
+            toUpdate.setQuantity(toUpdate.getQuantity() + 1);
+            toUpdate.setUpdatedAt(LocalDateTime.now());
+            update(toUpdate);
+            System.out.println("[DB] Quantidade incrementada para: " + entry.getCardName());
+            return;
+        }
+
         String sql = "INSERT INTO catalog (card_id, card_name, series_id, series_name, type, rarity, image_url, quantity, language, notes, added_at, updated_at) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
