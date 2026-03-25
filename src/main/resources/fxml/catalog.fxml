@@ -9,30 +9,27 @@
     <content>
         <VBox spacing="30" styleClass="content-area">
             <children>
-                <!-- Título e Ações Principais -->
-                <HBox alignment="CENTER_LEFT" spacing="20">
+                <!-- Título e Estatísticas -->
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
                     <children>
-                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
                             <children>
-                                <HBox alignment="CENTER_LEFT" spacing="10">
-                                    <children>
-                                        <FontIcon iconLiteral="fas-th-large" iconSize="26" styleClass="card-icon-primary" />
-                                        <Label text="MINHA COLEÇÃO" styleClass="section-title-xl" />
-                                    </children>
-                                </HBox>
-                                <Label fx:id="lblCatalogStats" text="Total de Cartas: 0 | Valor Estimado: $0.00" styleClass="section-subtitle" />
+                                <FontIcon iconLiteral="fas-th-large" iconSize="26" styleClass="card-icon-primary" />
+                                <Label text="MINHA COLEÇÃO" styleClass="section-title-xl" />
                             </children>
-                        </VBox>
-                        
-                        <Button onAction="#handleAddCard" styleClass="btn-primary-md" text="Adicionar Card">
+                        </HBox>
+                        <Label fx:id="lblCatalogStats" text="Total de Cartas: 0 | Valor Estimado: $0.00" styleClass="section-subtitle" />
+                    </children>
+                </VBox>
+
+                <!-- Barra de Busca Local -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <children>
+                        <ComboBox fx:id="comboCategoryLocal" maxHeight="48" minHeight="48" prefWidth="150" promptText="Categoria" styleClass="btn-outline" />
+                        <TextField fx:id="txtSearchLocal" maxHeight="48" minHeight="48" promptText="Procurar na minha coleção..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                        <Button maxHeight="48" minHeight="48" onAction="#handleLocalSearch" styleClass="btn-primary" text="BUSCAR">
                             <graphic>
-                                <FontIcon iconLiteral="fas-plus" iconSize="16" style="-fx-icon-color: -app-text-on-primary;" />
-                            </graphic>
-                        </Button>
-                        
-                        <Button onAction="#handleExportCatalog" styleClass="btn-outline" text="Exportar">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-file-export" iconSize="16" styleClass="ikonli-font-icon" />
+                                <FontIcon iconLiteral="fas-search" iconSize="16" />
                             </graphic>
                         </Button>
                     </children>

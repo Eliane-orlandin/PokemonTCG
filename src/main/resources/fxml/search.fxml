@@ -26,8 +26,8 @@
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <children>
                         <ComboBox fx:id="comboCategoryMain" minHeight="48" maxHeight="48" prefWidth="150" promptText="Categoria" styleClass="btn-outline" />
-                        <TextField fx:id="txtSearch" minHeight="48" maxHeight="48" HBox.hgrow="ALWAYS" promptText="Ex: Charizard, Lugia, Pikachu..." styleClass="search-field" />
-                        <Button minHeight="48" maxHeight="48" styleClass="btn-primary" text="BUSCAR">
+                        <TextField fx:id="txtSearch" minHeight="48" maxHeight="48" onAction="#handleSearch" HBox.hgrow="ALWAYS" promptText="Ex: Charizard, Lugia, Pikachu..." styleClass="search-field" />
+                        <Button minHeight="48" maxHeight="48" onAction="#handleSearch" styleClass="btn-primary" text="BUSCAR">
                             <graphic>
                                 <FontIcon iconLiteral="fas-search" iconSize="16" />
                             </graphic>

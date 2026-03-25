@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.media.MediaView?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <BorderPane fx:id="mainLayout" prefHeight="700.0" prefWidth="1200.0" 
@@ -29,12 +30,8 @@
                             </image>
                         </ImageView>
                         
-                        <!-- Ícone do Raio Azul -->
-                        <ImageView fitHeight="156" fitWidth="156" preserveRatio="true">
-                            <image>
-                                <Image url="@../images/icone-azul-raio.png" />
-                            </image>
-                        </ImageView>
+                        <!-- Ícone Animado -->
+                        <MediaView fx:id="mediaViewLogo" fitHeight="156" fitWidth="156" />
                     </children>
                     <VBox.margin>
                         <Insets top="20" bottom="20"/>
@@ -99,12 +96,13 @@
     <center>
         <VBox>
             <children>
-                <!-- Cabeçalho (Header) Simplificado -->
-                <HBox alignment="CENTER_LEFT" styleClass="header-pane">
+                <!-- Cabeçalho (Header) Sophisticated -->
+                <VBox alignment="CENTER_LEFT" spacing="5" styleClass="header-pane" style="-fx-padding: 25 30 25 40;">
                     <children>
-                        <Label styleClass="header-title" text="PokéCatálogo TCG" />
+                        <Label styleClass="header-title" text="Bem-vindo, Treinador" />
+                        <Label styleClass="section-subtitle" text="Sua biblioteca lendária de cards aguarda sua exploração e curadoria." />
                     </children>
-                </HBox>
+                </VBox>
                 
                 <!-- Conteúdo Dinâmico -->
                 <StackPane fx:id="contentArea" styleClass="content-area" VBox.vgrow="ALWAYS">

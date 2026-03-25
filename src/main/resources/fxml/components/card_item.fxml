@@ -9,7 +9,7 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!-- Componente individual de carta: exibido nos resultados de busca -->
-<VBox spacing="10" styleClass="card-item-container" fx:id="cardRoot"
+<VBox spacing="10" styleClass="card-item-container" fx:id="cardRoot" onMouseClicked="#handleShowDetail" cursor="HAND"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.pokemontcg.controller.CardItemController">
     <children>

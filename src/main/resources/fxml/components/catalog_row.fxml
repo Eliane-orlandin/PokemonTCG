@@ -12,9 +12,6 @@
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.pokemontcg.controller.CatalogRowController">
     <children>
-        <!-- Checkbox de seleção para exclusão em massa -->
-        <CheckBox fx:id="checkSelect" />
-        
         <!-- Info Principal com Miniatura da carta -->
         <HBox spacing="12" alignment="CENTER_LEFT" prefWidth="250">
             <children>
