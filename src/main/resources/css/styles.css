@@ -144,6 +144,21 @@
     -fx-background-radius: 12;
 }
 
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-padding: 8 15;
+    -fx-text-fill: -app-primary;
+    -fx-font-weight: bold;
+}
+
+.btn-outline:hover {
+    -fx-background-color: rgba(42, 117, 187, 0.1);
+    -fx-border-color: -app-primary;
+}
+
 /* ========================================
    HEADER
    ======================================== */
@@ -168,12 +183,19 @@
     -fx-text-fill: -app-text-dark;
 }
 
+.icon-on-primary {
+    -fx-icon-color: -app-text-on-primary;
+}
+
 .search-field {
     -fx-background-color: -app-bg-card;
-    -fx-background-radius: 20;
-    -fx-border-color: -app-border-color;
-    -fx-border-radius: 20;
-    -fx-padding: 8 15;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255, 255, 255, 0.2); /* Borda neutra em vez de amarela */
+    -fx-border-radius: 8;
+    -fx-padding: 10 20;
+    -fx-text-fill: #FFFFFF; /* Texto branco e nítido */
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.5); /* Placeholder suave */
+    -fx-highlight-fill: -app-primary;
 }
 
 /* ========================================
@@ -388,11 +410,48 @@
 }
 
 .btn-outline {
-    -fx-background-color: -app-bg-card;
-    -fx-border-color: -app-border-color;
+    -fx-background-color: -app-secondary; /* Azul Pokémon Vibrante */
+    -fx-border-color: rgba(255, 255, 255, 0.3);
     -fx-border-radius: 8;
-    -fx-padding: 8 20;
-    -fx-text-fill: -app-text-dark;
+    -fx-background-radius: 8;
+    -fx-padding: 5 15;
+    -fx-text-fill: -app-primary; /* Letras Amarelas */
+    -fx-font-weight: bold;
+}
+
+/* Garante que o texto selecionado dentro do botão também seja amarelo e SEM fundo sólido */
+.combo-box > .list-cell {
+    -fx-background-color: transparent !important; /* Força a transparência */
+    -fx-text-fill: -app-primary !important;
+    -fx-padding: 0 5;
+}
+
+.combo-box .label {
+    -fx-text-fill: -app-primary;
+}
+
+/* Estilização para o Dropdown (Janela que abre) */
+.combo-box .list-view {
+    -fx-background-color: -app-bg-main;
+    -fx-border-color: -app-primary;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-padding: 8 15;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: -app-bg-hover;
+    -fx-text-fill: -app-primary;
+}
+
+.combo-box .list-cell:selected {
+    -fx-background-color: -app-primary;
+    -fx-text-fill: -app-bg-main;
 }
 
 .btn-secondary {
@@ -403,10 +462,32 @@
     -fx-padding: 8 15;
 }
 
+/* ========================================
+   CONTAINERS DE FILTROS
+   ======================================== */
+.filter-container {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+}
+
 .btn-danger-text {
     -fx-background-color: transparent;
     -fx-text-fill: -app-danger;
     -fx-cursor: hand;
+}
+
+.btn-primary-text {
+    -fx-background-color: transparent;
+    -fx-text-fill: -app-primary;
+    -fx-cursor: hand;
+}
+
+.btn-primary-text .ikonli-font-icon {
+    -fx-icon-color: -app-primary;
 }
 
 /* ========================================
@@ -540,6 +621,14 @@
 .type-fairy { -fx-background-color: #F48FB1; }
 .type-dragon { -fx-background-color: #FBC02D; -fx-text-fill: #5D4037; }
 .type-colorless { -fx-background-color: #F5F5F5; -fx-text-fill: #757575; }
+
+.btn-primary {
+    -fx-background-color: -app-primary;
+    -fx-background-radius: 8;
+    -fx-padding: 10 25;
+    -fx-text-fill: -app-navy;
+    -fx-font-weight: bold;
+}
 
 .export-banner {
     -fx-background-color: -app-bg-card;

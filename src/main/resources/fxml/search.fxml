@@ -23,50 +23,61 @@
                 </VBox>
                 
                 <!-- Barra de Busca Principal -->
-                <HBox spacing="15">
+                <HBox spacing="10" alignment="CENTER_LEFT">
                     <children>
-                        <TextField fx:id="txtSearch" promptText="Ex: Charizard, Lugia, Pikachu..." styleClass="search-field" HBox.hgrow="ALWAYS" />
-                        <Button onAction="#handleSearch" styleClass="btn-primary-md" text="BUSCAR">
+                        <ComboBox fx:id="comboCategoryMain" minHeight="48" maxHeight="48" prefWidth="150" promptText="Categoria" styleClass="btn-outline" />
+                        <TextField fx:id="txtSearch" minHeight="48" maxHeight="48" HBox.hgrow="ALWAYS" promptText="Ex: Charizard, Lugia, Pikachu..." styleClass="search-field" />
+                        <Button minHeight="48" maxHeight="48" styleClass="btn-primary" text="BUSCAR">
                             <graphic>
-                                <FontIcon iconLiteral="fas-search" iconSize="16" style="-fx-icon-color: -app-text-on-primary;" />
+                                <FontIcon iconLiteral="fas-search" iconSize="16" />
                             </graphic>
                         </Button>
                     </children>
                 </HBox>
                 
-                <!-- Filtros Rápidos -->
-                <HBox spacing="20" alignment="CENTER_LEFT">
+                <!-- Filtros Rápidos (Responsivos) -->
+                <FlowPane hgap="15" vgap="15" styleClass="filter-container">
                     <children>
                         <VBox spacing="5">
                             <children>
+                                <Label text="CATEGORIA" styleClass="app-subtitle" />
+                                <ComboBox fx:id="comboCategory" minHeight="48" maxHeight="48" minWidth="220" maxWidth="220" promptText="Todas as Categorias" styleClass="btn-outline" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="5">
+                            <children>
                                 <Label text="TIPO" styleClass="app-subtitle" />
-                                <ComboBox fx:id="comboType" prefWidth="180" promptText="Todos os Tipos" styleClass="btn-outline" />
+                                <ComboBox fx:id="comboType" minHeight="48" maxHeight="48" minWidth="220" maxWidth="220" promptText="Todos os Tipos" styleClass="btn-outline" />
                             </children>
                         </VBox>
                         
                         <VBox spacing="5">
                             <children>
                                 <Label text="RARIDADE" styleClass="app-subtitle" />
-                                <ComboBox fx:id="comboRarity" prefWidth="180" promptText="Todas as Raridades" styleClass="btn-outline" />
+                                <ComboBox fx:id="comboRarity" minHeight="48" maxHeight="48" minWidth="220" maxWidth="220" promptText="Todas as Raridades" styleClass="btn-outline" />
                             </children>
                         </VBox>
                         
                         <VBox spacing="5">
                             <children>
                                 <Label text="SÉRIE" styleClass="app-subtitle" />
-                                <ComboBox fx:id="comboSet" prefWidth="180" promptText="Todas as Séries" styleClass="btn-outline" />
+                                <ComboBox fx:id="comboSet" minHeight="48" maxHeight="48" minWidth="220" maxWidth="220" promptText="Todas as Séries" styleClass="btn-outline" />
                             </children>
                         </VBox>
                         
-                        <Region HBox.hgrow="ALWAYS" />
-                        
-                        <Button styleClass="btn-danger-text" text="Limpar Filtros">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-filter" iconSize="14" />
-                            </graphic>
-                        </Button>
+                        <VBox spacing="5" alignment="BOTTOM_LEFT">
+                            <children>
+                                <Label text=" " styleClass="app-subtitle" />
+                                <Button minHeight="48" maxHeight="48" minWidth="220" maxWidth="220" styleClass="btn-outline" text="LIMPAR FILTROS">
+                                    <graphic>
+                                        <FontIcon iconLiteral="fas-filter" iconSize="16" styleClass="card-icon-primary" />
+                                    </graphic>
+                                </Button>
+                            </children>
+                        </VBox>
                     </children>
-                </HBox>
+                </FlowPane>
 
                 <Separator styleClass="separator-light" />
                 

@@ -7,10 +7,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Controlador da tela de Busca (Search API).
@@ -20,12 +22,101 @@ import java.util.List;
 public class SearchController {
 
     @FXML private TextField txtSearch;
+    @FXML private ComboBox<String> comboCategoryMain; // Categoria na barra superior
+    @FXML private ComboBox<String> comboCategory;     // Categoria na área de filtros
     @FXML private ComboBox<String> comboType;
     @FXML private ComboBox<String> comboRarity;
     @FXML private ComboBox<String> comboSet;
     @FXML private FlowPane flowResults;
 
     private final CardService cardService;
+    
+    // Mapeamentos para tradução (Exibição -> API)
+    private static final Map<String, String> CATEGORY_TRANSLATIONS = new HashMap<>();
+    private static final Map<String, String> TYPE_TRANSLATIONS = new HashMap<>();
+    private static final Map<String, String> RARITY_TRANSLATIONS = new HashMap<>();
+    private static final Map<String, String> SERIES_TRANSLATIONS = new HashMap<>();
+
+    static {
+        // Categorias
+        CATEGORY_TRANSLATIONS.put("Pokémon", "Pokemon");
+        CATEGORY_TRANSLATIONS.put("Treinador", "Trainer");
+        CATEGORY_TRANSLATIONS.put("Energia", "Energy");
+
+        // Tipos
+        TYPE_TRANSLATIONS.put("Incolor", "Colorless");
+        TYPE_TRANSLATIONS.put("Noturno", "Darkness");
+        TYPE_TRANSLATIONS.put("Dragão", "Dragon");
+        TYPE_TRANSLATIONS.put("Fada", "Fairy");
+        TYPE_TRANSLATIONS.put("Lutador", "Fighting");
+        TYPE_TRANSLATIONS.put("Fogo", "Fire");
+        TYPE_TRANSLATIONS.put("Planta", "Grass");
+        TYPE_TRANSLATIONS.put("Raio", "Lightning");
+        TYPE_TRANSLATIONS.put("Metal", "Metal");
+        TYPE_TRANSLATIONS.put("Psíquico", "Psychic");
+        TYPE_TRANSLATIONS.put("Água", "Water");
+
+        // Raridades
+        RARITY_TRANSLATIONS.put("Rara ACE SPEC", "ACE SPEC Rare");
+        RARITY_TRANSLATIONS.put("Rara Incrível", "Amazing Rare");
+        RARITY_TRANSLATIONS.put("Rara B&W", "Black White Rare");
+        RARITY_TRANSLATIONS.put("Coleção Clássica", "Classic Collection");
+        RARITY_TRANSLATIONS.put("Comum", "Common");
+        RARITY_TRANSLATIONS.put("Coroa", "Crown");
+        RARITY_TRANSLATIONS.put("Dupla Rara", "Double rare");
+        RARITY_TRANSLATIONS.put("Quatro Diamantes", "Four Diamond");
+        RARITY_TRANSLATIONS.put("Treinador Full Art", "Full Art Trainer");
+        RARITY_TRANSLATIONS.put("Holo Rara", "Holo Rare");
+        RARITY_TRANSLATIONS.put("Holo Rara V", "Holo Rare V");
+        RARITY_TRANSLATIONS.put("Holo Rara VMAX", "Holo Rare VMAX");
+        RARITY_TRANSLATIONS.put("Holo Rara VSTAR", "Holo Rare VSTAR");
+        RARITY_TRANSLATIONS.put("Hiper Rara", "Hyper rare");
+        RARITY_TRANSLATIONS.put("Ilustração Rara", "Illustration rare");
+        RARITY_TRANSLATIONS.put("LENDA", "LEGEND");
+        RARITY_TRANSLATIONS.put("Mega Hiper Rara", "Mega Hyper Rare");
+        RARITY_TRANSLATIONS.put("Um Diamante", "One Diamond");
+        RARITY_TRANSLATIONS.put("Um Brilhante", "One Shiny");
+        RARITY_TRANSLATIONS.put("Uma Estrela", "One Star");
+        RARITY_TRANSLATIONS.put("Rara Radiante", "Radiant Rare");
+        RARITY_TRANSLATIONS.put("Rara", "Rare");
+        RARITY_TRANSLATIONS.put("Rara Holo", "Rare Holo");
+        RARITY_TRANSLATIONS.put("Rara Holo LV.X", "Rare Holo LV.X");
+        RARITY_TRANSLATIONS.put("Rara PRIME", "Rare PRIME");
+        RARITY_TRANSLATIONS.put("Rara Secreta", "Secret Rare");
+        RARITY_TRANSLATIONS.put("Ultra Rara Brilhante", "Shiny Ultra Rare");
+        RARITY_TRANSLATIONS.put("Rara Brilhante", "Shiny rare");
+        RARITY_TRANSLATIONS.put("Rara Brilhante V", "Shiny rare V");
+        RARITY_TRANSLATIONS.put("Rara Brilhante VMAX", "Shiny rare VMAX");
+        RARITY_TRANSLATIONS.put("Ilustração Especial Rara", "Special illustration rare");
+        RARITY_TRANSLATIONS.put("Três Diamantes", "Three Diamond");
+        RARITY_TRANSLATIONS.put("Três Estrelas", "Three Star");
+        RARITY_TRANSLATIONS.put("Dois Diamantes", "Two Diamond");
+        RARITY_TRANSLATIONS.put("Dois Brilhantes", "Two Shiny");
+        RARITY_TRANSLATIONS.put("Duas Estrelas", "Two Star");
+        RARITY_TRANSLATIONS.put("Ultra Rara", "Ultra Rare");
+        RARITY_TRANSLATIONS.put("Incomum", "Uncommon");
+
+        // Séries
+        SERIES_TRANSLATIONS.put("Base", "Base");
+        SERIES_TRANSLATIONS.put("Ginásio", "Gym");
+        SERIES_TRANSLATIONS.put("Neo", "Neo");
+        SERIES_TRANSLATIONS.put("Coleção Lendária", "Legendary Collection");
+        SERIES_TRANSLATIONS.put("EX", "EX");
+        SERIES_TRANSLATIONS.put("POP", "POP");
+        SERIES_TRANSLATIONS.put("Kits de Treinador", "Trainer kits");
+        SERIES_TRANSLATIONS.put("Diamante & Pérola", "Diamond & Pearl");
+        SERIES_TRANSLATIONS.put("Platina", "Platinum");
+        SERIES_TRANSLATIONS.put("HeartGold & SoulSilver", "HeartGold & SoulSilver");
+        SERIES_TRANSLATIONS.put("Chamado das Lendas", "Call of Legends");
+        SERIES_TRANSLATIONS.put("Preto & Branco", "Black & White");
+        SERIES_TRANSLATIONS.put("Coleção McDonald's", "McDonald's Collection");
+        SERIES_TRANSLATIONS.put("XY", "XY");
+        SERIES_TRANSLATIONS.put("Sol & Lua", "Sun & Moon");
+        SERIES_TRANSLATIONS.put("Espada & Escudo", "Sword & Shield");
+        SERIES_TRANSLATIONS.put("Escarlate & Violeta", "Scarlet & Violet");
+        SERIES_TRANSLATIONS.put("TCG Pocket", "Pokémon TCG Pocket");
+        SERIES_TRANSLATIONS.put("Mega Evolução", "Mega Evolution");
+    }
 
     public SearchController() {
         this.cardService = new CardService();
@@ -33,10 +124,59 @@ public class SearchController {
 
     @FXML
     public void initialize() {
-        // Inicializa os filtros com placeholders/opções
-        if (comboType != null) comboType.getItems().addAll("Todos os Tipos", "Fogo", "Água", "Grama", "Elétrico", "Psíquico");
-        if (comboRarity != null) comboRarity.getItems().addAll("Todas as Raridades", "Common", "Uncommon", "Rare", "Holo Rare", "Ultra Rare", "Secret Rare");
-        if (comboSet != null) comboSet.getItems().addAll("Todas as Séries", "Scarlet & Violet", "Sword & Shield", "Sun & Moon", "XY");
+        // Inicializa Categorias (e sincroniza os dois menus)
+        setupCategoryCombos();
+
+        // Inicializa Tipos
+        if (comboType != null) {
+            comboType.getItems().add("Todos os Tipos");
+            comboType.getItems().addAll(TYPE_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+        }
+        
+        // Inicializa Raridades
+        if (comboRarity != null) {
+            comboRarity.getItems().add("Todas as Raridades");
+            comboRarity.getItems().addAll(RARITY_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+        }
+        
+        // Inicializa Séries
+        if (comboSet != null) {
+            comboSet.getItems().add("Todas as Séries");
+            comboSet.getItems().addAll(SERIES_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+        }
+    }
+
+    /**
+     * Configura as categorias e garante que os dois menus (superior e inferior) fiquem em sincronia.
+     */
+    private void setupCategoryCombos() {
+        List<String> categories = CATEGORY_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList());
+        
+        // Inicializa Superior
+        if (comboCategoryMain != null) {
+            comboCategoryMain.getItems().add("Todas as Categorias");
+            comboCategoryMain.getItems().addAll(categories);
+            
+            // Listener para sincronizar com o inferior
+            comboCategoryMain.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (comboCategory != null && (comboCategory.getValue() == null || !comboCategory.getValue().equals(newVal))) {
+                    comboCategory.setValue(newVal);
+                }
+            });
+        }
+
+        // Inicializa Inferior
+        if (comboCategory != null) {
+            comboCategory.getItems().add("Todas as Categorias");
+            comboCategory.getItems().addAll(categories);
+            
+            // Listener para sincronizar com o superior
+            comboCategory.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                if (comboCategoryMain != null && (comboCategoryMain.getValue() == null || !comboCategoryMain.getValue().equals(newVal))) {
+                    comboCategoryMain.setValue(newVal);
+                }
+            });
+        }
     }
 
     /**

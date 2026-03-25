@@ -6,4 +6,4 @@ Antes de gerar o código faça uma breve explicação do que você irá implemen
 
 Sempre adicione comentários explicativos no código
 
-Faça commits pequenos e padronizados conforme o Conventional Commits
+Faça commits pequenos e padronizados conforme o Conventional Commits, escritos em português
