@@ -21,87 +21,41 @@
                 <HBox spacing="30">
                     <children>
                         <!-- Card JSON -->
-                        <VBox prefWidth="350" styleClass="export-card" alignment="TOP_CENTER">
+                        <VBox prefWidth="350" styleClass="glass-pane" alignment="TOP_CENTER" style="-fx-padding: 30;">
                             <children>
                                 <StackPane alignment="CENTER" prefWidth="64" prefHeight="64" maxWidth="64" 
-                                           styleClass="export-icon-container, export-icon-json">
-                                    <FontIcon iconLiteral="fas-file-code" iconSize="24" styleClass="export-icon-json-text" />
+                                           style="-fx-background-color: rgba(255,215,0,0.1); -fx-background-radius: 50;">
+                                    <FontIcon iconLiteral="fas-file-code" iconSize="24" styleClass="card-icon-primary" />
                                     <VBox.margin><Insets bottom="20" /></VBox.margin>
                                 </StackPane>
                                 <Label text="Exportar como JSON" styleClass="section-title-sm" />
                                 <Label text="Ideal para integração com outras ferramentas, desenvolvedores e backups estruturados." 
-                                       wrapText="true" styleClass="text-description" textAlignment="CENTER">
+                                       wrapText="true" styleClass="section-subtitle" textAlignment="CENTER">
                                     <VBox.margin><Insets top="10" bottom="25" /></VBox.margin>
                                 </Label>
-                                <Button onAction="#handleExportJson" text="EXPORTAR" styleClass="btn-primary-md">
-                                    <graphic>
-                                        <FontIcon iconLiteral="fas-download" iconSize="14" style="-fx-icon-color: white;" />
-                                    </graphic>
-                                </Button>
+                                <Button minHeight="48" onAction="#handleExportJson" text="EXPORTAR AGORA" styleClass="btn-primary" maxWidth="Infinity" />
                             </children>
                         </VBox>
 
                         <!-- Card CSV -->
-                        <VBox prefWidth="350" styleClass="export-card" alignment="TOP_CENTER">
+                        <VBox prefWidth="350" styleClass="glass-pane" alignment="TOP_CENTER" style="-fx-padding: 30;">
                             <children>
                                 <StackPane alignment="CENTER" prefWidth="64" prefHeight="64" maxWidth="64" 
-                                           styleClass="export-icon-container, export-icon-csv">
-                                    <FontIcon iconLiteral="fas-file-excel" iconSize="24" styleClass="export-icon-csv-text" />
+                                           style="-fx-background-color: rgba(66,165,245,0.1); -fx-background-radius: 50;">
+                                    <FontIcon iconLiteral="fas-file-excel" iconSize="24" style="-fx-icon-color: #42A5F5;" />
                                     <VBox.margin><Insets bottom="20" /></VBox.margin>
                                 </StackPane>
                                 <Label text="Exportar como CSV" styleClass="section-title-sm" />
                                 <Label text="Formato universal para planilhas. Perfeito para análise de mercado no Excel ou Google Sheets." 
-                                       wrapText="true" styleClass="text-description" textAlignment="CENTER">
+                                       wrapText="true" styleClass="section-subtitle" textAlignment="CENTER">
                                     <VBox.margin><Insets top="10" bottom="25" /></VBox.margin>
                                 </Label>
-                                <Button onAction="#handleExportCsv" text="EXPORTAR" styleClass="btn-primary-md">
-                                    <graphic>
-                                        <FontIcon iconLiteral="fas-download" iconSize="14" style="-fx-icon-color: white;" />
-                                    </graphic>
-                                </Button>
+                                <Button minHeight="48" onAction="#handleExportCsv" text="EXPORTAR AGORA" styleClass="btn-primary" maxWidth="Infinity" />
                             </children>
                         </VBox>
                     </children>
                 </HBox>
 
-                <!-- Tabela de Últimas Exportações -->
-                <VBox spacing="15">
-                    <Label text="Últimas exportações" styleClass="section-title-sm" />
-                    <VBox styleClass="table-container">
-                        <children>
-                            <HBox spacing="20" styleClass="table-header">
-                                <children>
-                                    <Label text="NOME DO ARQUIVO" prefWidth="300" styleClass="table-column-label" />
-                                    <Label text="DATA DE CRIAÇÃO" prefWidth="250" styleClass="table-column-label" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label text="AÇÕES" styleClass="table-column-label" />
-                                </children>
-                            </HBox>
-                            
-                            <!-- Exemplo 1 -->
-                            <HBox spacing="20" alignment="CENTER_LEFT" styleClass="table-row">
-                                <children>
-                                    <FontIcon iconLiteral="fas-file-alt" iconSize="14" styleClass="card-icon-primary" />
-                                    <Label text="colecao_2026_05_10.json" prefWidth="300" styleClass="row-card-name" />
-                                    <Label text="10 de maio, 2026 • 14:32" prefWidth="250" styleClass="text-status" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <FontIcon iconLiteral="fas-download" iconSize="16" styleClass="card-icon-primary" />
-                                </children>
-                            </HBox>
-
-                            <!-- Exemplo 2 -->
-                            <HBox spacing="20" alignment="CENTER_LEFT" styleClass="table-row">
-                                <children>
-                                    <FontIcon iconLiteral="fas-file-alt" iconSize="14" styleClass="card-icon-primary" />
-                                    <Label text="inventory_full_master.csv" prefWidth="300" styleClass="row-card-name" />
-                                    <Label text="08 de maio, 2026 • 09:15" prefWidth="250" styleClass="text-status" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <FontIcon iconLiteral="fas-download" iconSize="16" styleClass="card-icon-primary" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-                </VBox>
             </children>
         </VBox>
     </content>

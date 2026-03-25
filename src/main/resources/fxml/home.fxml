@@ -10,45 +10,48 @@
         <VBox VBox.vgrow="ALWAYS" spacing="30" styleClass="content-area, dashboard-view">
             <children>
                 <!-- Título de Boas-vindas -->
-                <VBox spacing="5">
+                <VBox spacing="5" style="-fx-padding: 0 0 10 0;">
                     <children>
                         <Label text="Bem-vindo, Treinador" styleClass="section-title-xl" />
-                        <Label text="Sua biblioteca lendária de cards aguarda sua exploração" styleClass="section-subtitle" />
+                        <Label text="Sua biblioteca lendária de cards aguarda sua exploração e curadoria." styleClass="section-subtitle" />
                     </children>
                 </VBox>
                 
                 <!-- Cards de Pulso (Estatísticas) -->
-                <HBox spacing="20">
+                <HBox spacing="25">
                     <children>
-                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, pulse-card">
+                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane" style="-fx-padding: 25;">
                             <children>
-                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                <HBox alignment="CENTER_LEFT" spacing="12">
                                     <children>
-                                        <FontIcon iconLiteral="fas-th-list" iconSize="20" styleClass="card-icon-primary" />
+                                        <StackPane style="-fx-background-color: rgba(255,215,0,0.1); -fx-background-radius: 8; -fx-padding: 10;">
+                                            <FontIcon iconLiteral="fas-th-list" iconSize="20" styleClass="card-icon-primary" />
+                                        </StackPane>
                                         <Label text="Total de Cartas" styleClass="card-title" />
                                     </children>
                                 </HBox>
-                                <Label fx:id="lblTotalCards" text="1.240" styleClass="card-value" />
-                                <Label text="REGISTRADAS NO SISTEMA" styleClass="app-subtitle" />
+                                <Label fx:id="lblTotalCards" text="1.240" styleClass="card-value" style="-fx-font-size: 36;" />
+                                <Label text="REGISTRADAS NO SISTEMA" styleClass="app-subtitle" style="-fx-opacity: 0.6;" />
                             </children>
                         </VBox>
                         
-                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, pulse-card">
+                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane" style="-fx-padding: 25;">
                             <children>
-                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                <HBox alignment="CENTER_LEFT" spacing="12">
                                     <children>
-                                        <FontIcon iconLiteral="fas-star" iconSize="20" style="-fx-icon-color: #FFC107;" />
+                                        <StackPane style="-fx-background-color: rgba(255,193,7,0.1); -fx-background-radius: 8; -fx-padding: 10;">
+                                            <FontIcon iconLiteral="fas-star" iconSize="20" style="-fx-icon-color: #FFC107;" />
+                                        </StackPane>
                                         <Label text="Cartas Raras" styleClass="card-title" />
                                     </children>
                                 </HBox>
-                                <Label fx:id="lblRareCards" text="42" styleClass="card-value" />
-                                <Label text="NÍVEL ULTRA &amp; SECRETO" styleClass="app-subtitle" />
+                                <Label fx:id="lblRareCards" text="42" styleClass="card-value" style="-fx-font-size: 36;" />
+                                <Label text="NÍVEL ULTRA &amp; SECRETO" styleClass="app-subtitle" style="-fx-opacity: 0.6;" />
                             </children>
                         </VBox>
                     </children>
                 </HBox>
-                
-                <!-- Somente Estatísticas Reais permanecem por enquanto -->
+
             </children>
         </VBox>
     </content>
