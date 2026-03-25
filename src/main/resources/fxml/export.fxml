@@ -21,7 +21,7 @@
                 <HBox spacing="30">
                     <children>
                         <!-- Card JSON -->
-                        <VBox prefWidth="350" styleClass="glass-pane" alignment="TOP_CENTER" style="-fx-padding: 30;">
+                        <VBox prefWidth="350" styleClass="export-card" alignment="TOP_CENTER" style="-fx-padding: 30;">
                             <children>
                                 <StackPane alignment="CENTER" prefWidth="64" prefHeight="64" maxWidth="64" 
                                            style="-fx-background-color: rgba(255,215,0,0.1); -fx-background-radius: 50;">
@@ -38,7 +38,7 @@
                         </VBox>
 
                         <!-- Card CSV -->
-                        <VBox prefWidth="350" styleClass="glass-pane" alignment="TOP_CENTER" style="-fx-padding: 30;">
+                        <VBox prefWidth="350" styleClass="export-card" alignment="TOP_CENTER" style="-fx-padding: 30;">
                             <children>
                                 <StackPane alignment="CENTER" prefWidth="64" prefHeight="64" maxWidth="64" 
                                            style="-fx-background-color: rgba(66,165,245,0.1); -fx-background-radius: 50;">

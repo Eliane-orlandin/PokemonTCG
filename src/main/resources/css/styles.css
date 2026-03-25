@@ -5,14 +5,17 @@
     font-family: 'Inter';
     src: url('../fonts/Inter-Regular.ttf');
 }
+
 @font-face {
     font-family: 'Inter Bold';
     src: url('../fonts/Inter-Bold.ttf');
 }
+
 @font-face {
     font-family: 'Plus Jakarta Sans';
     src: url('../fonts/PlusJakartaSans-Regular.ttf');
 }
+
 @font-face {
     font-family: 'Pokemon Hollow';
     src: url('../fonts/PokemonHollow.ttf');
@@ -24,38 +27,57 @@
 .root {
     /* Tipografia Profissional */
     -fx-font-family: "Inter", "Segoe UI", sans-serif;
-    
+
     /* Cores de superfície - REFERÊNCIA: FOTOS DO USUÁRIO */
-    -app-bg-main: #000E3D;          /* Navy Profundo da foto */
-    -app-bg-sidebar: #010A2B;       /* Sidebar mais sólida e escura */
-    -app-bg-card: rgba(255, 255, 255, 0.06); /* Glass Transparente */
+    -app-bg-main: #000E3D;
+    /* Navy Profundo da foto */
+    -app-bg-sidebar: #010A2B;
+    /* Sidebar mais sólida e escura */
+    -app-bg-card: rgba(255, 255, 255, 0.06);
+    /* Glass Transparente */
     -app-bg-hover: rgba(255, 255, 255, 0.12);
     -app-bg-placeholder: #001550;
-    
+
     /* Cores de destaque - O TOQUE DO TREINADOR (GOLD) */
-    -app-primary: #FFC107;          /* Dourado/Amarelo Sabugo das fotos */
-    -app-accent: #FFD54F;           /* Dourado mais claro para brilhos */
+    -app-primary: #FFC107;
+    /* Dourado/Amarelo Sabugo das fotos */
+    -app-accent: #FFD54F;
+    /* Dourado mais claro para brilhos */
     -app-danger: #FF5252;
     -app-warning: #FFA000;
-    
+
     /* Cores de texto */
-    -app-text-dark: #FFFFFF;        
-    -app-text-medium: #CFD8DC;       
-    -app-text-muted: #90A4AE;        
-    -app-text-on-primary: #000A2D;  /* Texto preto/navy sobre o dourado */
+    -app-text-dark: #FFFFFF;
+    -app-text-medium: #CFD8DC;
+    -app-text-muted: #90A4AE;
+    -app-text-on-primary: #000A2D;
+    /* Texto preto/navy sobre o dourado */
 
     /* Cores de borda */
     -app-border-color: rgba(255, 255, 255, 0.10);
     -app-border-subtle: rgba(255, 255, 255, 0.05);
-    
+
     /* Variáveis de Destaque (Faltantes anteriormente) */
-    -app-highlight-bg: rgba(255, 193, 7, 0.15); /* Dourado suave para seleção */
-    -app-increment-bg: rgba(255, 193, 7, 0.25); /* Fundo de badges de aumento */
-    
+    -app-highlight-bg: rgba(255, 193, 7, 0.15);
+    /* Dourado suave para seleção */
+    -app-increment-bg: rgba(255, 193, 7, 0.25);
+    /* Fundo de badges de aumento */
+
     /* Efeitos de Glow e Gradientes das fotos */
-    -app-glass-gradient: linear-gradient(to bottom right, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    -app-glass-gradient: linear-gradient(to bottom right, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
     -app-gold-glow: dropshadow(three-pass-box, rgba(255, 193, 7, 0.3), 15, 0, 0, 0);
     -app-bg-gradient: radial-gradient(center 50% 50%, radius 100%, #001E5D, #000E3D);
+
+    /* Novas variáveis de design */
+    -app-navy: #0A192F;
+    -app-surface: #112240;
+    -app-surface-light: #233554;
+    -app-primary: #FFD700;
+    /* Redefinido para um dourado mais puro */
+    -app-primary-hover: #FFC107;
+    -app-text: #E6F1FF;
+    -app-text-dim: #8892B0;
+    -app-border: rgba(255, 215, 0, 0.15);
 }
 
 /* ========================================
@@ -63,6 +85,8 @@
    ======================================== */
 .root-pane {
     -fx-background-color: -app-bg-gradient;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
 }
 
 .ikonli-font-icon {
@@ -72,13 +96,17 @@
 
 /* Efeito Glassmorphism Universal */
 .glass-pane {
-    -fx-background-color: -app-glass-gradient;
-    -fx-background-radius: 20;
-    -fx-border-color: -app-border-color;
+    -fx-background-color: rgba(17, 34, 64, 0.7);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 215, 0, 0.1);
+    -fx-border-radius: 12;
     -fx-border-width: 1;
-    -fx-border-radius: 20;
-    /* Sombras no Dark Mode devem ser mais sutis e escuras */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 15, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 10);
+}
+
+.glass-pane:hover {
+    -fx-border-color: rgba(255, 215, 0, 0.3);
+    -fx-background-color: rgba(17, 34, 64, 0.85);
 }
 
 /* ========================================
@@ -88,7 +116,7 @@
     -fx-background-color: -app-bg-sidebar;
     -fx-border-color: -app-border-color;
     -fx-border-width: 0 1 0 0;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 10, 0, 0, 0);
 }
 
 .app-logo-container {
@@ -152,6 +180,7 @@
     -fx-padding: 8 15;
     -fx-text-fill: -app-primary;
     -fx-font-weight: bold;
+    -fx-transition: 0.3s;
 }
 
 .btn-outline:hover {
@@ -184,17 +213,20 @@
 }
 
 .icon-on-primary {
-    -fx-icon-color: -app-text-on-primary;
+    -fx-icon-color: -app-primary;
 }
 
 .search-field {
     -fx-background-color: -app-bg-card;
     -fx-background-radius: 8;
-    -fx-border-color: rgba(255, 255, 255, 0.2); /* Borda neutra em vez de amarela */
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    /* Borda neutra em vez de amarela */
     -fx-border-radius: 8;
     -fx-padding: 10 20;
-    -fx-text-fill: #FFFFFF; /* Texto branco e nítido */
-    -fx-prompt-text-fill: rgba(255, 255, 255, 0.5); /* Placeholder suave */
+    -fx-text-fill: #FFFFFF;
+    /* Texto branco e nítido */
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
+    /* Placeholder suave */
     -fx-highlight-fill: -app-primary;
 }
 
@@ -203,7 +235,8 @@
    ======================================== */
 .content-area {
     -fx-background-color: transparent;
-    -fx-padding: 30; /* Espaço para ver as bordas arredondadas */
+    -fx-padding: 30;
+    /* Espaço para ver as bordas arredondadas */
 }
 
 .scroll-pane {
@@ -211,8 +244,37 @@
     -fx-background: transparent;
     -fx-border-color: transparent;
 }
+
 .scroll-pane .viewport {
     -fx-background-color: transparent;
+}
+
+/* ==========================================================================
+   SCROLLBAR MODERNA
+   ========================================================================== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(255, 215, 0, 0.2);
+    -fx-background-radius: 10;
+}
+
+.scroll-bar:vertical .thumb:hover,
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: rgba(255, 215, 0, 0.4);
 }
 
 /* ========================================
@@ -267,11 +329,13 @@
    PULSE CARDS (Dashboard)
    ======================================== */
 .pulse-card {
-    -fx-background-color: rgba(6, 11, 40, 0.7); /* Azul Marinho Profundo com opacidade */
+    -fx-background-color: rgba(6, 11, 40, 0.7);
+    /* Azul Marinho Profundo com opacidade */
     -fx-background-radius: 20;
     -fx-padding: 25;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 30, 0, 0, 15);
-    -fx-border-color: rgba(60, 90, 166, 0.5); /* Borda em Azul Pokémon claro para definição */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 30, 0, 0, 15);
+    -fx-border-color: rgba(60, 90, 166, 0.5);
+    /* Borda em Azul Pokémon claro para definição */
     -fx-border-radius: 20;
     -fx-border-width: 1.5;
 }
@@ -280,14 +344,15 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 3, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 3, 0, 0, 1);
 }
 
 .card-value {
-    -fx-text-fill: #FFCB05; /* Amarelo Pokémon */
+    -fx-text-fill: #FFCB05;
+    /* Amarelo Pokémon */
     -fx-font-size: 42px;
     -fx-font-weight: 900;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 5, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 5, 0, 0, 2);
 }
 
 .card-increment {
@@ -321,7 +386,7 @@
     -fx-background-color: -app-bg-card;
     -fx-background-radius: 20;
     -fx-padding: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 15, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 15, 0, 0, 5);
     -fx-cursor: hand;
 }
 
@@ -384,11 +449,17 @@
    ======================================== */
 .btn-primary {
     -fx-background-color: -app-primary;
-    -fx-text-fill: -app-text-on-primary;
+    -fx-text-fill: -app-navy;
     -fx-font-weight: bold;
-    -fx-background-radius: 20;
-    -fx-padding: 10 30;
+    -fx-background-radius: 8;
     -fx-cursor: hand;
+    -fx-transition: 0.3s;
+    /* Nota: Simulado via hover no JavaFX */
+}
+
+.btn-primary:hover {
+    -fx-background-color: -app-primary-hover;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 215, 0, 0.3), 10, 0, 0, 0);
 }
 
 .btn-primary-sm {
@@ -410,18 +481,21 @@
 }
 
 .btn-outline {
-    -fx-background-color: -app-secondary; /* Azul Pokémon Vibrante */
+    -fx-background-color: -app-secondary;
+    /* Azul Pokémon Vibrante */
     -fx-border-color: rgba(255, 255, 255, 0.3);
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 5 15;
-    -fx-text-fill: -app-primary; /* Letras Amarelas */
+    -fx-text-fill: -app-primary;
+    /* Letras Amarelas */
     -fx-font-weight: bold;
 }
 
 /* Garante que o texto selecionado dentro do botão também seja amarelo e SEM fundo sólido */
-.combo-box > .list-cell {
-    -fx-background-color: transparent !important; /* Força a transparência */
+.combo-box>.list-cell {
+    -fx-background-color: transparent !important;
+    /* Força a transparência */
     -fx-text-fill: -app-primary !important;
     -fx-padding: 0 5;
 }
@@ -485,9 +559,11 @@
     -fx-font-size: 14;
 }
 
-.search-field:hover, .search-field:focused {
+.search-field:hover,
+.search-field:focused {
     -fx-border-color: -app-primary;
-    -fx-background-color: rgba(255, 255, 255, 0.08); /* Sutil destaque no fundo */
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    /* Sutil destaque no fundo */
 }
 
 .btn-danger-text {
@@ -568,7 +644,7 @@
     -fx-background-color: -app-bg-card;
     -fx-background-radius: 20;
     -fx-padding: 30;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 15, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.03), 15, 0, 0, 0);
 }
 
 .export-icon-container {
@@ -626,17 +702,52 @@
     -fx-text-fill: white;
 }
 
-.type-fire { -fx-background-color: #FF5252; }
-.type-water { -fx-background-color: #448AFF; }
-.type-grass { -fx-background-color: #4CAF50; }
-.type-lightning { -fx-background-color: #FFD740; -fx-text-fill: #5D4037; }
-.type-psychic { -fx-background-color: #E040FB; }
-.type-fighting { -fx-background-color: #E64A19; }
-.type-darkness { -fx-background-color: #37474F; }
-.type-metal { -fx-background-color: #78909C; }
-.type-fairy { -fx-background-color: #F48FB1; }
-.type-dragon { -fx-background-color: #FBC02D; -fx-text-fill: #5D4037; }
-.type-colorless { -fx-background-color: #F5F5F5; -fx-text-fill: #757575; }
+.type-fire {
+    -fx-background-color: #FF5252;
+}
+
+.type-water {
+    -fx-background-color: #448AFF;
+}
+
+.type-grass {
+    -fx-background-color: #4CAF50;
+}
+
+.type-lightning {
+    -fx-background-color: #FFD740;
+    -fx-text-fill: #5D4037;
+}
+
+.type-psychic {
+    -fx-background-color: #E040FB;
+}
+
+.type-fighting {
+    -fx-background-color: #E64A19;
+}
+
+.type-darkness {
+    -fx-background-color: #37474F;
+}
+
+.type-metal {
+    -fx-background-color: #78909C;
+}
+
+.type-fairy {
+    -fx-background-color: #F48FB1;
+}
+
+.type-dragon {
+    -fx-background-color: #FBC02D;
+    -fx-text-fill: #5D4037;
+}
+
+.type-colorless {
+    -fx-background-color: #F5F5F5;
+    -fx-text-fill: #757575;
+}
 
 .btn-primary {
     -fx-background-color: -app-primary;
@@ -662,9 +773,26 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
     /* Arredondamento que dá o aspecto premium */
-    -fx-background-radius: 40;
-    -fx-padding: 40; 
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-border-color: rgba(255, 215, 0, 0.4);
+    -fx-border-width: 1.5;
+    -fx-padding: 40;
     /* Camada de contraste para os textos */
-    -fx-background-color: rgba(6, 11, 40, 0.4); 
+    -fx-background-color: rgba(6, 11, 40, 0.4);
     -fx-background-blend-mode: overlay;
+}
+/* Cards específicos para a tela de Exportação - Estilo Sólido RGB(15, 41, 99) */
+.export-card {
+    -fx-background-color: #0F2963; /* RGB(15, 41, 99) solicitado pelo usuário */
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 215, 0, 0.15);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 10);
+}
+
+.export-card:hover {
+    -fx-border-color: rgba(255, 215, 0, 0.4);
+    -fx-background-color: #1a3a7c; /* Realce sutil no hover */
 }
