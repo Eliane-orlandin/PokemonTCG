@@ -29,10 +29,10 @@
                             </image>
                         </ImageView>
                         
-                        <!-- Ícone do Treinador -->
-                        <ImageView fitHeight="120" fitWidth="120" preserveRatio="true">
+                        <!-- Ícone do Raio Azul -->
+                        <ImageView fitHeight="156" fitWidth="156" preserveRatio="true">
                             <image>
-                                <Image url="@../images/trainer.png" />
+                                <Image url="@../images/icone-azul-raio.png" />
                             </image>
                         </ImageView>
                     </children>

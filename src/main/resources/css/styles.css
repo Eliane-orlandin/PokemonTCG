@@ -474,6 +474,22 @@
     -fx-padding: 15;
 }
 
+.search-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 0 15;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+}
+
+.search-field:hover, .search-field:focused {
+    -fx-border-color: -app-primary;
+    -fx-background-color: rgba(255, 255, 255, 0.08); /* Sutil destaque no fundo */
+}
+
 .btn-danger-text {
     -fx-background-color: transparent;
     -fx-text-fill: -app-danger;
