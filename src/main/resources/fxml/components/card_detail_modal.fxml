@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<StackPane fx:id="rootPane" style="-fx-background-color: rgba(0,0,0,0.7);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.CardDetailController">
+    <children>
+        <HBox maxHeight="550" maxWidth="850" spacing="40" styleClass="glass-pane" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 30;">
+            <children>
+                <!-- Lado Esquerdo: Imagem da Carta -->
+                <VBox alignment="CENTER" HBox.hgrow="NEVER">
+                    <children>
+                        <StackPane styleClass="image-shadow-heavy">
+                            <children>
+                                <ImageView fx:id="imgLarge" fitHeight="480" fitWidth="340" preserveRatio="true" />
+                            </children>
+                        </StackPane>
+                    </children>
+                </VBox>
+
+                <!-- Lado Direito: Detalhes -->
+                <VBox spacing="15" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Button onAction="#handleClose" styleClass="btn-icon-only">
+                                    <graphic>
+                                        <FontIcon iconLiteral="fas-times" iconSize="24" iconColor="WHITE" />
+                                    </graphic>
+                                </Button>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="5">
+                            <children>
+                                <Label fx:id="lblCardName" text="Nome do Card" styleClass="section-title-xl" style="-fx-font-size: 32;" />
+                                <Label fx:id="lblSetId" text="SÉRIE • ID" styleClass="section-subtitle" />
+                            </children>
+                        </VBox>
+
+                        <Separator styleClass="separator-light" />
+
+                        <GridPane hgap="20" vgap="15">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="120" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+                            <children>
+                                <Label text="RARIDADE" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <Label fx:id="lblRarity" text="---" style="-fx-text-fill: white; -fx-font-size: 16;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                <Label text="TIPO / CLASSE" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <Label fx:id="lblType" text="---" styleClass="type-badge-pill" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                <Label text="COLEÇÃO / SÉRIE" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <Label fx:id="lblSetName" text="---" style="-fx-text-fill: white; -fx-font-size: 16;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                
+                                <Label text="PONTOS DE VIDA (HP)" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <Label fx:id="lblHp" text="---" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                <Label text="VALOR ESTIMADO" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <Label fx:id="lblPrice" text="$0.00" style="-fx-text-fill: #FFD700; -fx-font-size: 20; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            </children>
+                        </GridPane>
+                        
+                        <Region VBox.vgrow="ALWAYS" />
+
+                        <StackPane fx:id="actionArea">
+                            <children>
+                                <!-- Estado 1: Botão Inicial -->
+                                <Button fx:id="btnAction" onAction="#handleShowAddOptions" maxWidth="Infinity" minHeight="54" styleClass="btn-primary" text="ADICIONAR À COLEÇÃO" />
+                                
+                                <!-- Estado 2: Controles de Quantidade e Confirmação (Invisível por padrão) -->
+                                <HBox fx:id="addOptionsArea" visible="false" spacing="15" alignment="CENTER">
+                                    <children>
+                                        <!-- Seletor +/- -->
+                                        <HBox spacing="10" alignment="CENTER" style="-fx-background-color: rgba(255,255,255,0.08); -fx-background-radius: 12; -fx-padding: 5 15; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 12;">
+                                            <children>
+                                                <Button onAction="#handleDecrement" styleClass="btn-icon-only" style="-fx-background-color: transparent;">
+                                                    <graphic>
+                                                        <FontIcon iconLiteral="fas-minus" iconSize="16" iconColor="WHITE" />
+                                                    </graphic>
+                                                </Button>
+                                                <Label fx:id="lblQuantity" text="1" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold; -fx-min-width: 40; -fx-alignment: center;" />
+                                                <Button onAction="#handleIncrement" styleClass="btn-icon-only" style="-fx-background-color: transparent;">
+                                                    <graphic>
+                                                        <FontIcon iconLiteral="fas-plus" iconSize="16" iconColor="WHITE" />
+                                                    </graphic>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                        
+                                        <!-- Ações de Confirmação -->
+                                        <Button onAction="#handlePrimaryAction" styleClass="btn-primary" text="SALVAR" HBox.hgrow="ALWAYS" maxWidth="Infinity" minHeight="54" />
+                                        <Button onAction="#handleCancelAdd" styleClass="btn-secondary" text="CANCELAR" minHeight="54" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </StackPane>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</StackPane>
