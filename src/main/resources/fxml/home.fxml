@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.HomeController">
+<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="content-scroll-pane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.HomeController">
     <content>
-        <VBox spacing="30" styleClass="content-area">
+        <VBox VBox.vgrow="ALWAYS" spacing="30" styleClass="content-area, dashboard-view">
             <children>
                 <!-- Título de Boas-vindas -->
                 <VBox spacing="5">
@@ -45,50 +45,10 @@
                                 <Label text="NÍVEL ULTRA &amp; SECRETO" styleClass="app-subtitle" />
                             </children>
                         </VBox>
-                        
-                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, pulse-card">
-                            <children>
-                                <HBox alignment="CENTER_LEFT" spacing="10">
-                                    <children>
-                                        <FontIcon iconLiteral="fas-globe" iconSize="20" styleClass="ikonli-font-icon" />
-                                        <Label text="Status da API" styleClass="card-title" />
-                                    </children>
-                                </HBox>
-                                <Label text="CONECTADO" style="-fx-text-fill: #4CAF50;" styleClass="card-value" />
-                                <Label text="TCGDEX API v2" styleClass="app-subtitle" />
-                            </children>
-                        </VBox>
                     </children>
                 </HBox>
                 
-                <!-- Ações Rápidas -->
-                <VBox spacing="15">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-                            <children>
-                                <FontIcon iconLiteral="fas-bolt" iconSize="18" styleClass="card-icon-primary" />
-                                <Label text="Acesso Rápido" styleClass="section-title-sm" />
-                            </children>
-                        </HBox>
-                        
-                        <HBox spacing="15">
-                            <children>
-                                <Button onAction="#handleSearchShortcut" styleClass="btn-primary-md" text="Procurar Novos Cards" />
-                                <Button onAction="#handleCollectionShortcut" styleClass="btn-outline" text="Ver Minha Coleção" />
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
-
-                <!-- Área de Recentes (Placeholder para o FlowPane dinâmico) -->
-                <VBox spacing="15">
-                    <children>
-                        <Label text="Adicionados Recentemente" styleClass="section-title-sm" />
-                        <FlowPane fx:id="flowRecentCards" hgap="20" vgap="20">
-                            <!-- Cards serão inseridos aqui via Controller -->
-                        </FlowPane>
-                    </children>
-                </VBox>
+                <!-- Somente Estatísticas Reais permanecem por enquanto -->
             </children>
         </VBox>
     </content>

@@ -92,7 +92,7 @@
 }
 
 .app-logo-container {
-    -fx-padding: 0 0 40 0;
+    -fx-padding: 40 0 20 0;
 }
 
 /* Ícone do logo (▣) - Antigo inline style */
@@ -181,7 +181,7 @@
    ======================================== */
 .content-area {
     -fx-background-color: transparent;
-    -fx-padding: 20 40 40 40;
+    -fx-padding: 30; /* Espaço para ver as bordas arredondadas */
 }
 
 .scroll-pane {
@@ -245,22 +245,27 @@
    PULSE CARDS (Dashboard)
    ======================================== */
 .pulse-card {
-    -fx-background-color: -app-bg-card;
+    -fx-background-color: rgba(6, 11, 40, 0.7); /* Azul Marinho Profundo com opacidade */
     -fx-background-radius: 20;
     -fx-padding: 25;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 15, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 30, 0, 0, 15);
+    -fx-border-color: rgba(60, 90, 166, 0.5); /* Borda em Azul Pokémon claro para definição */
+    -fx-border-radius: 20;
+    -fx-border-width: 1.5;
 }
 
 .card-title {
-    -fx-text-fill: -app-text-muted;
-    -fx-font-size: 13px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 3, 0, 0, 1);
 }
 
 .card-value {
-    -fx-text-fill: -app-text-dark;
-    -fx-font-size: 36px;
+    -fx-text-fill: #FFCB05; /* Amarelo Pokémon */
+    -fx-font-size: 42px;
     -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 5, 0, 0, 2);
 }
 
 .card-increment {
@@ -543,4 +548,18 @@
     -fx-border-color: #F8BBD0;
     -fx-border-width: 2;
     -fx-border-radius: 20;
+}
+
+/* Fundo Personalizado do Dashboard */
+.dashboard-view {
+    -fx-background-image: url("../images/dashboard_bg.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+    /* Arredondamento que dá o aspecto premium */
+    -fx-background-radius: 40;
+    -fx-padding: 40; 
+    /* Camada de contraste para os textos */
+    -fx-background-color: rgba(6, 11, 40, 0.4); 
+    -fx-background-blend-mode: overlay;
 }
