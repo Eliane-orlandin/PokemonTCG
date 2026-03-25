@@ -5,6 +5,8 @@ import com.pokemontcg.repository.CatalogRepository;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import java.util.List;
 
 /**
@@ -15,23 +17,37 @@ public class HomeController {
 
     @FXML private Label lblTotalCards;
     @FXML private Label lblRareCards;
+    @FXML private VBox dashboardVBox;
 
     private CatalogRepository repository = new CatalogRepository();
 
     @FXML
     public void initialize() {
+        setupDashboardClip();
         updateStatistics();
     }
 
+    private void setupDashboardClip() {
+        // Cria um retângulo de recorte com as mesmas medidas de arredondamento
+        Rectangle clip = new Rectangle();
+        clip.setArcWidth(60); // Diâmetro de 60 para raio de 30px
+        clip.setArcHeight(60);
+        
+        // Faz o recorte acompanhar o tamanho dinâmico do container
+        clip.widthProperty().bind(dashboardVBox.widthProperty());
+        clip.heightProperty().bind(dashboardVBox.heightProperty());
+        
+        dashboardVBox.setClip(clip);
+    }
+    
     @FXML
-    public void handleSearchShortcut() {
-        System.out.println("[Dashboard] Atalho: Buscar Novos Cards");
-        // A lógica de navegação centralizada deve ser chamada via evento ou referência ao MainController se necessário
+    public void handleQuickSearch() {
+        System.out.println("[Dashboard] Atalho: Redirecionando para busca...");
     }
 
     @FXML
-    public void handleCollectionShortcut() {
-        System.out.println("[Dashboard] Atalho: Ver Minha Coleção");
+    public void handleQuickCatalog() {
+        System.out.println("[Dashboard] Atalho: Redirecionando para coleção...");
     }
 
     private void updateStatistics() {

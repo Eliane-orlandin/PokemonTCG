@@ -7,16 +7,8 @@
 
 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="content-scroll-pane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.HomeController">
     <content>
-        <VBox VBox.vgrow="ALWAYS" spacing="30" styleClass="content-area, dashboard-view">
+        <VBox fx:id="dashboardVBox" VBox.vgrow="ALWAYS" spacing="30" styleClass="content-area, dashboard-view">
             <children>
-                <!-- Título de Boas-vindas -->
-                <VBox spacing="5" style="-fx-padding: 0 0 10 0;">
-                    <children>
-                        <Label text="Bem-vindo, Treinador" styleClass="section-title-xl" />
-                        <Label text="Sua biblioteca lendária de cards aguarda sua exploração e curadoria." styleClass="section-subtitle" />
-                    </children>
-                </VBox>
-                
                 <!-- Cards de Pulso (Estatísticas) -->
                 <HBox spacing="25">
                     <children>
