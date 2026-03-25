@@ -20,8 +20,9 @@ import java.util.List;
 public class SearchController {
 
     @FXML private TextField txtSearch;
-    @FXML private ComboBox<String> comboSearchType;
-    @FXML private Label lblStatus;
+    @FXML private ComboBox<String> comboType;
+    @FXML private ComboBox<String> comboRarity;
+    @FXML private ComboBox<String> comboSet;
     @FXML private FlowPane flowResults;
 
     private final CardService cardService;
@@ -32,8 +33,10 @@ public class SearchController {
 
     @FXML
     public void initialize() {
-        comboSearchType.getItems().addAll("Nome", "Série");
-        comboSearchType.setValue("Nome");
+        // Inicializa os filtros com placeholders/opções
+        if (comboType != null) comboType.getItems().addAll("Todos os Tipos", "Fogo", "Água", "Grama", "Elétrico", "Psíquico");
+        if (comboRarity != null) comboRarity.getItems().addAll("Todas as Raridades", "Common", "Uncommon", "Rare", "Holo Rare", "Ultra Rare", "Secret Rare");
+        if (comboSet != null) comboSet.getItems().addAll("Todas as Séries", "Scarlet & Violet", "Sword & Shield", "Sun & Moon", "XY");
     }
 
     /**
@@ -45,42 +48,31 @@ public class SearchController {
         System.out.println("[DEBUG] SearchController: Iniciando busca por -> " + query);
         
         if (query.isEmpty()) {
-            lblStatus.setText("⚠ Please enter a name to search.");
+            System.out.println("[Warn] Query vazia.");
             return;
         }
 
         flowResults.getChildren().clear();
-        lblStatus.setText("🔍 Searching for \"" + query + "\"... Please wait.");
+        System.out.println("🔍 Searching for \"" + query + "\"... Please wait.");
 
         new Thread(() -> {
             try {
                 System.out.println("[DEBUG] SearchController: Chamando CardService...");
-                String searchType = comboSearchType.getValue();
-                List<Card> results;
-                
-                if ("Série".equals(searchType)) {
-                    results = cardService.searchBySeries(query);
-                } else {
-                    results = cardService.searchByName(query);
-                }
+                // Para simplificar agora, buscamos sempre por nome por padrão
+                List<Card> results = cardService.searchByName(query);
                 
                 System.out.println("[DEBUG] SearchController: Service retornou " + results.size() + " resultados");
                 
                 Platform.runLater(() -> {
                     if (results.isEmpty()) {
                         System.out.println("[DEBUG] SearchController: Nenhum card encontrado");
-                        lblStatus.setText("❌ No cards found for \"" + query + "\".");
                     } else {
-                        System.out.println("[DEBUG] SearchController: Chamando renderizador de grade...");
-                        lblStatus.setText("✅ Found " + results.size() + " cards matching \"" + query + "\".");
                         loadCardsInGrid(results);
                     }
                 });
                 
             } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error during search: " + e.getMessage());
-                });
+                System.err.println("❌ Error during search: " + e.getMessage());
                 e.printStackTrace();
             }
         }).start();
@@ -128,11 +120,7 @@ public class SearchController {
                 System.out.println("[DEBUG] SearchController: Card injetado visualmente.");
                 
             } catch (Exception e) {
-                final String errorMsg = e.getMessage();
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error rendering cards: " + errorMsg);
-                });
-                System.err.println("❌ Erro crítico ao renderizar card: " + errorMsg);
+                System.err.println("❌ Erro crítico ao renderizar card: " + e.getMessage());
                 e.printStackTrace();
                 break; // Para no primeiro erro para não inundar o log
             }

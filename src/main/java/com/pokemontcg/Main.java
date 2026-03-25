@@ -3,8 +3,9 @@ package com.pokemontcg;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 /**
  * Ponto de entrada oficial da aplicação Pokémon TCG Catalog (Versão Visual).
@@ -16,35 +17,44 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         
-        // 1. Inicializa o banco de dados antes de tudo
+        System.out.println("[Debug] 1. Inicializando Banco de Dados...");
         try {
             com.pokemontcg.repository.DatabaseManager.initDatabase();
+            System.out.println("[Debug] ✓ Banco de dados inicializado.");
         } catch (Exception e) {
             System.err.println("Erro crítico no banco de dados: " + e.getMessage());
+            e.printStackTrace();
         }
 
         try {
-            // 2. Carrega o Layout Principal da Navegação (Nave Mãe)
+            System.out.println("[Debug] 2. Carregando Fontes Customizadas...");
+            Font.loadFont(getClass().getResourceAsStream("/fonts/Inter-Regular.ttf"), 12);
+            Font.loadFont(getClass().getResourceAsStream("/fonts/Inter-Bold.ttf"), 12);
+            Font.loadFont(getClass().getResourceAsStream("/fonts/PlusJakartaSans-Regular.ttf"), 12);
+            Font.loadFont(getClass().getResourceAsStream("/fonts/PokemonHollow.ttf"), 12);
+            System.out.println("[Debug] ✓ Fontes carregadas em memória.");
+
+            System.out.println("[Debug] 3. Carregando FXML Principal (main.fxml)...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
             Parent root = loader.load();
+            System.out.println("[Debug] ✓ FXML carregado com sucesso.");
             
-            // 3. Define a Janela e o Tamanho base (1000x700 como planejado)
-            Scene scene = new Scene(root, 1000, 700);
+            System.out.println("[Debug] 4. Configurando Cena e CSS...");
+            Scene scene = new Scene(root, 1200, 800);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             
-            // 4. Configurações Finais do Stage (Janela)
-            primaryStage.setTitle("POKÉMON TCG — Catalog v1.0");
+            primaryStage.setTitle("The Glass Trainer's Codex | Pokémon TCG Catalog");
             primaryStage.setScene(scene);
-            
-            // Impede que a janela fique menor que o ideal
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);
             
+            System.out.println("[Debug] 5. Abrindo Stage (Janela)...");
             primaryStage.show();
             
-            System.out.println("[App] Interface gráfica iniciada com sucesso!");
+            System.out.println("[App] Interface gráfica carregada com sucesso!");
             
         } catch (Exception e) {
-            System.err.println("Erro fatal ao carregar a interface gráfica:");
+            System.err.println("[Erro Fatal] Houve uma falha durante o carregamento da interface:");
             e.printStackTrace();
         }
     }

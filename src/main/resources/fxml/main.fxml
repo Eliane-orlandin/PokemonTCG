@@ -6,53 +6,76 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <BorderPane fx:id="mainLayout" prefHeight="700.0" prefWidth="1200.0" 
             stylesheets="@../css/styles.css" styleClass="root-pane" 
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="com.pokemontcg.controller.MainController">
     
-    <!-- BARRA LATERAL (SIDEBAR) -->
+    <!-- BARRA LATERAL (Sidebar) -->
     <left>
-        <VBox prefWidth="260.0" styleClass="sidebar">
-            <padding>
-                <Insets bottom="30.0" left="25.0" right="25.0" top="40.0" />
-            </padding>
+        <VBox prefWidth="250" styleClass="sidebar">
             <children>
-                <!-- Logo e Título do App -->
-                <VBox styleClass="app-logo-container">
+                <!-- Logo e Branding -->
+                <VBox alignment="CENTER" styleClass="app-logo-container">
                     <children>
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <Label text="▣" styleClass="app-title" style="-fx-text-fill: #C2185B; -fx-font-size: 28;"/>
-                            <VBox>
-                                <Label styleClass="app-title" text="Acervo TCG" />
-                                <Label styleClass="app-subtitle" text="CATÁLOGO PREMIUM" />
-                            </VBox>
-                        </HBox>
+                        <Label text="▣" styleClass="app-logo-icon" />
+                        <Label text="THE GLASS TRAINER" styleClass="app-title" />
+                        <Label text="CODEX DIGITAL" styleClass="app-subtitle" />
                     </children>
                 </VBox>
                 
                 <!-- Menu de Navegação -->
-                <VBox spacing="8.0" VBox.vgrow="ALWAYS">
-                    <VBox.margin>
-                        <Insets top="20.0" />
-                    </VBox.margin>
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
                     <children>
-                        <Button fx:id="btnHome" alignment="BASELINE_LEFT" onAction="#showHome" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button, menu-button-active" text="🏠  INÍCIO" />
+                        <Button fx:id="btnHome" onAction="#handleNavigateHome" maxWidth="Infinity" styleClass="menu-button-active">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-home" iconSize="18" styleClass="ikonli-font-icon" />
+                            </graphic>
+                            <text>Início</text>
+                            <VBox.margin><Insets left="15" right="15"/></VBox.margin>
+                        </Button>
                         
-                        <Button fx:id="btnSearch" alignment="BASELINE_LEFT" onAction="#showSearch" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🔍  BUSCAR" />
+                        <Button fx:id="btnSearch" onAction="#handleNavigateSearch" maxWidth="Infinity" styleClass="menu-button">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-search" iconSize="18" styleClass="ikonli-font-icon" />
+                            </graphic>
+                            <text>Buscar Cartas</text>
+                            <VBox.margin><Insets left="15" right="15"/></VBox.margin>
+                        </Button>
                         
-                        <Button fx:id="btnCatalog" alignment="BASELINE_LEFT" onAction="#showCatalog" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="🗂  MINHA COLEÇÃO" />
+                        <Button fx:id="btnCatalog" onAction="#handleNavigateCatalog" maxWidth="Infinity" styleClass="menu-button">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-th-large" iconSize="18" styleClass="ikonli-font-icon" />
+                            </graphic>
+                            <text>Minha Coleção</text>
+                            <VBox.margin><Insets left="15" right="15"/></VBox.margin>
+                        </Button>
                         
-                        <Button fx:id="btnExport" alignment="BASELINE_LEFT" onAction="#showExport" 
-                                prefHeight="45.0" prefWidth="210.0" styleClass="menu-button" text="📑  EXPORTAR" />
+                        <Button fx:id="btnExport" onAction="#handleNavigateExport" maxWidth="Infinity" styleClass="menu-button">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-file-export" iconSize="18" styleClass="ikonli-font-icon" />
+                            </graphic>
+                            <text>Exportar</text>
+                            <VBox.margin><Insets left="15" right="15"/></VBox.margin>
+                        </Button>
                     </children>
                 </VBox>
                 
-                <!-- Botões Inferiores Removidos -->
+                <!-- Rodapé da Sidebar (User Profile) -->
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="sidebar-footer">
+                    <children>
+                        <Label text="👤" styleClass="header-icon-profile" />
+                        <VBox>
+                            <children>
+                                <Label text="Ash Ketchum" styleClass="row-card-name" />
+                                <Label text="Mestre Pokémon" styleClass="app-subtitle" />
+                            </children>
+                        </VBox>
+                    </children>
+                    <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
+                </HBox>
             </children>
         </VBox>
     </left>
@@ -69,9 +92,9 @@
                         <HBox alignment="CENTER" spacing="20">
                             <children>
                                 <TextField promptText="Pesquisar no acervo..." styleClass="search-field" prefWidth="250" />
-                                <Label text="🔔" style="-fx-font-size: 18; -fx-text-fill: #78909C;" />
-                                <Label text="⚙" style="-fx-font-size: 18; -fx-text-fill: #78909C;" />
-                                <Label text="👤" style="-fx-font-size: 24; -fx-text-fill: #263238;" />
+                                <Label text="🔔" styleClass="header-icon" />
+                                <Label text="⚙" styleClass="header-icon" />
+                                <Label text="👤" styleClass="header-icon-profile" />
                             </children>
                         </HBox>
                     </children>

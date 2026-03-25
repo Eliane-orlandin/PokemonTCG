@@ -1,25 +1,89 @@
-/* 
-    Sistema de Cores Premium - Pokemon TCG Professional UI 
-    Baseado no design "Museum-Grade Catalog" 
-*/
+/* ========================================
+   CARREGAMENTO DE FONTES CUSTOMIZADAS
+   ======================================== */
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.ttf');
+}
+@font-face {
+    font-family: 'Inter Bold';
+    src: url('../fonts/Inter-Bold.ttf');
+}
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    src: url('../fonts/PlusJakartaSans-Regular.ttf');
+}
+@font-face {
+    font-family: 'Pokemon Hollow';
+    src: url('../fonts/PokemonHollow.ttf');
+}
 
+/* ========================================
+   TOKENS DE DESIGN (Variáveis Globais - GOLD & NAVY THEME)
+   ======================================== */
 .root {
-    -app-bg-main: #F5F6FA;
-    -app-bg-sidebar: #FFFFFF;
-    -app-primary: #C2185B;
-    -app-accent: #E91E63;
-    -app-text-dark: #263238;
-    -app-text-muted: #78909C;
-    -app-lavender-gradient: linear-gradient(to right, #E1BEE7, #F8BBD0);
-    -app-border-color: #ECEFF1;
+    /* Tipografia Profissional */
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+    
+    /* Cores de superfície - REFERÊNCIA: FOTOS DO USUÁRIO */
+    -app-bg-main: #000E3D;          /* Navy Profundo da foto */
+    -app-bg-sidebar: #010A2B;       /* Sidebar mais sólida e escura */
+    -app-bg-card: rgba(255, 255, 255, 0.06); /* Glass Transparente */
+    -app-bg-hover: rgba(255, 255, 255, 0.12);
+    -app-bg-placeholder: #001550;
+    
+    /* Cores de destaque - O TOQUE DO TREINADOR (GOLD) */
+    -app-primary: #FFC107;          /* Dourado/Amarelo Sabugo das fotos */
+    -app-accent: #FFD54F;           /* Dourado mais claro para brilhos */
+    -app-danger: #FF5252;
+    -app-warning: #FFA000;
+    
+    /* Cores de texto */
+    -app-text-dark: #FFFFFF;        
+    -app-text-medium: #CFD8DC;       
+    -app-text-muted: #90A4AE;        
+    -app-text-on-primary: #000A2D;  /* Texto preto/navy sobre o dourado */
+
+    /* Cores de borda */
+    -app-border-color: rgba(255, 255, 255, 0.10);
+    -app-border-subtle: rgba(255, 255, 255, 0.05);
+    
+    /* Variáveis de Destaque (Faltantes anteriormente) */
+    -app-highlight-bg: rgba(255, 193, 7, 0.15); /* Dourado suave para seleção */
+    -app-increment-bg: rgba(255, 193, 7, 0.25); /* Fundo de badges de aumento */
+    
+    /* Efeitos de Glow e Gradientes das fotos */
+    -app-glass-gradient: linear-gradient(to bottom right, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    -app-gold-glow: dropshadow(three-pass-box, rgba(255, 193, 7, 0.3), 15, 0, 0, 0);
+    -app-bg-gradient: radial-gradient(center 50% 50%, radius 100%, #001E5D, #000E3D);
 }
 
+/* ========================================
+   RESET E BASE
+   ======================================== */
 .root-pane {
-    -fx-background-color: -app-bg-main;
-    -fx-font-family: "Segoe UI", "Roboto", "Helvetica", "Arial";
+    -fx-background-color: -app-bg-gradient;
 }
 
-/* --- SIDEBAR --- */
+.ikonli-font-icon {
+    -fx-icon-color: -app-text-muted;
+    -fx-icon-size: 20px;
+}
+
+/* Efeito Glassmorphism Universal */
+.glass-pane {
+    -fx-background-color: -app-glass-gradient;
+    -fx-background-radius: 20;
+    -fx-border-color: -app-border-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    /* Sombras no Dark Mode devem ser mais sutis e escuras */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 15, 0, 0, 0);
+}
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
 .sidebar {
     -fx-background-color: -app-bg-sidebar;
     -fx-border-color: -app-border-color;
@@ -31,19 +95,32 @@
     -fx-padding: 0 0 40 0;
 }
 
+/* Ícone do logo (▣) - Antigo inline style */
+.app-logo-icon {
+    -fx-text-fill: -app-primary;
+    -fx-font-size: 32;
+    -fx-effect: -app-gold-glow;
+}
+
 .app-title {
-    -fx-text-fill: -app-text-dark;
-    -fx-font-weight: bold;
-    -fx-font-size: 20px;
+    -fx-font-family: 'Pokemon Hollow';
+    -fx-text-fill: -app-primary;
+    -fx-font-size: 24px;
+    -fx-effect: -app-gold-glow;
+    -fx-letter-spacing: 2;
 }
 
 .app-subtitle {
-    -fx-text-fill: -app-text-muted;
-    -fx-font-size: 11px;
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
     -fx-text-transform: uppercase;
+    -fx-opacity: 0.7;
+    -fx-letter-spacing: 1;
 }
 
-/* Botões do Menu Lateral */
+/* ========================================
+   BOTÕES DO MENU LATERAL
+   ======================================== */
 .menu-button {
     -fx-background-color: transparent;
     -fx-text-fill: -app-text-muted;
@@ -56,34 +133,20 @@
 }
 
 .menu-button:hover {
-    -fx-background-color: #F8F9FB;
+    -fx-background-color: -app-bg-hover;
     -fx-text-fill: -app-primary;
 }
 
 .menu-button-active {
-    -fx-background-color: #F3E5F5;
+    -fx-background-color: -app-highlight-bg;
     -fx-text-fill: -app-primary;
     -fx-font-weight: bold;
     -fx-background-radius: 12;
 }
 
-/* Botão Especial "Add New Card" */
-.add-card-button {
-    -fx-background-color: -app-primary;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-padding: 15 25;
-    -fx-background-radius: 12;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(194, 24, 91, 0.3), 10, 0, 0, 5);
-}
-
-.add-card-button:hover {
-    -fx-background-color: -app-accent;
-}
-
-/* --- HEADER --- */
+/* ========================================
+   HEADER
+   ======================================== */
 .header-pane {
     -fx-padding: 20 40;
 }
@@ -94,21 +157,33 @@
     -fx-font-weight: 900;
 }
 
+/* Ícones de notificação, config e perfil */
+.header-icon {
+    -fx-font-size: 18;
+    -fx-text-fill: -app-text-muted;
+}
+
+.header-icon-profile {
+    -fx-font-size: 24;
+    -fx-text-fill: -app-text-dark;
+}
+
 .search-field {
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: -app-bg-card;
     -fx-background-radius: 20;
     -fx-border-color: -app-border-color;
     -fx-border-radius: 20;
     -fx-padding: 8 15;
 }
 
-/* --- ÁREA DE CONTEÚDO --- */
+/* ========================================
+   ÁREA DE CONTEÚDO
+   ======================================== */
 .content-area {
     -fx-background-color: transparent;
     -fx-padding: 20 40 40 40;
 }
 
-/* ScrollPane Transparente */
 .scroll-pane {
     -fx-background-color: transparent;
     -fx-background: transparent;
@@ -118,9 +193,59 @@
     -fx-background-color: transparent;
 }
 
-/* Cards de Resumo (Pulse) */
+/* ========================================
+   TÍTULOS DE SEÇÃO
+   ======================================== */
+.section-title {
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-text-dark;
+}
+
+.section-title-xl {
+    -fx-font-size: 32;
+    -fx-font-weight: 900;
+    -fx-text-fill: -app-text-dark;
+}
+
+.section-title-md {
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-text-dark;
+}
+
+.section-title-sm {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-text-dark;
+}
+
+.section-subtitle {
+    -fx-text-fill: -app-text-muted;
+    -fx-font-size: 14;
+}
+
+.text-description {
+    -fx-text-fill: -app-text-muted;
+    -fx-font-size: 12;
+}
+
+.text-status {
+    -fx-text-fill: -app-text-muted;
+    -fx-font-size: 12;
+}
+
+.text-timestamp {
+    -fx-text-fill: -app-text-muted;
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+}
+
+/* ========================================
+   PULSE CARDS (Dashboard)
+   ======================================== */
 .pulse-card {
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: -app-bg-card;
     -fx-background-radius: 20;
     -fx-padding: 25;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 15, 0, 0, 0);
@@ -141,20 +266,281 @@
 .card-increment {
     -fx-text-fill: -app-primary;
     -fx-font-size: 12px;
-    -fx-background-color: #FCE4EC;
+    -fx-background-color: -app-increment-bg;
     -fx-padding: 2 8;
     -fx-background-radius: 10;
 }
 
-/* Cards da Galeria de Busca (card_item.fxml) */
+.card-icon-primary {
+    -fx-font-size: 24;
+    -fx-text-fill: -app-primary;
+}
+
+.card-icon-fire {
+    -fx-font-size: 24;
+    -fx-text-fill: #FF5722;
+}
+
+.card-stat-label {
+    -fx-text-fill: -app-primary;
+    -fx-font-size: 11;
+    -fx-font-weight: bold;
+}
+
+/* ========================================
+   CARDS DE BUSCA E GALERIA
+   ======================================== */
 .card-item-container {
-    -fx-background-color: white;
+    -fx-background-color: -app-bg-card;
     -fx-background-radius: 20;
     -fx-padding: 15;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 15, 0, 0, 5);
+    -fx-cursor: hand;
 }
 
-.card-item-container:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(194, 24, 91, 0.2), 25, 0, 0, 10);
-    -fx-translate-y: -10;
+.card-image-placeholder {
+    -fx-background-color: -app-bg-placeholder;
+    -fx-background-radius: 15;
+}
+
+.card-set-id {
+    -fx-font-size: 10;
+    -fx-text-fill: -app-text-muted;
+}
+
+.card-name {
+    -fx-font-weight: 800;
+    -fx-font-size: 15;
+    -fx-text-fill: -app-text-dark;
+}
+
+.card-name-lg {
+    -fx-font-weight: 800;
+    -fx-font-size: 16;
+    -fx-text-fill: -app-text-dark;
+}
+
+.type-badge {
+    -fx-font-weight: bold;
+    -fx-font-size: 9;
+    -fx-padding: 3 10;
+    -fx-background-radius: 6;
+    -fx-background-color: #F5F5F5;
+    -fx-text-fill: #9E9E9E;
+}
+
+.type-badge-pill {
+    -fx-font-size: 9;
+    -fx-font-weight: bold;
+    -fx-padding: 3 12;
+    -fx-background-radius: 12;
+}
+
+.card-rarity {
+    -fx-font-size: 10;
+    -fx-text-fill: -app-text-muted;
+}
+
+.btn-add-card {
+    -fx-background-color: -app-primary;
+    -fx-text-fill: -app-text-on-primary;
+    -fx-font-weight: bold;
+    -fx-background-radius: 50;
+    -fx-min-width: 30;
+    -fx-min-height: 30;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+/* ========================================
+   BOTÕES E AÇÕES
+   ======================================== */
+.btn-primary {
+    -fx-background-color: -app-primary;
+    -fx-text-fill: -app-text-on-primary;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+}
+
+.btn-primary-sm {
+    -fx-background-color: -app-primary;
+    -fx-text-fill: -app-text-on-primary;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+}
+
+.btn-primary-md {
+    -fx-background-color: -app-primary;
+    -fx-text-fill: -app-text-on-primary;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.btn-outline {
+    -fx-background-color: -app-bg-card;
+    -fx-border-color: -app-border-color;
+    -fx-border-radius: 8;
+    -fx-padding: 8 20;
+    -fx-text-fill: -app-text-dark;
+}
+
+.btn-secondary {
+    -fx-background-color: -app-border-color;
+    -fx-text-fill: -app-text-dark;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 15;
+}
+
+.btn-danger-text {
+    -fx-background-color: transparent;
+    -fx-text-fill: -app-danger;
+    -fx-cursor: hand;
+}
+
+/* ========================================
+   TABELAS E LISTAS
+   ======================================== */
+.table-container {
+    -fx-background-color: -app-bg-card;
+    -fx-background-radius: 15;
+}
+
+.table-header {
+    -fx-padding: 15 20;
+    -fx-border-color: -app-border-color;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-column-label {
+    -fx-text-fill: -app-text-muted;
+    -fx-font-weight: bold;
+    -fx-font-size: 11;
+}
+
+.table-row {
+    -fx-padding: 12 20;
+    -fx-border-color: -app-border-subtle;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-action-bar {
+    -fx-background-color: -app-bg-hover;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+}
+
+/* Linha do catálogo */
+.row-thumbnail-container {
+    -fx-background-color: -app-bg-placeholder;
+    -fx-background-radius: 6;
+}
+
+.row-card-name {
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-text-dark;
+    -fx-font-size: 13;
+}
+
+.row-set-name {
+    -fx-text-fill: -app-text-medium;
+    -fx-font-size: 12;
+}
+
+.row-rarity {
+    -fx-text-fill: -app-primary;
+    -fx-font-size: 12;
+    -fx-font-weight: 500;
+}
+
+/* ========================================
+   EXPORTAÇÃO
+   ======================================== */
+.export-card {
+    -fx-background-color: -app-bg-card;
+    -fx-background-radius: 20;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 15, 0, 0, 0);
+}
+
+.export-icon-container {
+    -fx-background-radius: 12;
+}
+
+.export-icon-json {
+    -fx-background-color: -app-highlight-bg;
+}
+
+.export-icon-csv {
+    -fx-background-color: #FFF3E0;
+}
+
+.export-icon-json-text {
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-text-fill: -app-primary;
+}
+
+.export-icon-csv-text {
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-text-fill: -app-warning;
+}
+
+/* ========================================
+   MISCELÂNEA
+   ======================================== */
+.separator-light {
+    -fx-opacity: 0.5;
+}
+
+.recent-icon-container {
+    -fx-background-color: -app-bg-placeholder;
+    -fx-background-radius: 8;
+}
+
+.btn-text-primary {
+    -fx-background-color: transparent;
+    -fx-text-fill: -app-primary;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+/* ========================================
+   TYPE BADGES (ETAPA 4.4)
+   ======================================== */
+.type-badge-pill {
+    -fx-background-radius: 6;
+    -fx-padding: 3 10;
+    -fx-font-weight: bold;
+    -fx-font-size: 9;
+    -fx-text-fill: white;
+}
+
+.type-fire { -fx-background-color: #FF5252; }
+.type-water { -fx-background-color: #448AFF; }
+.type-grass { -fx-background-color: #4CAF50; }
+.type-lightning { -fx-background-color: #FFD740; -fx-text-fill: #5D4037; }
+.type-psychic { -fx-background-color: #E040FB; }
+.type-fighting { -fx-background-color: #E64A19; }
+.type-darkness { -fx-background-color: #37474F; }
+.type-metal { -fx-background-color: #78909C; }
+.type-fairy { -fx-background-color: #F48FB1; }
+.type-dragon { -fx-background-color: #FBC02D; -fx-text-fill: #5D4037; }
+.type-colorless { -fx-background-color: #F5F5F5; -fx-text-fill: #757575; }
+
+.export-banner {
+    -fx-background-color: -app-bg-card;
+    -fx-background-radius: 20;
+    -fx-padding: 30;
+    -fx-border-color: #F8BBD0;
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
 }

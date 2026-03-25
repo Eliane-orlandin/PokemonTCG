@@ -5,41 +5,50 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 12 20; -fx-border-color: #F8F9FB; -fx-border-width: 0 0 1 0;" 
+<!-- Componente de linha do catálogo: exibe uma carta salva na coleção pessoal -->
+<HBox spacing="20" alignment="CENTER_LEFT" styleClass="table-row"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.pokemontcg.controller.CatalogRowController">
     <children>
+        <!-- Checkbox de seleção para exclusão em massa -->
         <CheckBox fx:id="checkSelect" />
         
-        <!-- Info Principal com Miniatura -->
+        <!-- Info Principal com Miniatura da carta -->
         <HBox spacing="12" alignment="CENTER_LEFT" prefWidth="250">
             <children>
-                <StackPane style="-fx-background-color: #ECEFF1; -fx-background-radius: 6;" prefWidth="35" prefHeight="48">
+                <StackPane styleClass="row-thumbnail-container" prefWidth="35" prefHeight="48">
                     <children>
                         <ImageView fx:id="imgMini" fitWidth="35" fitHeight="48" preserveRatio="true" />
                     </children>
                 </StackPane>
                 <VBox>
                     <children>
-                        <Label fx:id="lblName" text="Card Name" style="-fx-font-weight: bold; -fx-text-fill: #263238; -fx-font-size: 13;" />
-                        <Label fx:id="lblSetId" text="SET • ID" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                        <Label fx:id="lblName" text="Card Name" styleClass="row-card-name" />
+                        <Label fx:id="lblSetId" text="SET • ID" styleClass="card-set-id" />
                     </children>
                 </VBox>
             </children>
         </HBox>
         
-        <Label fx:id="lblSetName" text="Set Name Expansion" prefWidth="150" style="-fx-text-fill: #546E7A; -fx-font-size: 12;" />
+        <!-- Nome do Set/Expansão -->
+        <Label fx:id="lblSetName" text="Set Name Expansion" prefWidth="150" styleClass="row-set-name" />
         
-        <Label fx:id="lblType" text="FIRE" style="-fx-background-color: #FF7043; -fx-text-fill: white; -fx-font-size: 9; -fx-font-weight: bold; -fx-padding: 3 12; -fx-background-radius: 12;" />
+        <!-- Badge de Tipo (cor será customizada via controller na Etapa 4.4) -->
+        <Label fx:id="lblType" text="FIRE" styleClass="type-badge-pill" 
+               style="-fx-background-color: #FF7043; -fx-text-fill: white;" />
         
-        <Label fx:id="lblRarity" text="✪ Ultra Rare" prefWidth="120" style="-fx-text-fill: #C2185B; -fx-font-size: 12; -fx-font-weight: 500;" />
+        <!-- Raridade -->
+        <Label fx:id="lblRarity" text="✪ Ultra Rare" prefWidth="120" styleClass="row-rarity" />
         
-        <Label fx:id="lblQty" text="01" prefWidth="40" style="-fx-font-weight: 800; -fx-text-fill: #263238; -fx-font-size: 13;" />
+        <!-- Quantidade -->
+        <Label fx:id="lblQty" text="01" prefWidth="40" styleClass="card-value" style="-fx-font-size: 13;" />
         
+        <!-- Ações (Deletar) -->
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
             <children>
-                <Label onMouseClicked="#handleDelete" text="🗑" style="-fx-font-size: 14; -fx-text-fill: #EF5350; -fx-cursor: hand;" />
+                <FontIcon iconLiteral="fas-trash" iconSize="14" onMouseClicked="#handleDelete" styleClass="btn-delete-icon" />
             </children>
         </HBox>
     </children>

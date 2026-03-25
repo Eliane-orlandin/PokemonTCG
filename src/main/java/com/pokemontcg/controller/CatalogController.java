@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.List;
  */
 public class CatalogController {
 
-    @FXML private VBox vboxCatalogRows;
+    @FXML private VBox vboxCatalog;
+    @FXML private Label lblCatalogStats;
 
     private final CatalogService catalogService;
     
@@ -30,6 +32,16 @@ public class CatalogController {
         loadCatalogFromDatabase();
     }
 
+    @FXML
+    public void handleAddCard() {
+        System.out.println("[Catalogo] Ação: Abrir formulário de adição.");
+    }
+
+    @FXML
+    public void handleExportCatalog() {
+        System.out.println("[Catalogo] Ação: Exportar Coleção.");
+    }
+
     /**
      * Carrega as entradas do banco e preenche a lista visual.
      */
@@ -39,8 +51,13 @@ public class CatalogController {
                 List<CatalogEntry> entries = catalogService.getAllCardsInCatalog();
                 
                 Platform.runLater(() -> {
-                    vboxCatalogRows.getChildren().clear();
-                    renderRows(entries);
+                    if (vboxCatalog != null) {
+                        vboxCatalog.getChildren().clear();
+                        renderRows(entries);
+                    }
+                    if (lblCatalogStats != null) {
+                        lblCatalogStats.setText("Total de Cartas: " + entries.size());
+                    }
                     System.out.println("[Catalog] " + entries.size() + " itens carregados do SQLite.");
                 });
             } catch (Exception e) {
@@ -59,7 +76,7 @@ public class CatalogController {
                 controller.setRowData(entry);
                 controller.setOnDeleteCallback(() -> loadCatalogFromDatabase()); // Atualiza a lista ao deletar
                 
-                vboxCatalogRows.getChildren().add(rowNode);
+                vboxCatalog.getChildren().add(rowNode);
                 
             } catch (IOException e) {
                 System.err.println("Erro ao carregar catalog_row: " + e.getMessage());

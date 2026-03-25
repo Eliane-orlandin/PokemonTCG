@@ -14,8 +14,7 @@ import java.util.List;
 public class HomeController {
 
     @FXML private Label lblTotalCards;
-    @FXML private Label lblDominantType;
-    @FXML private Label lblDominantCount;
+    @FXML private Label lblRareCards;
 
     private CatalogRepository repository = new CatalogRepository();
 
@@ -24,25 +23,41 @@ public class HomeController {
         updateStatistics();
     }
 
+    @FXML
+    public void handleSearchShortcut() {
+        System.out.println("[Dashboard] Atalho: Buscar Novos Cards");
+        // A lógica de navegação centralizada deve ser chamada via evento ou referência ao MainController se necessário
+    }
+
+    @FXML
+    public void handleCollectionShortcut() {
+        System.out.println("[Dashboard] Atalho: Ver Minha Coleção");
+    }
+
     private void updateStatistics() {
         new Thread(() -> {
             try {
                 List<CatalogEntry> allCards = repository.findAll();
-                int totalQuantity = allCards.stream().mapToInt(CatalogEntry::getQuantity).sum();
+                int totalQuantity = 0;
+                int rareCount = 0;
                 
-                // Para este MVP, vamos apenas contar o total. 
-                // A lógica de "Tipo Dominante" pode ser expandida depois.
+                for (CatalogEntry entry : allCards) {
+                    totalQuantity += entry.getQuantity();
+                    String rarity = entry.getRarity() != null ? entry.getRarity().toLowerCase() : "";
+                    if (rarity.contains("rare") || rarity.contains("promo") || rarity.contains("vmax") || rarity.contains("vstar")) {
+                        rareCount += entry.getQuantity();
+                    }
+                }
+                
+                final int finalTotal = totalQuantity;
+                final int finalRare = rareCount;
                 
                 Platform.runLater(() -> {
-                    lblTotalCards.setText(String.format("%,d", totalQuantity));
-                    // Se não houver cartas, mostramos valores padrão
-                    if (totalQuantity == 0) {
-                        lblDominantType.setText("None yet");
-                        lblDominantCount.setText("0 CARDS CATALOGED");
-                    }
+                    lblTotalCards.setText(String.format("%,d", finalTotal));
+                    lblRareCards.setText(String.format("%,d", finalRare));
                 });
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println("Erro ao atualizar estatísticas: " + e.getMessage());
             }
         }).start();
     }

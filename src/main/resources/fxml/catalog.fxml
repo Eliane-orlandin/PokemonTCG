@@ -1,64 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
-          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.pokemontcg.controller.CatalogController">
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.CatalogController">
     <content>
-        <VBox spacing="25.0" styleClass="content-area">
+        <VBox spacing="30" styleClass="content-area">
             <children>
-                <!-- (...) - omitindo o header ja existente para brevidade no replacement se possivel, mas vou substituir o bloco todo -->
-                <HBox alignment="CENTER_LEFT">
+                <!-- Título e Ações Principais -->
+                <HBox alignment="CENTER_LEFT" spacing="20">
                     <children>
-                        <VBox spacing="5">
-                            <Label text="Gestão da Coleção" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #263238;" />
-                            <Label text="Curadoria do seu acervo digital" style="-fx-text-fill: #78909C; -fx-font-size: 14;" />
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <children>
+                                        <FontIcon iconLiteral="fas-th-large" iconSize="26" styleClass="card-icon-primary" />
+                                        <Label text="MINHA COLEÇÃO" styleClass="section-title-xl" />
+                                    </children>
+                                </HBox>
+                                <Label fx:id="lblCatalogStats" text="Total de Cartas: 0 | Valor Estimado: $0.00" styleClass="section-subtitle" />
+                            </children>
                         </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <HBox spacing="10" alignment="CENTER">
-                            <children>
-                                <Button text="Filtrar" style="-fx-background-color: white; -fx-border-color: #ECEFF1; -fx-border-radius: 8; -fx-padding: 8 20;" />
-                                <Button text="Ordenar Por" style="-fx-background-color: white; -fx-border-color: #ECEFF1; -fx-border-radius: 8; -fx-padding: 8 20;" />
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #F8F9FB; -fx-background-radius: 12; -fx-padding: 15;">
-                    <children>
-                        <Label text="EXPORTAÇÕES" style="-fx-text-fill: #C2185B; -fx-font-weight: bold; -fx-font-size: 11;" />
-                        <Button text="Exportar como JSON" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 15;" />
-                        <Button text="Exportar como CSV" style="-fx-background-color: #ECEFF1; -fx-text-fill: #263238; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 15;" />
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Button text="🗑 Exclusão em Massa" style="-fx-background-color: transparent; -fx-text-fill: #EF5350;" />
-                    </children>
-                </HBox>
-
-                <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.02), 10, 0, 0, 0);">
-                    <children>
-                        <HBox spacing="20" style="-fx-padding: 15 20; -fx-border-color: #ECEFF1; -fx-border-width: 0 0 1 0;">
-                            <children>
-                                <CheckBox />
-                                <Label text="NOME DO CARD" prefWidth="250" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 11;" />
-                                <Label text="COLEÇÃO" prefWidth="150" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 11;" />
-                                <Label text="TIPO" prefWidth="100" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 11;" />
-                                <Label text="RARIDADE" prefWidth="120" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 11;" />
-                                <Label text="QTD" prefWidth="40" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 11;" />
-                                <Label text="AÇÕES" style="-fx-text-fill: #78909C; -fx-font-weight: bold; -fx-font-size: 11;" />
-                            </children>
-                        </HBox>
                         
-                        <!-- Container para Linhas Dinâmicas do Banco de Dados -->
-                        <VBox fx:id="vboxCatalogRows" spacing="0">
-                            <!-- Injetado dinamicamente -->
+                        <Button onAction="#handleAddCard" styleClass="btn-primary-md" text="Adicionar Card">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-plus" iconSize="16" style="-fx-icon-color: -app-text-on-primary;" />
+                            </graphic>
+                        </Button>
+                        
+                        <Button onAction="#handleExportCatalog" styleClass="btn-outline" text="Exportar">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-file-export" iconSize="16" styleClass="ikonli-font-icon" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+                
+                <!-- Área da Tabela Estilizada -->
+                <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+                    <children>
+                        <VBox fx:id="vboxCatalog" spacing="1">
+                            <!-- Cabeçalho da Lista -->
+                            <HBox styleClass="table-header" spacing="15">
+                                <children>
+                                    <Label prefWidth="60" text="CARD" styleClass="table-column-label" />
+                                    <Label text="NOME E SÉRIE" styleClass="table-column-label" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+                                    <Label prefWidth="120" text="RARIDADE" styleClass="table-column-label" />
+                                    <Label prefWidth="100" text="QTD" styleClass="table-column-label" alignment="CENTER" />
+                                    <Label prefWidth="120" text="AÇÕES" styleClass="table-column-label" alignment="CENTER" />
+                                </children>
+                            </HBox>
+                            <!-- Linhas inseridas dinamicamente -->
                         </VBox>
                     </children>
                 </VBox>
-
-                <!-- Injetado dinamicamente -->
             </children>
         </VBox>
     </content>

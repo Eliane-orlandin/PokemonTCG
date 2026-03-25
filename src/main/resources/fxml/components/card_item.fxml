@@ -6,33 +6,39 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
+<!-- Componente individual de carta: exibido nos resultados de busca -->
 <VBox spacing="10" styleClass="card-item-container" fx:id="cardRoot"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.pokemontcg.controller.CardItemController"
-      style="-fx-cursor: hand; -fx-padding: 10;">
+      fx:controller="com.pokemontcg.controller.CardItemController">
     <children>
         <!-- Container da Imagem com bordas arredondadas -->
-        <StackPane fx:id="imageContainer" prefWidth="180" prefHeight="250" style="-fx-background-color: #ECEFF1; -fx-background-radius: 15;">
+        <StackPane fx:id="imageContainer" prefWidth="180" prefHeight="250" styleClass="card-image-placeholder">
             <children>
                 <ImageView fx:id="cardImage" fitWidth="180" fitHeight="250" preserveRatio="true" />
             </children>
         </StackPane>
         
-        <!-- Detalhes da Carta -->
+        <!-- Detalhes da Carta: nome, set ID e botão de adicionar -->
         <HBox alignment="CENTER_LEFT">
             <VBox HBox.hgrow="ALWAYS">
-                <Label fx:id="lblSetId" text="SET ID • 000/000" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
-                <Label fx:id="lblName" text="Pokémon Name" style="-fx-font-weight: 800; -fx-font-size: 15; -fx-text-fill: #263238;" />
+                <Label fx:id="lblSetId" text="SET ID • 000/000" styleClass="card-set-id" />
+                <Label fx:id="lblName" text="Pokémon Name" styleClass="card-name" />
             </VBox>
-            <Button onAction="#handleAddToCollection" text="+" 
-                    style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 50; -fx-min-width: 30; -fx-min-height: 30; -fx-padding: 0; -fx-cursor: hand;" />
+            <!-- Botão redondo "+" para adicionar à coleção -->
+            <Button onAction="#handleAddToCollection" styleClass="btn-add-card">
+                <graphic>
+                    <FontIcon iconLiteral="fas-plus" iconSize="12" style="-fx-icon-color: white;" />
+                </graphic>
+            </Button>
         </HBox>
         
+        <!-- Badge de tipo e raridade -->
         <HBox spacing="8" alignment="CENTER_LEFT">
             <children>
-                <Label fx:id="lblType" text="TYPE" style="-fx-background-color: #F5F5F5; -fx-text-fill: #9E9E9E; -fx-font-weight: bold; -fx-font-size: 9; -fx-padding: 3 10; -fx-background-radius: 6;" />
-                <Label fx:id="lblRarity" text="Rarity" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
+                <Label fx:id="lblType" text="TYPE" styleClass="type-badge-pill" />
+                <Label fx:id="lblRarity" text="Rarity" styleClass="card-rarity" />
             </children>
         </HBox>
     </children>

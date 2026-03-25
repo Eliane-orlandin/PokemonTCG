@@ -32,32 +32,32 @@ public class MainController {
     @FXML
     public void initialize() {
         menuButtons = Arrays.asList(btnHome, btnSearch, btnCatalog, btnExport);
-        showHome();
+        handleNavigateHome();
     }
 
     /**
      * Carrega o Dashboard / Home.
      */
     @FXML
-    public void showHome() {
+    public void handleNavigateHome() {
         System.out.println("[DEBUG] MainController: Navegando para HOME");
         loadView("/fxml/home.fxml", btnHome);
     }
 
     @FXML
-    public void showSearch() {
+    public void handleNavigateSearch() {
         System.out.println("[DEBUG] MainController: Navegando para BUSCA");
         loadView("/fxml/search.fxml", btnSearch);
     }
 
     @FXML
-    public void showCatalog() {
+    public void handleNavigateCatalog() {
         System.out.println("[DEBUG] MainController: Navegando para CATALOGO");
         loadView("/fxml/catalog.fxml", btnCatalog);
     }
 
     @FXML
-    public void showExport() {
+    public void handleNavigateExport() {
         System.out.println("[DEBUG] MainController: Navegando para EXPORTACAO");
         loadView("/fxml/export.fxml", btnExport);
     }

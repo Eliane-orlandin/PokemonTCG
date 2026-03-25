@@ -85,25 +85,32 @@ public class CardItemController {
     private void updateTypeBadge(String type) {
         if (type == null) return;
         
-        // Definindo cores de fundo baseadas no tipo (estilo Pokémon TCG)
-        String bgColor = "#F5F5F5"; // Padrão
-        String textColor = "#9E9E9E";
+        // Limpa classes de tipo anteriores para evitar conflitos
+        lblType.getStyleClass().removeAll(
+            "type-fire", "type-water", "type-grass", "type-lightning", 
+            "type-psychic", "type-fighting", "type-darkness", "type-metal", 
+            "type-fairy", "type-dragon", "type-colorless"
+        );
+        
+        String cleanType = type.toLowerCase().trim();
+        String styleClass = "type-colorless"; // Default
         String displayType = type.toUpperCase();
         
-        switch (type.toLowerCase()) {
-            case "fire": bgColor = "#FF7043"; textColor = "white"; displayType = "FOGO"; break;
-            case "water": bgColor = "#42A5F5"; textColor = "white"; displayType = "ÁGUA"; break;
-            case "lightning": bgColor = "#FFEE58"; textColor = "#FBC02D"; displayType = "ELÉTRICO"; break;
-            case "grass": bgColor = "#66BB6A"; textColor = "white"; displayType = "PLANTA"; break;
-            case "psychic": bgColor = "#AB47BC"; textColor = "white"; displayType = "PSÍQUICO"; break;
-            case "darkness": bgColor = "#263238"; textColor = "white"; displayType = "NOTURNO"; break;
-            case "dragon": bgColor = "#FB8C00"; textColor = "white"; displayType = "DRAGÃO"; break;
-            case "colorless": bgColor = "#F5F5F5"; textColor = "#9E9E9E"; displayType = "INCOLOR"; break;
-            case "metal": bgColor = "#B0BEC5"; textColor = "white"; displayType = "METAL"; break;
-            case "fighting": bgColor = "#B87333"; textColor = "white"; displayType = "LUTADOR"; break;
+        switch (cleanType) {
+            case "fire": styleClass = "type-fire"; displayType = "FOGO"; break;
+            case "water": styleClass = "type-water"; displayType = "ÁGUA"; break;
+            case "lightning": styleClass = "type-lightning"; displayType = "ELÉTRICO"; break;
+            case "grass": styleClass = "type-grass"; displayType = "PLANTA"; break;
+            case "psychic": styleClass = "type-psychic"; displayType = "PSÍQUICO"; break;
+            case "darkness": styleClass = "type-darkness"; displayType = "NOTURNO"; break;
+            case "dragon": styleClass = "type-dragon"; displayType = "DRAGÃO"; break;
+            case "metal": styleClass = "type-metal"; displayType = "METAL"; break;
+            case "fighting": styleClass = "type-fighting"; displayType = "LUTADOR"; break;
+            case "fairy": styleClass = "type-fairy"; displayType = "FADA"; break;
         }
         
         lblType.setText(displayType);
-        lblType.setStyle(String.format("-fx-background-color: %s; -fx-text-fill: %s; -fx-background-radius: 6; -fx-padding: 3 10; -fx-font-weight: bold; -fx-font-size: 9;", bgColor, textColor));
+        lblType.getStyleClass().add(styleClass);
+        // O padding e radius agora vêm da classe base .type-badge-pill no FXML ou CSS
     }
 }

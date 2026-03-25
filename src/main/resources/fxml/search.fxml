@@ -3,42 +3,77 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
-          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.pokemontcg.controller.SearchController">
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.SearchController">
     <content>
-        <VBox spacing="30.0" styleClass="content-area">
+        <VBox spacing="30" styleClass="content-area">
             <children>
-                <!-- Título e Barra de Busca Central -->
-                <VBox alignment="CENTER" spacing="15">
+                <!-- Título e Descrição -->
+                <VBox spacing="5">
                     <children>
-                        <VBox spacing="5" alignment="CENTER">
-                            <Label text="Pokémon TCG Search" style="-fx-font-size: 32; -fx-font-weight: 900; -fx-text-fill: #263238;" />
-                            <Label text="Explore o banco de dados oficial da TCGdex (v2)" style="-fx-text-fill: #78909C; -fx-font-size: 14;" />
-                        </VBox>
-                        
-                        <HBox alignment="CENTER" spacing="15">
-                            <VBox.margin><Insets top="20" /></VBox.margin>
+                        <HBox alignment="CENTER_LEFT" spacing="10">
                             <children>
-                                <ComboBox fx:id="comboSearchType" prefWidth="120" styleClass="search-combo" />
-                                <TextField fx:id="txtSearch" prefWidth="430" promptText="Ex: Pikachu, Charizard, Mewtwo..." styleClass="search-field" />
-                                <Button onAction="#handleSearch" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 10 30; -fx-cursor: hand;" text="PROCURAR" />
+                                <FontIcon iconLiteral="fas-search" iconSize="28" styleClass="card-icon-primary" />
+                                <Label text="PROCURAR CARTAS" styleClass="section-title-xl" />
                             </children>
                         </HBox>
+                        <Label text="Acesse o banco de dados global da Pokémon Company e filtre por raridade, tipo ou série." styleClass="section-subtitle" />
                     </children>
                 </VBox>
+                
+                <!-- Barra de Busca Principal -->
+                <HBox spacing="15">
+                    <children>
+                        <TextField fx:id="txtSearch" promptText="Ex: Charizard, Lugia, Pikachu..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleSearch" styleClass="btn-primary-md" text="BUSCAR">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-search" iconSize="16" style="-fx-icon-color: -app-text-on-primary;" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+                
+                <!-- Filtros Rápidos -->
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <children>
+                        <VBox spacing="5">
+                            <children>
+                                <Label text="TIPO" styleClass="app-subtitle" />
+                                <ComboBox fx:id="comboType" prefWidth="180" promptText="Todos os Tipos" styleClass="btn-outline" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <children>
+                                <Label text="RARIDADE" styleClass="app-subtitle" />
+                                <ComboBox fx:id="comboRarity" prefWidth="180" promptText="Todas as Raridades" styleClass="btn-outline" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <children>
+                                <Label text="SÉRIE" styleClass="app-subtitle" />
+                                <ComboBox fx:id="comboSet" prefWidth="180" promptText="Todas as Séries" styleClass="btn-outline" />
+                            </children>
+                        </VBox>
+                        
+                        <Region HBox.hgrow="ALWAYS" />
+                        
+                        <Button styleClass="btn-danger-text" text="Limpar Filtros">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-filter" iconSize="14" />
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
 
-                <Separator style="-fx-opacity: 0.5;" />
-
-                <!-- Indicador de Status/Loading -->
-                <Label fx:id="lblStatus" text="Ready to search..." style="-fx-text-fill: #78909C; -fx-font-size: 12;" />
-
+                <Separator styleClass="separator-light" />
+                
                 <!-- Grade de Resultados -->
-                <FlowPane fx:id="flowResults" hgap="25" vgap="40" alignment="CENTER" 
-                          prefWrapLength="1000" minHeight="500">
+                <FlowPane fx:id="flowResults" hgap="25" vgap="40" alignment="CENTER" prefWrapLength="1000">
                     <padding>
-                        <Insets top="20" right="20" bottom="50" left="20" />
+                        <Insets top="10" right="10" bottom="30" left="10" />
                     </padding>
                     <!-- Os componentes card_item.fxml serão injetados aqui via controlador -->
                 </FlowPane>

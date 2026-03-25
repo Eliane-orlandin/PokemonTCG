@@ -1,151 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" 
-          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.pokemontcg.controller.HomeController">
+<ScrollPane fitToWidth="true" styleClass="scroll-pane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.HomeController">
     <content>
-        <VBox spacing="30.0" styleClass="content-area">
+        <VBox spacing="30" styleClass="content-area">
             <children>
-                <!-- (...) -->
-                <HBox alignment="BOTTOM_LEFT">
+                <!-- Título de Boas-vindas -->
+                <VBox spacing="5">
                     <children>
-                        <VBox spacing="5">
-                            <Label text="Pulso da Coleção" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #263238;" />
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Label text="ÚLTIMA ATUALIZAÇÃO: AGORA" style="-fx-text-fill: #78909C; -fx-font-size: 12; -fx-font-weight: bold;" />
+                        <Label text="Bem-vindo, Treinador" styleClass="section-title-xl" />
+                        <Label text="Sua biblioteca lendária de cards aguarda sua exploração" styleClass="section-subtitle" />
                     </children>
-                </HBox>
-
-                <HBox spacing="25">
+                </VBox>
+                
+                <!-- Cards de Pulso (Estatísticas) -->
+                <HBox spacing="20">
                     <children>
-                        <!-- Card 1: Total Artifacts -->
-                        <VBox prefWidth="300" styleClass="pulse-card">
+                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, pulse-card">
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="10">
-                                    <Label text="🗂" style="-fx-font-size: 24; -fx-text-fill: #C2185B;" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Label text="+0% ESTE MÊS" styleClass="card-increment" />
-                                </HBox>
-                                <Label text="Total de Cartas" styleClass="card-title">
-                                    <VBox.margin><Insets top="40"/></VBox.margin>
-                                </Label>
-                                <Label fx:id="lblTotalCards" text="0" styleClass="card-value" />
-                            </children>
-                        </VBox>
-
-                        <!-- Card 2: Dominant Element -->
-                        <VBox prefWidth="300" styleClass="pulse-card">
-                            <children>
-                                <Label text="🔥" style="-fx-font-size: 24; -fx-text-fill: #FF5722;" />
-                                <Label text="Elemento Dominante" styleClass="card-title">
-                                    <VBox.margin><Insets top="15"/></VBox.margin>
-                                </Label>
-                                <Label fx:id="lblDominantType" text="Tipo Fogo" styleClass="card-value" />
-                                <Label fx:id="lblDominantCount" text="0 CARTAS CATALOGADAS" style="-fx-text-fill: #C2185B; -fx-font-size: 11; -fx-font-weight: bold;" />
-                            </children>
-                        </VBox>
-
-                        <!-- Card 3: Recent Additions -->
-                        <VBox prefWidth="350" styleClass="pulse-card">
-                            <children>
-                                <Label text="Adições Recentes" styleClass="card-title" />
-                                <VBox spacing="15">
-                                    <VBox.margin><Insets top="20"/></VBox.margin>
                                     <children>
-                                        <HBox spacing="15" alignment="CENTER_LEFT">
-                                            <StackPane style="-fx-background-color: #ECEFF1; -fx-background-radius: 8;" prefWidth="45" prefHeight="45">
-                                                <Label text="🔥" />
-                                            </StackPane>
-                                            <VBox>
-                                                <Label text="Charizard G LV.X" style="-fx-font-weight: bold; -fx-text-fill: #263238;" />
-                                                <Label text="ADICIONADO HÁ 2H" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
-                                            </VBox>
-                                        </HBox>
-                                        <HBox spacing="15" alignment="CENTER_LEFT">
-                                            <StackPane style="-fx-background-color: #ECEFF1; -fx-background-radius: 8;" prefWidth="45" prefHeight="45">
-                                                <Label text="💧" />
-                                            </StackPane>
-                                            <VBox>
-                                                <Label text="Mewtwo VSTAR" style="-fx-font-weight: bold; -fx-text-fill: #263238;" />
-                                                <Label text="ADICIONADO HÁ 5H" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
-                                            </VBox>
-                                        </HBox>
-                                        <Button text="VER LOG COMPLETO →" style="-fx-background-color: transparent; -fx-text-fill: #C2185B; -fx-font-weight: bold; -fx-padding: 0; -fx-cursor: hand;" />
+                                        <FontIcon iconLiteral="fas-th-list" iconSize="20" styleClass="card-icon-primary" />
+                                        <Label text="Total de Cartas" styleClass="card-title" />
                                     </children>
-                                </VBox>
+                                </HBox>
+                                <Label fx:id="lblTotalCards" text="1.240" styleClass="card-value" />
+                                <Label text="REGISTRADAS NO SISTEMA" styleClass="app-subtitle" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, pulse-card">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <children>
+                                        <FontIcon iconLiteral="fas-star" iconSize="20" style="-fx-icon-color: #FFC107;" />
+                                        <Label text="Cartas Raras" styleClass="card-title" />
+                                    </children>
+                                </HBox>
+                                <Label fx:id="lblRareCards" text="42" styleClass="card-value" />
+                                <Label text="NÍVEL ULTRA &amp; SECRETO" styleClass="app-subtitle" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, pulse-card">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <children>
+                                        <FontIcon iconLiteral="fas-globe" iconSize="20" styleClass="ikonli-font-icon" />
+                                        <Label text="Status da API" styleClass="card-title" />
+                                    </children>
+                                </HBox>
+                                <Label text="CONECTADO" style="-fx-text-fill: #4CAF50;" styleClass="card-value" />
+                                <Label text="TCGDEX API v2" styleClass="app-subtitle" />
                             </children>
                         </VBox>
                     </children>
                 </HBox>
-
-                <!-- Galeria Curada -->
-                <VBox spacing="20">
+                
+                <!-- Ações Rápidas -->
+                <VBox spacing="15">
                     <children>
-                        <HBox alignment="BOTTOM_LEFT">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
                             <children>
-                                <Label text="Curated Gallery" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #263238;" />
-                                <Region HBox.hgrow="ALWAYS" />
-                                <HBox spacing="10">
-                                    <Label text="∷" style="-fx-font-size: 20; -fx-text-fill: #263238;" />
-                                    <Label text="≡" style="-fx-font-size: 20; -fx-text-fill: #78909C;" />
-                                </HBox>
+                                <FontIcon iconLiteral="fas-bolt" iconSize="18" styleClass="card-icon-primary" />
+                                <Label text="Acesso Rápido" styleClass="section-title-sm" />
                             </children>
                         </HBox>
                         
-                        <!-- Grid de Cartas (Exemplo Estático) -->
-                        <FlowPane hgap="25" vgap="25">
+                        <HBox spacing="15">
                             <children>
-                                <!-- Card Item Mockup -->
-                                <VBox spacing="10">
-                                    <StackPane prefWidth="180" prefHeight="250" style="-fx-background-color: #ECEFF1; -fx-background-radius: 15;">
-                                        <Label text="Charizard Image" style="-fx-text-fill: #78909C;" />
-                                    </StackPane>
-                                    <Label text="SWSH04 • 025/185" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
-                                    <Label text="Pikachu VMAX" style="-fx-font-weight: 800; -fx-font-size: 16; -fx-text-fill: #263238;" />
-                                    <HBox spacing="5" alignment="CENTER_LEFT">
-                                        <Label text="ELECTRIC" style="-fx-background-color: #FFF9C4; -fx-text-fill: #FBC02D; -fx-font-weight: bold; -fx-font-size: 9; -fx-padding: 2 8; -fx-background-radius: 5;" />
-                                        <Label text="Ultra Rare" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
-                                    </HBox>
-                                </VBox>
-                                
-                                <VBox spacing="10">
-                                    <StackPane prefWidth="180" prefHeight="250" style="-fx-background-color: #ECEFF1; -fx-background-radius: 15;">
-                                        <Label text="Lugia Image" style="-fx-text-fill: #78909C;" />
-                                    </StackPane>
-                                    <Label text="SILVER • 186/195" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
-                                    <Label text="Lugia VSTAR" style="-fx-font-weight: 800; -fx-font-size: 16; -fx-text-fill: #263238;" />
-                                    <HBox spacing="5" alignment="CENTER_LEFT">
-                                        <Label text="COLORLESS" style="-fx-background-color: #F5F5F5; -fx-text-fill: #9E9E9E; -fx-font-weight: bold; -fx-font-size: 9; -fx-padding: 2 8; -fx-background-radius: 5;" />
-                                        <Label text="Secret Rare" style="-fx-font-size: 10; -fx-text-fill: #78909C;" />
-                                    </HBox>
-                                </VBox>
+                                <Button onAction="#handleSearchShortcut" styleClass="btn-primary-md" text="Procurar Novos Cards" />
+                                <Button onAction="#handleCollectionShortcut" styleClass="btn-outline" text="Ver Minha Coleção" />
                             </children>
-                        </FlowPane>
+                        </HBox>
                     </children>
                 </VBox>
 
-                <!-- Banner de Exportação -->
-                <HBox alignment="CENTER_LEFT" style="-fx-background-color: #FFFFFF; -fx-background-radius: 20; -fx-padding: 30; -fx-border-color: #F8BBD0; -fx-border-width: 2; -fx-border-radius: 20;">
+                <!-- Área de Recentes (Placeholder para o FlowPane dinâmico) -->
+                <VBox spacing="15">
                     <children>
-                        <VBox spacing="5">
-                            <Label text="Pronto para exportar sua coleção?" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #263238;" />
-                            <Label text="Gere planilhas PDF de alta fidelidade ou dados JSON para trocas." style="-fx-text-fill: #78909C;" />
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <HBox spacing="15">
-                            <Button text="Baixar JSON" style="-fx-background-color: transparent; -fx-border-color: #ECEFF1; -fx-border-radius: 10; -fx-padding: 10 20; -fx-text-fill: #263238; -fx-font-weight: bold;" />
-                            <Button text="Exportar Catálogo PDF" style="-fx-background-color: #C2185B; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20;" />
-                        </HBox>
+                        <Label text="Adicionados Recentemente" styleClass="section-title-sm" />
+                        <FlowPane fx:id="flowRecentCards" hgap="20" vgap="20">
+                            <!-- Cards serão inseridos aqui via Controller -->
+                        </FlowPane>
                     </children>
-                </HBox>
+                </VBox>
             </children>
         </VBox>
     </content>
