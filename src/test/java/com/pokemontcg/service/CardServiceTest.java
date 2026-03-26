@@ -23,7 +23,7 @@ public class CardServiceTest {
         
         TcgDexClient stubClient = new TcgDexClient() {
             @Override
-            public List<Card> searchCards(String name, String category, String type, String rarity, String series) {
+            public List<Card> searchCards(String name, String category, String type, String rarity, String series, String localId) {
                 apiCalled = true;
                 List<Card> list = new ArrayList<>();
                 Card c = new Card();
