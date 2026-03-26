@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!-- Componente de linha do catálogo: exibe uma carta salva na coleção pessoal -->
-<HBox spacing="20" alignment="CENTER_LEFT" styleClass="table-row"
-      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.pokemontcg.controller.CatalogRowController">
+<HBox fx:id="rootContainer" spacing="15" alignment="CENTER_LEFT" styleClass="table-row"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.pokemontcg.controller.CatalogRowController"
+      onMouseClicked="#handleShowDetail">
     <children>
         <!-- Info Principal com Miniatura da carta -->
         <HBox spacing="12" alignment="CENTER_LEFT" prefWidth="250">
@@ -20,7 +20,7 @@
                         <ImageView fx:id="imgMini" fitWidth="35" fitHeight="48" preserveRatio="true" />
                     </children>
                 </StackPane>
-                <VBox>
+                <VBox alignment="CENTER_LEFT">
                     <children>
                         <Label fx:id="lblName" text="Card Name" styleClass="row-card-name" />
                         <Label fx:id="lblSetId" text="SET • ID" styleClass="card-set-id" />
@@ -29,21 +29,24 @@
             </children>
         </HBox>
         
-        <!-- Nome do Set/Expansão -->
-        <Label fx:id="lblSetName" text="Set Name Expansion" prefWidth="150" styleClass="row-set-name" />
+        <!-- Estágio da carta -->
+        <Label fx:id="lblStage" text="Básico" prefWidth="120" styleClass="row-set-name" />
         
-        <!-- Badge de Tipo (cor será customizada via controller na Etapa 4.4) -->
-        <Label fx:id="lblType" text="FIRE" styleClass="type-badge-pill" 
-               style="-fx-background-color: #FF7043; -fx-text-fill: white;" />
+        <!-- Badge de Tipo -->
+        <HBox prefWidth="100" alignment="CENTER_LEFT">
+            <children>
+                <Label fx:id="lblType" text="FIRE" styleClass="type-badge-pill" />
+            </children>
+        </HBox>
         
         <!-- Raridade -->
-        <Label fx:id="lblRarity" text="✪ Ultra Rare" prefWidth="120" styleClass="row-rarity" />
+        <Label fx:id="lblRarity" text="✪ Ultra Rare" prefWidth="150" styleClass="row-rarity" />
         
         <!-- Quantidade -->
-        <Label fx:id="lblQty" text="01" prefWidth="40" styleClass="card-value" style="-fx-font-size: 13;" />
+        <Label fx:id="lblQty" text="01" prefWidth="60" styleClass="card-value" alignment="CENTER" />
         
         <!-- Ações (Deletar) -->
-        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
+        <HBox alignment="CENTER_RIGHT" prefWidth="80" spacing="10">
             <children>
                 <FontIcon iconLiteral="fas-trash" iconSize="14" onMouseClicked="#handleDelete" styleClass="btn-delete-icon" />
             </children>

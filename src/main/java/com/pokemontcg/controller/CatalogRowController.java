@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.Cursor;
 
 /**
  * Controlador para uma linha individual da tabela de catálogo.
@@ -19,6 +21,7 @@ public class CatalogRowController {
     @FXML private Label lblType;
     @FXML private Label lblRarity;
     @FXML private Label lblQty;
+    @FXML private HBox rootContainer; // Mapeia o root do FXML para aplicar efeitos visuais
     
     private CatalogEntry entry;
     private Runnable onDeleteCallback;
@@ -30,6 +33,14 @@ public class CatalogRowController {
 
     public void setOnDeleteCallback(Runnable callback) {
         this.onDeleteCallback = callback;
+    }
+
+    @FXML
+    public void initialize() {
+        // Define o ponteiro de mão via código para evitar erros de coerção no FXML do JavaFX 21
+        if (rootContainer != null) {
+            rootContainer.setCursor(Cursor.HAND);
+        }
     }
 
     public void setRowData(CatalogEntry entry) {
