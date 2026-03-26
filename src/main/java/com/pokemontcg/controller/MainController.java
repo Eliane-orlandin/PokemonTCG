@@ -98,8 +98,6 @@ public class MainController {
             if (rarityFilter != null) {
                 CatalogController controller = loader.getController();
                 controller.setInitialRarityFilter(rarityFilter);
-                // Re-inicializa para aplicar o filtro após a injeção
-                controller.initialize();
             }
             
             contentArea.getChildren().setAll(view);
@@ -133,6 +131,45 @@ public class MainController {
             
         } catch (IOException e) {
             System.err.println("Erro ao carregar FXML: " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Exibe o modal de detalhes de uma carta (pode vir da busca ou do catálogo).
+     */
+    public void showCardDetail(com.pokemontcg.model.CatalogEntry entry) {
+        if (entry == null || contentArea == null) return;
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/card_detail_modal.fxml"));
+            StackPane modal = loader.load();
+            CardDetailController controller = loader.getController();
+            
+            // Tenta obter dados completos da API em background
+            Thread t = new Thread(() -> {
+                try {
+                    com.pokemontcg.service.CardService cardService = new com.pokemontcg.service.CardService();
+                    com.pokemontcg.model.Card fullCard = cardService.getCardDetails(entry.getCardId());
+                    javafx.application.Platform.runLater(() -> {
+                        if (fullCard != null) {
+                            controller.setCardData(fullCard);
+                        } else {
+                            controller.setCardData(entry);
+                        }
+                    });
+                } catch (Exception e) {
+                    javafx.application.Platform.runLater(() -> controller.setCardData(entry));
+                }
+            });
+            t.setDaemon(true); // Não impede a JVM de fechar
+            t.start();
+            
+            contentArea.getChildren().add(modal);
+            controller.setOnCloseCallback(() -> contentArea.getChildren().remove(modal));
+            
+        } catch (IOException e) {
+            System.err.println("[DEBUG] Erro ao carregar modal de detalhes: " + e.getMessage());
             e.printStackTrace();
         }
     }

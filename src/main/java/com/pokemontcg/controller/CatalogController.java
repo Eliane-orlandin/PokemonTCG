@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,15 +35,27 @@ public class CatalogController {
 
     @FXML
     public void initialize() {
-        // Inicializar categorías locais (exemplo)
+        System.out.println("[Catalogo] Inicializando...");
+        
+        // Inicializar categorías locais
         if (comboCategoryLocal != null) {
             comboCategoryLocal.getItems().clear();
             comboCategoryLocal.getItems().addAll("Todas", "Pokémon", "Treinador", "Energia");
             comboCategoryLocal.getSelectionModel().selectFirst();
+            
+            comboCategoryLocal.setOnAction(e -> handleLocalSearch());
         }
         
-        // Carrega o catálogo respeitando um possível filtro pré-existente
-        loadCatalogFromDatabase(null);
+        if (txtSearchLocal != null) {
+            txtSearchLocal.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    handleLocalSearch();
+                }
+            });
+        }
+        
+        // Dispara o carregamento inicial (Platform.runLater garante que o rarityFilter injetado já esteja lá)
+        Platform.runLater(() -> loadCatalogFromDatabase(null));
     }
 
     /**
@@ -62,74 +76,102 @@ public class CatalogController {
      * Carrega as entradas do banco e preenche a lista visual com filtro opcional.
      */
     private void loadCatalogFromDatabase(String nameFilter) {
-        new Thread(() -> {
+        // Captura o estado da UI ANTES de entrar na Thread de banco
+        final String selectedCategory = (comboCategoryLocal != null && comboCategoryLocal.getValue() != null) 
+                                        ? comboCategoryLocal.getValue() : "Todas";
+        
+        System.out.println("[Catalogo] Iniciando carregamento. Filtro Nome: " + nameFilter + ", Categoria: " + selectedCategory + ", FiltroDashboard: " + rarityFilter);
+
+        Thread t = new Thread(() -> {
             try {
+                // Recupera todos os cards registrados no banco
                 List<CatalogEntry> entries = catalogService.getAllCardsInCatalog();
-                
-                // 1. Aplicar filtro de raridade se estiver definido (vinda do Dashboard)
+                System.out.println("[Catalogo] Registros no banco: " + (entries != null ? entries.size() : 0));
+
+                if (entries == null) return;
+
+                // 1. Aplicar filtro de raridade rápida (vinda do Dashboard se houver)
                 if (rarityFilter != null && !rarityFilter.isEmpty()) {
                     final String rRef = rarityFilter.toLowerCase();
                     entries = entries.stream()
                         .filter(e -> {
                             String r = e.getRarity() != null ? e.getRarity().toLowerCase() : "";
-                            // Filtro abrangente para Cartas Especiais/Raras
-                            return r.contains("rara") || 
-                                   r.contains("holo") || 
-                                   r.contains("ultra") || 
-                                   r.contains("secret") || 
-                                   r.contains("secreta") || 
-                                   r.contains("vmax") || 
-                                   r.contains("vstar") || 
-                                   r.contains("ilustração") ||
-                                   r.contains("especial") ||
-                                   r.contains("shiny") ||
-                                   r.contains("promo");
+                            return r.contains("rara") || r.contains("holo") || r.contains("ultra") || 
+                                   r.contains("secret") || r.contains("secreta") || r.contains("vmax") || 
+                                   r.contains("vstar") || r.contains("ilustração") || r.contains("especial") ||
+                                   r.contains("shiny") || r.contains("promo");
                         })
                         .collect(Collectors.toList());
+                    System.out.println("[Catalogo] Após filtro de raridade dashboard: " + entries.size());
                 }
 
-                // 2. Aplicar filtro local se houver texto na busca
+                // 2. Aplicar filtro local (busca por texto)
                 if (nameFilter != null && !nameFilter.isEmpty()) {
                     final String nRef = nameFilter.toLowerCase();
                     entries = entries.stream()
-                        .filter(e -> e.getCardName().toLowerCase().contains(nRef))
+                        .filter(e -> (e.getCardName() != null && e.getCardName().toLowerCase().contains(nRef)) ||
+                                     (e.getSeriesName() != null && e.getSeriesName().toLowerCase().contains(nRef)))
                         .collect(Collectors.toList());
+                    System.out.println("[Catalogo] Após filtro de nome/série: " + entries.size());
                 }
 
-                final List<CatalogEntry> finalEntries = entries;
+                // 3. Aplicar filtro de categoria
+                if (!selectedCategory.equalsIgnoreCase("Todas")) {
+                    entries = entries.stream()
+                        .filter(e -> e.getCategory() != null && e.getCategory().equalsIgnoreCase(selectedCategory))
+                        .collect(Collectors.toList());
+                    System.out.println("[Catalogo] Após filtro de categoria (" + selectedCategory + "): " + entries.size());
+                }
+
+                final List<CatalogEntry> filteredEntries = entries;
+
                 Platform.runLater(() -> {
                     if (vboxCatalog != null) {
+                        // Limpa o container dinâmico (o cabeçalho agora está fixo fora dele no FXML)
                         vboxCatalog.getChildren().clear();
-                        renderRows(finalEntries);
+                        renderRows(filteredEntries);
                     }
+                    
                     if (lblCatalogStats != null) {
-                        lblCatalogStats.setText("Total de Cartas: " + finalEntries.size());
+                        int totalCards = filteredEntries.stream().mapToInt(CatalogEntry::getQuantity).sum();
+                        lblCatalogStats.setText("Total de Cartas: " + totalCards);
                     }
-                    System.out.println(String.format("[Catalog] %d itens exibidos (Nomes: %s, Raridade: %s)", 
-                        finalEntries.size(), 
-                        (nameFilter != null ? nameFilter : "Nenhum"),
-                        (rarityFilter != null ? rarityFilter : "Nenhuma")));
                 });
             } catch (Exception e) {
+                System.err.println("[Catalogo] Erro ao carregar banco: " + e.getMessage());
                 e.printStackTrace();
             }
-        }).start();
+        });
+        t.setDaemon(true); // Não impede a JVM de fechar
+        t.start();
     }
 
     private void renderRows(List<CatalogEntry> entries) {
+        if (entries == null || entries.isEmpty()) {
+            return;
+        }
+
         for (CatalogEntry entry : entries) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/catalog_row.fxml"));
                 Node rowNode = loader.load();
                 
                 CatalogRowController controller = loader.getController();
+                // Passa o serviço já existente para economizar recursos
+                controller.setService(catalogService);
                 controller.setRowData(entry);
-                controller.setOnDeleteCallback(() -> loadCatalogFromDatabase(null)); // Atualiza a lista ao deletar
+                controller.setOnDeleteCallback(() -> loadCatalogFromDatabase(null));
                 
                 vboxCatalog.getChildren().add(rowNode);
                 
-            } catch (IOException e) {
-                System.err.println("Erro ao carregar catalog_row: " + e.getMessage());
+            } catch (Exception e) {
+                System.err.println("Erro crítico ao carregar catalog_row: " + e.getMessage());
+                if (e.getCause() != null) {
+                    System.err.println("Causa raiz: " + e.getCause().getMessage());
+                    e.getCause().printStackTrace();
+                } else {
+                    e.printStackTrace();
+                }
             }
         }
     }

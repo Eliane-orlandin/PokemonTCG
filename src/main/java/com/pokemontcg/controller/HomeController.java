@@ -1,7 +1,7 @@
 package com.pokemontcg.controller;
 
 import com.pokemontcg.model.CatalogEntry;
-import com.pokemontcg.repository.CatalogRepository;
+import com.pokemontcg.service.CatalogService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -19,7 +19,8 @@ public class HomeController {
     @FXML private Label lblRareCards;
     @FXML private VBox dashboardVBox;
 
-    private CatalogRepository repository = new CatalogRepository();
+    // Usa CatalogService ao invés de acessar o Repository diretamente (respeita o padrão MVC)
+    private final CatalogService catalogService = new CatalogService();
 
     @FXML
     public void initialize() {
@@ -57,13 +58,14 @@ public class HomeController {
     }
 
     private void updateStatistics() {
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
-                List<CatalogEntry> allCards = repository.findAll();
+                // Obtém todos os cards do catálogo via serviço (respeitando camada de serviço)
+                java.util.List<CatalogEntry> allEntries = catalogService.getAllCardsInCatalog();
                 int totalQuantity = 0;
                 int rareCount = 0;
                 
-                for (CatalogEntry entry : allCards) {
+                for (CatalogEntry entry : allEntries) {
                     totalQuantity += entry.getQuantity();
                     String rarity = entry.getRarity() != null ? entry.getRarity().toLowerCase() : "";
                     
@@ -93,8 +95,11 @@ public class HomeController {
                     lblRareCards.setText(String.format("%,d", finalRare));
                 });
             } catch (Exception e) {
-                System.err.println("Erro ao atualizar estatísticas: " + e.getMessage());
+                javafx.application.Platform.runLater(() -> lblTotalCards.setText("Erro ao carregar"));
+                System.err.println("Erro ao carregar estatísticas: " + e.getMessage());
             }
-        }).start();
+        });
+        t.setDaemon(true); // Não impede a JVM de fechar
+        t.start();
     }
 }

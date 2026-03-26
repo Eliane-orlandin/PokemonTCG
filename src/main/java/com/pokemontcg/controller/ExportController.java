@@ -37,7 +37,13 @@ public class ExportController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(format + " Files", extension));
         
         // Pega o estágio (Stage) atual
-        Stage stage = (Stage) javafx.stage.Window.getWindows().filtered(w -> w.isFocused()).get(0);
+        // Proteção contra crash se nenhuma janela estiver focada (ex: alt-tab)
+        var focusedWindows = javafx.stage.Window.getWindows().filtered(w -> w.isFocused());
+        if (focusedWindows.isEmpty()) {
+            System.err.println("[Export] Nenhuma janela focada para exibir diálogo.");
+            return;
+        }
+        Stage stage = (Stage) focusedWindows.get(0);
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
