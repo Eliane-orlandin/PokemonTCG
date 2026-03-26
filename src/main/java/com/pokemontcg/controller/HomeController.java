@@ -41,13 +41,19 @@ public class HomeController {
     }
     
     @FXML
-    public void handleQuickSearch() {
-        System.out.println("[Dashboard] Atalho: Redirecionando para busca...");
+    public void handleNavigateCatalog() {
+        System.out.println("[Dashboard] Redirecionando para Coleção...");
+        if (MainController.getInstance() != null) {
+            MainController.getInstance().navigateCatalog(null);
+        }
     }
 
     @FXML
-    public void handleQuickCatalog() {
-        System.out.println("[Dashboard] Atalho: Redirecionando para coleção...");
+    public void handleNavigateRareCards() {
+        System.out.println("[Dashboard] Redirecionando para Cartas Raras...");
+        if (MainController.getInstance() != null) {
+            MainController.getInstance().navigateCatalog("rare");
+        }
     }
 
     private void updateStatistics() {
@@ -60,7 +66,21 @@ public class HomeController {
                 for (CatalogEntry entry : allCards) {
                     totalQuantity += entry.getQuantity();
                     String rarity = entry.getRarity() != null ? entry.getRarity().toLowerCase() : "";
-                    if (rarity.contains("rare") || rarity.contains("promo") || rarity.contains("vmax") || rarity.contains("vstar")) {
+                    
+                    // Lógica sincronizada com o filtro do Catálogo
+                    boolean isRare = rarity.contains("rara") || 
+                                     rarity.contains("holo") || 
+                                     rarity.contains("ultra") || 
+                                     rarity.contains("secret") || 
+                                     rarity.contains("secreta") || 
+                                     rarity.contains("vmax") || 
+                                     rarity.contains("vstar") || 
+                                     rarity.contains("ilustração") ||
+                                     rarity.contains("especial") ||
+                                     rarity.contains("shiny") ||
+                                     rarity.contains("promo");
+
+                    if (isRare) {
                         rareCount += entry.getQuantity();
                     }
                 }

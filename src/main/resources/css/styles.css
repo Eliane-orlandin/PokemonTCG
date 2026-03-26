@@ -843,3 +843,19 @@
 .btn-save-mini:hover {
     -fx-background-color: -app-primary-hover;
 }
+
+/* Dashboard - Cards Clicáveis (Hover e Feedback) */
+.clickable-card {
+    -fx-cursor: hand;
+}
+
+.clickable-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.clickable-card:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}

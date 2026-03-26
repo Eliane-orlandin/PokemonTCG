@@ -21,6 +21,12 @@ import java.util.List;
 public class MainController {
 
     @FXML private StackPane contentArea;
+    private static MainController instance;
+
+    public static MainController getInstance() {
+        return instance;
+    }
+
     
     // Botões da Sidebar para controle de estado visual
     @FXML private Button btnHome;
@@ -36,6 +42,7 @@ public class MainController {
      */
     @FXML
     public void initialize() {
+        instance = this;
         menuButtons = Arrays.asList(btnHome, btnSearch, btnCatalog, btnExport);
         handleNavigateHome();
         setupLogoAnimation();
@@ -74,8 +81,34 @@ public class MainController {
 
     @FXML
     public void handleNavigateCatalog() {
-        System.out.println("[DEBUG] MainController: Navegando para CATALOGO");
-        loadView("/fxml/catalog.fxml", btnCatalog);
+        navigateCatalog(null);
+    }
+
+    /**
+     * Navega para o catálogo com um filtro opcional de raridade.
+     */
+    public void navigateCatalog(String rarityFilter) {
+        System.out.println("[DEBUG] MainController: Navegando para CATALOGO | Filtro: " + rarityFilter);
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/catalog.fxml"));
+            Node view = loader.load();
+            
+            // Injeta o filtro no controlador se fornecido
+            if (rarityFilter != null) {
+                CatalogController controller = loader.getController();
+                controller.setInitialRarityFilter(rarityFilter);
+                // Re-inicializa para aplicar o filtro após a injeção
+                controller.initialize();
+            }
+            
+            contentArea.getChildren().setAll(view);
+            updateActiveButton(btnCatalog);
+            
+        } catch (IOException e) {
+            System.err.println("Erro ao navegar para Catálogo");
+            e.printStackTrace();
+        }
     }
 
     @FXML

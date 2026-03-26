@@ -12,7 +12,7 @@
                 <!-- Cards de Pulso (Estatísticas) -->
                 <HBox spacing="25">
                     <children>
-                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane" style="-fx-padding: 25;">
+                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, clickable-card" style="-fx-padding: 25;" onMouseClicked="#handleNavigateCatalog">
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="12">
                                     <children>
@@ -27,7 +27,7 @@
                             </children>
                         </VBox>
                         
-                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane" style="-fx-padding: 25;">
+                        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="glass-pane, clickable-card" style="-fx-padding: 25;" onMouseClicked="#handleNavigateRareCards">
                             <children>
                                 <HBox alignment="CENTER_LEFT" spacing="12">
                                     <children>

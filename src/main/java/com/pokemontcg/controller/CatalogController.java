@@ -25,6 +25,7 @@ public class CatalogController {
     @FXML private javafx.scene.control.TextField txtSearchLocal;
 
     private final CatalogService catalogService;
+    private String rarityFilter = null;
     
     public CatalogController() {
         this.catalogService = new CatalogService();
@@ -34,10 +35,20 @@ public class CatalogController {
     public void initialize() {
         // Inicializar categorías locais (exemplo)
         if (comboCategoryLocal != null) {
+            comboCategoryLocal.getItems().clear();
             comboCategoryLocal.getItems().addAll("Todas", "Pokémon", "Treinador", "Energia");
             comboCategoryLocal.getSelectionModel().selectFirst();
         }
+        
+        // Carrega o catálogo respeitando um possível filtro pré-existente
         loadCatalogFromDatabase(null);
+    }
+
+    /**
+     * Permite definir um filtro de raridade antes ou logo após o carregamento.
+     */
+    public void setInitialRarityFilter(String rarity) {
+        this.rarityFilter = rarity;
     }
 
     @FXML
@@ -50,15 +61,38 @@ public class CatalogController {
     /**
      * Carrega as entradas do banco e preenche a lista visual com filtro opcional.
      */
-    private void loadCatalogFromDatabase(String filter) {
+    private void loadCatalogFromDatabase(String nameFilter) {
         new Thread(() -> {
             try {
                 List<CatalogEntry> entries = catalogService.getAllCardsInCatalog();
                 
-                // Aplicar filtro local se houver texto
-                if (filter != null && !filter.isEmpty()) {
+                // 1. Aplicar filtro de raridade se estiver definido (vinda do Dashboard)
+                if (rarityFilter != null && !rarityFilter.isEmpty()) {
+                    final String rRef = rarityFilter.toLowerCase();
                     entries = entries.stream()
-                        .filter(e -> e.getCardName().toLowerCase().contains(filter.toLowerCase()))
+                        .filter(e -> {
+                            String r = e.getRarity() != null ? e.getRarity().toLowerCase() : "";
+                            // Filtro abrangente para Cartas Especiais/Raras
+                            return r.contains("rara") || 
+                                   r.contains("holo") || 
+                                   r.contains("ultra") || 
+                                   r.contains("secret") || 
+                                   r.contains("secreta") || 
+                                   r.contains("vmax") || 
+                                   r.contains("vstar") || 
+                                   r.contains("ilustração") ||
+                                   r.contains("especial") ||
+                                   r.contains("shiny") ||
+                                   r.contains("promo");
+                        })
+                        .collect(Collectors.toList());
+                }
+
+                // 2. Aplicar filtro local se houver texto na busca
+                if (nameFilter != null && !nameFilter.isEmpty()) {
+                    final String nRef = nameFilter.toLowerCase();
+                    entries = entries.stream()
+                        .filter(e -> e.getCardName().toLowerCase().contains(nRef))
                         .collect(Collectors.toList());
                 }
 
@@ -71,7 +105,10 @@ public class CatalogController {
                     if (lblCatalogStats != null) {
                         lblCatalogStats.setText("Total de Cartas: " + finalEntries.size());
                     }
-                    System.out.println("[Catalog] " + finalEntries.size() + " itens exibidos (Filtro: " + (filter != null ? filter : "Nenhum") + ").");
+                    System.out.println(String.format("[Catalog] %d itens exibidos (Nomes: %s, Raridade: %s)", 
+                        finalEntries.size(), 
+                        (nameFilter != null ? nameFilter : "Nenhum"),
+                        (rarityFilter != null ? rarityFilter : "Nenhuma")));
                 });
             } catch (Exception e) {
                 e.printStackTrace();
