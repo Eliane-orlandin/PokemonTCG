@@ -39,6 +39,7 @@ public class CardDetailController {
     @FXML private Label lblWeaknessLabel;
     @FXML private Label lblResistanceLabel;
     @FXML private Label lblRetreatLabel;
+    @FXML private Label lblDescriptionHeader;
     
     @FXML private Button btnAction;
     @FXML private StackPane actionArea;
@@ -97,10 +98,10 @@ public class CardDetailController {
 
         renderAttacks(card);
         updateCatalogFields(card);
-        applyCategoryLayout(card.getCategory(), card.getRarity(), card.getStage());
+        applyCategoryLayout(card.getCategory(), card.getRarity(), card.getStage(), card.getTrainerType());
     }
 
-    private void applyCategoryLayout(String category, String rarity, String stage) {
+    private void applyCategoryLayout(String category, String rarity, String stage, String trainerType) {
         boolean isPokemon = category == null || category.equalsIgnoreCase("Pokémon") || category.equalsIgnoreCase("Pokemon");
 
         if (isPokemon) {
@@ -108,6 +109,7 @@ public class CardDetailController {
             lblStageLabel.setText("ESTÁGIO");
             lblHpLabel.setText("HP");
             lblWeaknessLabel.setText("FRAQUEZA");
+            lblDescriptionHeader.setText("SOBRE");
             
             lblHpLabel.setVisible(true);
             lblHp.setVisible(true);
@@ -119,20 +121,25 @@ public class CardDetailController {
             lblRetreat.setVisible(true);
         } else {
             // Layout Especial: Treinador / Energia
-            lblStageLabel.setText("TIPO");
+            lblStageLabel.setText("ESTÁGIO"); // Mantém conforme pedido "Keep estagio"
             lblStage.setText(stage != null ? stage : "---");
             
             lblHpLabel.setText("CATEGORIA");
             lblHp.setText(category != null ? category : "---");
-            lblHp.getStyleClass().remove("data-value-hp"); // Remove cor vermelha de HP
+            lblHp.getStyleClass().remove("data-value-hp");
             lblHp.getStyleClass().add("data-value");
             
             lblWeaknessLabel.setText("RARIDADE");
-            lblWeakness.setText(rarity != null ? rarity : "Comum");
+            lblWeakness.setText(rarity != null ? rarity : "---");
 
-            // Esconder atributos de batalha irrelevantes
-            lblResistanceLabel.setVisible(false);
-            lblResistance.setVisible(false);
+            lblResistanceLabel.setText("TIPO TREINADOR");
+            lblResistance.setText(trainerType != null ? trainerType : "---");
+            lblResistanceLabel.setVisible(true);
+            lblResistance.setVisible(true);
+
+            lblDescriptionHeader.setText("DESCRIÇÃO");
+
+            // Esconder atributos de batalha
             lblRetreatLabel.setVisible(false);
             lblRetreat.setVisible(false);
         }
@@ -152,6 +159,7 @@ public class CardDetailController {
         entry.setRarity(card.getRarity() != null ? card.getRarity() : "Common");
         entry.setCategory(card.getCategory());
         entry.setStage(card.getStage());
+        entry.setTrainerType(card.getTrainerType());
         entry.setQuantity(1);
     }
 

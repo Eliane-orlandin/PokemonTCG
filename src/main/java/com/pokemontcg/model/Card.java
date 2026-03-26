@@ -64,6 +64,7 @@ public class Card {
     public void setTypes(List<String> types) { this.types = types; }
 
     private String stage; // Estágio do Pokémon (Básico, Estágio 1, etc.)
+    private String trainerType; // Tipo de Treinador (Item, Suporte, Estádio)
     private String flavorText; // Texto de rodapé/descrição
     private List<Attack> attacks; // Lista de ataques
     private List<Ability> abilities; // Lista de habilidades (Poke-Power, etc)
@@ -103,6 +104,9 @@ public class Card {
 
     public String getFlavorText() { return flavorText; }
     public void setFlavorText(String flavorText) { this.flavorText = flavorText; }
+
+    public String getTrainerType() { return trainerType; }
+    public void setTrainerType(String trainerType) { this.trainerType = trainerType; }
 
     public List<Attack> getAttacks() { return attacks; }
     public void setAttacks(List<Attack> attacks) { this.attacks = attacks; }

@@ -50,6 +50,7 @@ public class CatalogEntry {
     private String seriesId;
     private String localId;
     private String imageUrl;
+    private String trainerType;
 
     public CatalogEntry() {
         this.language = "pt";
@@ -97,6 +98,9 @@ public class CatalogEntry {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    public String getTrainerType() { return trainerType; }
+    public void setTrainerType(String trainerType) { this.trainerType = trainerType; }
 
     public LocalDateTime getAddedAt() { return addedAt; }
     public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
