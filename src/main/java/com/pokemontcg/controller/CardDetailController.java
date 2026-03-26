@@ -129,16 +129,20 @@ public class CardDetailController {
     @FXML
     public void handlePrimaryAction() {
         if (entry != null) {
-            System.out.println("[DEBUG] CardDetailController: Salvando card com quantidade -> " + quantity);
+            System.out.println("[DEBUG] CardDetailController: Iniciando salvamento -> " + entry.getCardName() + " (Qtd: " + quantity + ")");
             try {
                 // Atualiza a quantidade no objeto antes de salvar
                 entry.setQuantity(quantity);
                 
                 catalogService.saveEntry(entry);
+                System.out.println("[DEBUG] CardDetailController: Sucesso ao chamar saveEntry!");
                 handleClose();
             } catch (Exception e) {
-                System.err.println("[DEBUG] Erro ao salvar card: " + e.getMessage());
+                System.err.println("[DEBUG] CardDetailController: Erro ao salvar card: " + e.getMessage());
+                e.printStackTrace();
             }
+        } else {
+            System.err.println("[DEBUG] CardDetailController: Erro - entry está NULL no momento do salvamento!");
         }
     }
 

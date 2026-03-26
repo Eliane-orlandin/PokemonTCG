@@ -45,7 +45,8 @@ public class CatalogRepository {
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             mapEntryToStatement(entry, pstmt, true);
-            pstmt.executeUpdate();
+            int rows = pstmt.executeUpdate();
+            System.out.println("[App] Novo card salvo com sucesso: " + entry.getCardName() + " (Rows affected: " + rows + ")");
 
             // Pega o ID gerado automaticamente
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
