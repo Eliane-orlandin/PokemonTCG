@@ -54,19 +54,19 @@
                                 <ColumnConstraints hgrow="ALWAYS" />
                             </columnConstraints>
                             <children>
-                                <Label text="ESTÁGIO" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <Label fx:id="lblStageLabel" text="ESTÁGIO" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                                 <Label fx:id="lblStage" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                                <Label text="HP" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <Label fx:id="lblHpLabel" text="HP" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                                 <Label fx:id="lblHp" text="---" styleClass="data-value-hp" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                                <Label text="FRAQUEZA" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <Label fx:id="lblWeaknessLabel" text="FRAQUEZA" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                                 <Label fx:id="lblWeakness" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                                <Label text="RESISTÊNCIA" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <Label fx:id="lblResistanceLabel" text="RESISTÊNCIA" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                                 <Label fx:id="lblResistance" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                 
-                                <Label text="RECUO" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <Label fx:id="lblRetreatLabel" text="RECUO" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                                 <Label fx:id="lblRetreat" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                             </children>
                         </GridPane>

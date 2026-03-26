@@ -33,6 +33,13 @@ public class CardDetailController {
     @FXML private Label lblFlavorText;
     @FXML private VBox attacksContainer;
     
+    // Rótulos estáticos para controle dinâmico
+    @FXML private Label lblStageLabel;
+    @FXML private Label lblHpLabel;
+    @FXML private Label lblWeaknessLabel;
+    @FXML private Label lblResistanceLabel;
+    @FXML private Label lblRetreatLabel;
+    
     @FXML private Button btnAction;
     @FXML private StackPane actionArea;
     @FXML private HBox addOptionsArea;
@@ -63,6 +70,8 @@ public class CardDetailController {
         if (entry.getImageUrl() != null) {
             loadImage(entry.getImageUrl());
         }
+
+        applyCategoryLayout(entry.getCategory(), entry.getRarity(), entry.getStage());
     }
 
     public void setCardData(Card card) {
@@ -88,6 +97,45 @@ public class CardDetailController {
 
         renderAttacks(card);
         updateCatalogFields(card);
+        applyCategoryLayout(card.getCategory(), card.getRarity(), card.getStage());
+    }
+
+    private void applyCategoryLayout(String category, String rarity, String stage) {
+        boolean isPokemon = category == null || category.equalsIgnoreCase("Pokémon") || category.equalsIgnoreCase("Pokemon");
+
+        if (isPokemon) {
+            // Layout Padrão: Pokémon
+            lblStageLabel.setText("ESTÁGIO");
+            lblHpLabel.setText("HP");
+            lblWeaknessLabel.setText("FRAQUEZA");
+            
+            lblHpLabel.setVisible(true);
+            lblHp.setVisible(true);
+            lblWeaknessLabel.setVisible(true);
+            lblWeakness.setVisible(true);
+            lblResistanceLabel.setVisible(true);
+            lblResistance.setVisible(true);
+            lblRetreatLabel.setVisible(true);
+            lblRetreat.setVisible(true);
+        } else {
+            // Layout Especial: Treinador / Energia
+            lblStageLabel.setText("TIPO");
+            lblStage.setText(stage != null ? stage : "---");
+            
+            lblHpLabel.setText("CATEGORIA");
+            lblHp.setText(category != null ? category : "---");
+            lblHp.getStyleClass().remove("data-value-hp"); // Remove cor vermelha de HP
+            lblHp.getStyleClass().add("data-value");
+            
+            lblWeaknessLabel.setText("RARIDADE");
+            lblWeakness.setText(rarity != null ? rarity : "Comum");
+
+            // Esconder atributos de batalha irrelevantes
+            lblResistanceLabel.setVisible(false);
+            lblResistance.setVisible(false);
+            lblRetreatLabel.setVisible(false);
+            lblRetreat.setVisible(false);
+        }
     }
 
     private void updateCatalogFields(Card card) {
