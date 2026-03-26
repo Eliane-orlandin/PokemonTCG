@@ -39,6 +39,7 @@ public class CardItemController {
     private String currentImageUrl;
     private String currentType;
     private String currentRarity;
+    private String currentCategory;
 
     private CatalogService catalogService = new CatalogService();
     private CardService cardService = new CardService();
@@ -110,6 +111,9 @@ public class CardItemController {
                         }
                         if (fullCard.getStage() != null) {
                             lblStage.setText(fullCard.getStage());
+                        }
+                        if (fullCard.getCategory() != null) {
+                            this.currentCategory = fullCard.getCategory();
                         }
                         
                         // Atualiza todos os tipos
@@ -219,7 +223,10 @@ public class CardItemController {
             entry.setType(cardType);
             entry.setRarity(cardRarity);
             entry.setStage(lblStage.getText()); 
-            entry.setCategory(findCategory(cardType)); 
+            
+            // Prioridade para a categoria da API, se não houver, usa o findCategory robusto
+            String category = (currentCategory != null && !currentCategory.isEmpty()) ? currentCategory : findCategory(cardType);
+            entry.setCategory(category); 
             entry.setQuantity(quantity);
             
             catalogService.saveEntry(entry);
@@ -253,10 +260,19 @@ public class CardItemController {
     }
 
     private String findCategory(String type) {
-        if (type == null) return "Pokémon";
+        if (type == null || type.equalsIgnoreCase("N/A")) return "Pokémon";
+        
         String t = type.toLowerCase();
-        if (t.contains("treinador") || t.contains("trainer")) return "Treinador";
-        if (t.contains("energia") || t.contains("energy")) return "Energia";
+        // Verifica se é Treinador
+        if (t.contains("treinador") || t.contains("trainer") || t.contains("item") || t.contains("suporte") || t.contains("apoio") || t.contains("estádio") || t.contains("stadium")) {
+            return "Treinador";
+        }
+        // Verifica se é Energia
+        if (t.contains("energia") || t.contains("energy")) {
+            return "Energia";
+        }
+        
+        // Padrão é Pokémon
         return "Pokémon";
     }
 }

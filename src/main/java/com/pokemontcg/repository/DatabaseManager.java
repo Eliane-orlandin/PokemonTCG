@@ -47,6 +47,9 @@ public class DatabaseManager {
             
             System.out.println("Banco de dados inicializado com sucesso!");
             
+            // Passo 3: Conserta categorias dos cards antigos
+            fixLegacyCategories(conn);
+            
         } catch (SQLException e) {
             throw new DatabaseException("Erro ao inicializar o banco de dados", e);
         }
@@ -59,6 +62,45 @@ public class DatabaseManager {
      */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(CONNECTION_URL);
+    }
+
+    /**
+     * Corrigir categorias de cards antigos que foram salvos incorretamente como 'Pokémon'. 
+     * RNF-01: Integridade dos dados após mudança de regra.
+     */
+    private static void fixLegacyCategories(Connection conn) {
+        System.out.println("[Database] Iniciando correção profunda de categorias legadas...");
+        
+        // Termos que indicam um Treinador (no tipo ou no nome)
+        String[] trainerTerms = {"Treinador", "Trainer", "Item", "Suporte", "Apoio", "Estádio", "Stadium", 
+                                "Bola", "Ball", "Poção", "Potion", "Pesquisa", "Research", "Substituição", "Switch",
+                                "Martelo", "Hammer", "Maca", "Recuperação", "Energy Retrieval"};
+        
+        // Termos que indicam uma Energia
+        String[] energyTerms = {"Energia", "Energy"};
+
+        try (Statement stmt = conn.createStatement()) {
+            // 1. Corrigir Treinadores baseados em Type OU Card Name
+            for (String term : trainerTerms) {
+                // Atualiza se achar no tipo
+                stmt.execute("UPDATE catalog SET category = 'Treinador' WHERE category IN ('Pokémon', '') AND type LIKE '%" + term + "%'");
+                // Atualiza se achar no nome
+                stmt.execute("UPDATE catalog SET category = 'Treinador' WHERE category IN ('Pokémon', '') AND card_name LIKE '%" + term + "%'");
+            }
+
+            // 2. Corrigir Energias baseados em Type OU Card Name
+            for (String term : energyTerms) {
+                stmt.execute("UPDATE catalog SET category = 'Energia' WHERE category IN ('Pokémon', '') AND type LIKE '%" + term + "%'");
+                stmt.execute("UPDATE catalog SET category = 'Energia' WHERE category IN ('Pokémon', '') AND card_name LIKE '%" + term + "%'");
+            }
+            
+            // 3. Casos especiais onde a categoria está vazia e o nome é claramente um Pokémon (default)
+            stmt.execute("UPDATE catalog SET category = 'Pokémon' WHERE category IS NULL OR category = ''");
+            
+            System.out.println("[Database] Correção profunda finalizada!");
+        } catch (SQLException e) {
+            System.err.println("[Database] Erro ao corrigir categorias: " + e.getMessage());
+        }
     }
 
     /**
