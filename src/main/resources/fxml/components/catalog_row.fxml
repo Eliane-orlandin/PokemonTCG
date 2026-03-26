@@ -33,9 +33,9 @@
         <Label fx:id="lblStage" text="Básico" prefWidth="120" styleClass="row-set-name" />
         
         <!-- Badge de Tipo -->
-        <HBox prefWidth="100" alignment="CENTER_LEFT">
+        <HBox prefWidth="100" alignment="CENTER">
             <children>
-                <Label fx:id="lblType" text="FIRE" styleClass="type-badge-pill" />
+                <Label fx:id="lblType" text="FIRE" styleClass="type-badge-pill" alignment="CENTER" prefWidth="90" />
             </children>
         </HBox>
         
@@ -43,12 +43,12 @@
         <Label fx:id="lblRarity" text="✪ Ultra Rare" prefWidth="150" styleClass="row-rarity" />
         
         <!-- Quantidade -->
-        <Label fx:id="lblQty" text="01" prefWidth="60" styleClass="card-value" alignment="CENTER" />
+        <Label fx:id="lblQty" text="01" prefWidth="60" styleClass="row-quantity" alignment="CENTER" />
         
         <!-- Ações (Deletar) -->
-        <HBox alignment="CENTER_RIGHT" prefWidth="80" spacing="10">
+        <HBox alignment="CENTER" prefWidth="100" spacing="10">
             <children>
-                <FontIcon iconLiteral="fas-trash" iconSize="14" onMouseClicked="#handleDelete" styleClass="btn-delete-icon" />
+                <FontIcon iconLiteral="fas-trash" iconSize="16" onMouseClicked="#handleDelete" styleClass="btn-delete-icon" />
             </children>
         </HBox>
     </children>

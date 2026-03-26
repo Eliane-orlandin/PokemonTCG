@@ -38,19 +38,33 @@
                 <!-- Área da Tabela Estilizada -->
                 <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
                     <children>
+                        <HBox fx:id="hboxTableHeader" styleClass="table-header" spacing="15">
+                            <children>
+                                <Label prefWidth="250" text="CARD / NOME" styleClass="table-column-label" />
+                                <Label prefWidth="120" text="ESTÁGIO" styleClass="table-column-label" />
+                                <Label prefWidth="100" text="TIPO" styleClass="table-column-label" alignment="CENTER" />
+                                <Label prefWidth="150" text="RARIDADE" styleClass="table-column-label" />
+                                <Label prefWidth="60" text="QTD" styleClass="table-column-label" alignment="CENTER" />
+                                <Label prefWidth="100" text="AÇÕES" styleClass="table-column-label" alignment="CENTER" />
+                            </children>
+                        </HBox>
+                        
+                        <!-- Lista de Cards (dinâmica) -->
                         <VBox fx:id="vboxCatalog" spacing="1">
-                            <!-- Cabeçalho da Lista -->
-                            <HBox styleClass="table-header" spacing="15">
-                                <children>
-                                    <Label prefWidth="60" text="CARD" styleClass="table-column-label" />
-                                    <Label text="NOME E SÉRIE" styleClass="table-column-label" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
-                                    <Label prefWidth="120" text="RARIDADE" styleClass="table-column-label" />
-                                    <Label prefWidth="100" text="QTD" styleClass="table-column-label" alignment="CENTER" />
-                                    <Label prefWidth="120" text="AÇÕES" styleClass="table-column-label" alignment="CENTER" />
-                                </children>
-                            </HBox>
-                            <!-- Linhas inseridas dinamicamente -->
                         </VBox>
+
+                        <!-- Paginação -->
+                        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 20 0 0 0;">
+                            <children>
+                                <Button fx:id="btnPrevPage" styleClass="btn-outline" onAction="#handlePrevPage">
+                                    <graphic><FontIcon iconLiteral="fas-chevron-left"/></graphic>
+                                </Button>
+                                <Label fx:id="lblPagination" text="Página 1 de 1" styleClass="section-subtitle" />
+                                <Button fx:id="btnNextPage" styleClass="btn-outline" onAction="#handleNextPage">
+                                    <graphic><FontIcon iconLiteral="fas-chevron-right"/></graphic>
+                                </Button>
+                            </children>
+                        </HBox>
                     </children>
                 </VBox>
             </children>
