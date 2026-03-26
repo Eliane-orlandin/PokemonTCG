@@ -637,6 +637,12 @@
     -fx-font-weight: 500;
 }
 
+.row-quantity {
+    -fx-text-fill: white;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+}
+
 /* ========================================
    EXPORTAÇÃO
    ======================================== */
