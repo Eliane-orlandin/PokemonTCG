@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 
 /**
  * Representa um card que já faz parte do seu catálogo pessoal.
- * Comentários explicativos: Esta classe é um POJO (Plain Old Java Object) que 
- * mapeia exatamente os campos da tabela 'catalog' no banco de dados.
  */
 public class CatalogEntry {
     
@@ -28,6 +26,12 @@ public class CatalogEntry {
     @CsvBindByName(column = "Raridade")
     private String rarity;
 
+    @CsvBindByName(column = "Estágio")
+    private String stage;
+
+    @CsvBindByName(column = "Categoria")
+    private String category;
+
     @CsvBindByName(column = "Quantidade")
     private int quantity;
 
@@ -43,27 +47,23 @@ public class CatalogEntry {
     @CsvBindByName(column = "Última Atualização")
     private LocalDateTime updatedAt;
     
-    // Campo sem cabeçalho explícito (não exportamos link interno se preferir)
     private String seriesId;
+    private String localId;
     private String imageUrl;
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
-
-    public String getRarity() { return rarity; }
-    public void setRarity(String rarity) { this.rarity = rarity; }
-
-    // Construtor vazio (Necessário para frameworks de mapeamento se usados no futuro)
     public CatalogEntry() {
         this.language = "pt";
     }
 
-    // Getters e Setters (As portas de entrada e saída dos dados)
+    // Getters e Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
     public String getCardId() { return cardId; }
     public void setCardId(String cardId) { this.cardId = cardId; }
+
+    public String getLocalId() { return localId; }
+    public void setLocalId(String localId) { this.localId = localId; }
 
     public String getCardName() { return cardName; }
     public void setCardName(String cardName) { this.cardName = cardName; }
@@ -76,6 +76,18 @@ public class CatalogEntry {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public String getRarity() { return rarity; }
+    public void setRarity(String rarity) { this.rarity = rarity; }
+
+    public String getStage() { return stage; }
+    public void setStage(String stage) { this.stage = stage; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }

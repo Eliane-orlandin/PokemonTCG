@@ -64,8 +64,60 @@ public class Card {
     public void setTypes(List<String> types) { this.types = types; }
 
     private String stage; // Estágio do Pokémon (Básico, Estágio 1, etc.)
+    private String flavorText; // Texto de rodapé/descrição
+    private List<Attack> attacks; // Lista de ataques
+    private List<Ability> abilities; // Lista de habilidades (Poke-Power, etc)
+    private String retreatCost; // Custo de Recuo (ex: 2)
+    private String weakness; // Fraqueza (ex: Fire x2)
+    private String resistance; // Resistência (ex: Water -20)
+
+    // Classes Internas para dados complexos
+    public static class Attack {
+        private String name;
+        private String damage;
+        private String description;
+        // Getters e Setters
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getDamage() { return damage; }
+        public void setDamage(String damage) { this.damage = damage; }
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+    }
+
+    public static class Ability {
+        private String name;
+        private String description;
+        private String type;
+        // Getters e Setters
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+        public String getType() { return type; }
+        public void setType(String type) { this.type = type; }
+    }
+
     public String getStage() { return stage; }
     public void setStage(String stage) { this.stage = stage; }
+
+    public String getFlavorText() { return flavorText; }
+    public void setFlavorText(String flavorText) { this.flavorText = flavorText; }
+
+    public List<Attack> getAttacks() { return attacks; }
+    public void setAttacks(List<Attack> attacks) { this.attacks = attacks; }
+
+    public List<Ability> getAbilities() { return abilities; }
+    public void setAbilities(List<Ability> abilities) { this.abilities = abilities; }
+
+    public String getRetreatCost() { return retreatCost; }
+    public void setRetreatCost(String retreatCost) { this.retreatCost = retreatCost; }
+
+    public String getWeakness() { return weakness; }
+    public void setWeakness(String weakness) { this.weakness = weakness; }
+
+    public String getResistance() { return resistance; }
+    public void setResistance(String resistance) { this.resistance = resistance; }
 
     @Override
     public String toString() {
