@@ -1,18 +1,26 @@
 package com.pokemontcg.api;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Gerenciador de cache simples em memória (HashMap).
+ * Gerenciador de cache simples em memória com limite LRU.
  * Comentários explicativos: O objetivo aqui é evitar chamadas repetidas à API
  * para o mesmo termo de busca durante uma mesma sessão de uso.
+ * Limite de 500 entradas para evitar consumo excessivo de memória.
  */
 public class CacheManager {
 
-    // Nosso depósito de dados: a chave é o que você buscou (ex: 'Pikachu'), 
-    // e o valor é o resultado que a API nos devolveu.
-    private static final Map<String, Object> cache = new HashMap<>();
+    // Limite máximo de entradas no cache para evitar uso excessivo de memória
+    private static final int MAX_ENTRIES = 500;
+
+    // LinkedHashMap com accessOrder=true remove automaticamente as entradas menos acessadas (LRU)
+    private static final Map<String, Object> cache = new LinkedHashMap<>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
+            return size() > MAX_ENTRIES;
+        }
+    };
 
     /**
      * Adiciona um item ao cache.
@@ -51,3 +59,4 @@ public class CacheManager {
         System.out.println("[Cache] Memória de busca limpa.");
     }
 }
+

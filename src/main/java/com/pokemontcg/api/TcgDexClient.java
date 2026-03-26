@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pokemontcg.exception.ApiException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
+import java.nio.charset.StandardCharsets;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -22,8 +25,10 @@ public class TcgDexClient {
     private final String baseUrl = "https://api.tcgdex.net/v2/pt";
 
     public TcgDexClient() {
+        // Timeout de 15 segundos para evitar threads bloqueadas indefinidamente
         this.httpClient = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
+                .connectTimeout(Duration.ofSeconds(15))
                 .build();
         this.objectMapper = new ObjectMapper();
     }
@@ -37,21 +42,21 @@ public class TcgDexClient {
 
         // Filtro por nome
         if (name != null && !name.trim().isEmpty()) {
-            urlBuilder.append("name=like:").append(name.replace(" ", "%20"));
+            urlBuilder.append("name=like:").append(encodeParam(name));
             first = false;
         }
 
         // Filtro por LocalId (Número da carta no set)
         if (localId != null && !localId.trim().isEmpty()) {
             if (!first) urlBuilder.append("&");
-            urlBuilder.append("localId=").append(localId.replace(" ", "%20"));
+            urlBuilder.append("localId=").append(encodeParam(localId));
             first = false;
         }
 
         // Filtro por Categoria (Endpoint /pt aceita termos como 'Energia' ou 'Treinador')
         if (category != null && !category.isEmpty() && !category.toLowerCase().startsWith("tod")) {
             if (!first) urlBuilder.append("&");
-            urlBuilder.append("category=").append(category.replace(" ", "%20"));
+            urlBuilder.append("category=").append(encodeParam(category));
             first = false;
         }
 
@@ -67,21 +72,21 @@ public class TcgDexClient {
                 paramName = "energyType";
             }
             
-            urlBuilder.append(paramName).append("=").append(type.replace(" ", "%20"));
+            urlBuilder.append(paramName).append("=").append(encodeParam(type));
             first = false;
         }
 
         // Filtro por Raridades (Endpoint /pt aceita termos como 'Incomum' ou 'Rara Holo')
         if (rarity != null && !rarity.isEmpty() && !rarity.toLowerCase().startsWith("tod")) {
             if (!first) urlBuilder.append("&");
-            urlBuilder.append("rarity=").append(rarity.replace(" ", "%20"));
+            urlBuilder.append("rarity=").append(encodeParam(rarity));
             first = false;
         }
 
         // Filtro por Séries (Na v2v /pt para cartas, 'set.name=like:' traz resultados globais da série)
         if (series != null && !series.isEmpty() && !series.toLowerCase().startsWith("tod")) {
             if (!first) urlBuilder.append("&");
-            urlBuilder.append("set.name=like:").append(series.replace(" ", "%20"));
+            urlBuilder.append("set.name=like:").append(encodeParam(series));
             first = false;
         }
 
@@ -100,7 +105,7 @@ public class TcgDexClient {
      */
     public List<com.pokemontcg.model.Card> searchBySeries(String seriesQuery) {
         // Na API v2, filtros de série podem ser feitos via ?set.name=... ou similar
-        String url = baseUrl + "/cards?set.name=like:" + seriesQuery.replace(" ", "%20");
+        String url = baseUrl + "/cards?set.name=like:" + encodeParam(seriesQuery);
         return fetchCardsFromUrl(url);
     }
 
@@ -118,6 +123,7 @@ public class TcgDexClient {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
+                System.err.println("[API] findById: status " + response.statusCode() + " para cardId: " + cardId);
                 return null;
             }
 
@@ -228,5 +234,12 @@ public class TcgDexClient {
         card.setTypes(types);
 
         return card;
+    }
+
+    /**
+     * Codifica parâmetros de URL corretamente (acentos, espaços, caracteres especiais).
+     */
+    private String encodeParam(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 }
