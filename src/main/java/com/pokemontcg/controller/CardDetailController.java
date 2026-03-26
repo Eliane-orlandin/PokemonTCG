@@ -11,10 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
 
 /**
  * Controlador para o modal de detalhes da carta.
- * Exibe as informações completas e permite adicionar à coleção.
+ * Versão restaurada para estabilidade.
  */
 public class CardDetailController {
 
@@ -22,11 +24,15 @@ public class CardDetailController {
     @FXML private ImageView imgLarge;
     @FXML private Label lblCardName;
     @FXML private Label lblSetId;
-    @FXML private Label lblRarity;
-    @FXML private Label lblType;
-    @FXML private Label lblSetName;
+    @FXML private Label lblStage;
     @FXML private Label lblHp;
-    @FXML private Label lblPrice;
+    @FXML private Label lblWeakness;
+    @FXML private Label lblResistance;
+    @FXML private Label lblRetreat;
+    @FXML private Label lblTypePill;
+    @FXML private Label lblFlavorText;
+    @FXML private VBox attacksContainer;
+    
     @FXML private Button btnAction;
     @FXML private StackPane actionArea;
     @FXML private HBox addOptionsArea;
@@ -41,17 +47,16 @@ public class CardDetailController {
         this.onCloseCallback = callback;
     }
 
-    /**
-     * Define os dados vindos de uma entrada do catálogo (banco local).
-     */
     public void setCardData(CatalogEntry entry) {
         this.entry = entry;
         lblCardName.setText(entry.getCardName());
-        lblSetId.setText("SÉRIE: " + entry.getSeriesName() + " • ID: " + entry.getCardId());
-        lblRarity.setText(entry.getRarity() != null ? entry.getRarity() : "Desconhecida");
-        lblSetName.setText(entry.getSeriesName());
+        lblSetId.setText("ID: " + entry.getLocalId()); 
+        lblStage.setText(entry.getStage() != null ? entry.getStage() : "Básico");
         lblHp.setText("---");
-        lblPrice.setText("0.00");
+        lblWeakness.setText("---");
+        lblResistance.setText("---");
+        lblRetreat.setText("---");
+        lblFlavorText.setText("");
         
         updateTypeBadge(entry.getType());
 
@@ -60,35 +65,91 @@ public class CardDetailController {
         }
     }
 
-    /**
-     * Define os dados vindos diretamente da API (objeto Card completo).
-     */
     public void setCardData(Card card) {
         if (card == null) return;
         
         lblCardName.setText(card.getName());
-        lblSetId.setText("SÉRIE: " + card.getSeriesName() + " • ID: " + card.getLocalId());
-        lblRarity.setText(card.getRarity() != null ? card.getRarity() : "Desconhecida");
-        lblSetName.setText(card.getSeriesName());
+        lblSetId.setText("ID: " + card.getLocalId()); 
+        lblStage.setText(card.getStage() != null ? card.getStage() : "Básico");
         lblHp.setText(card.getHp() != null && card.getHp() > 0 ? String.valueOf(card.getHp()) : "---");
-        lblPrice.setText("0.00"); 
+        lblWeakness.setText(card.getWeakness() != null ? card.getWeakness() : "---");
+        lblResistance.setText(card.getResistance() != null ? card.getResistance() : "---");
+        lblRetreat.setText(card.getRetreatCost() != null ? card.getRetreatCost() : "---");
         
-        updateTypeBadge(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : null);
+        if (card.getFlavorText() != null) {
+            lblFlavorText.setText(card.getFlavorText());
+        }
+
+        updateTypeBadge(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : "Colorless");
 
         if (card.getImage() != null) {
             loadImage(card.getImage());
         }
-        
-        // Prepara objeto para salvamento
-        this.entry = new CatalogEntry();
+
+        renderAttacks(card);
+        updateCatalogFields(card);
+    }
+
+    private void updateCatalogFields(Card card) {
+        if (entry == null) {
+            entry = new CatalogEntry();
+        }
         entry.setCardId(card.getId());
         entry.setCardName(card.getName());
         entry.setImageUrl(card.getImage());
+        entry.setLocalId(card.getLocalId());
         entry.setSeriesId(card.getSeriesId() != null ? card.getSeriesId() : "base");
         entry.setSeriesName(card.getSeriesName() != null ? card.getSeriesName() : "Expansão");
         entry.setType(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : "Colorless");
         entry.setRarity(card.getRarity() != null ? card.getRarity() : "Common");
+        entry.setCategory(card.getCategory());
+        entry.setStage(card.getStage());
         entry.setQuantity(1);
+    }
+
+    private void renderAttacks(Card card) {
+        attacksContainer.getChildren().clear();
+        attacksContainer.setSpacing(10);
+        
+        if (card.getAbilities() != null && !card.getAbilities().isEmpty()) {
+            for (Card.Ability ability : card.getAbilities()) {
+                VBox box = new VBox(2);
+                Label name = new Label("★ " + ability.getName());
+                name.setStyle("-fx-text-fill: #FF5252; -fx-font-weight: bold; -fx-font-size: 13;");
+                name.setWrapText(true);
+
+                Label desc = new Label(ability.getDescription());
+                desc.setStyle("-fx-text-fill: #CCC; -fx-font-size: 11;");
+                desc.setWrapText(true);
+                
+                box.getChildren().addAll(name, desc);
+                attacksContainer.getChildren().add(box);
+            }
+        }
+        
+        if (card.getAttacks() != null && !card.getAttacks().isEmpty()) {
+            for (Card.Attack attack : card.getAttacks()) {
+                VBox box = new VBox(2);
+                HBox header = new HBox(10);
+                Label name = new Label("• " + attack.getName());
+                name.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;");
+                
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+                
+                Label damage = new Label(attack.getDamage());
+                damage.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;");
+                
+                header.getChildren().addAll(name, spacer, damage);
+                
+                Label desc = new Label(attack.getDescription());
+                desc.setStyle("-fx-text-fill: #999; -fx-font-size: 11;");
+                desc.setWrapText(true);
+                
+                box.getChildren().addAll(header, desc);
+                attacksContainer.getChildren().add(box);
+            }
+        }
     }
 
     private void loadImage(String url) {
@@ -98,104 +159,53 @@ public class CardDetailController {
                 Platform.runLater(() -> {
                     if (img != null) imgLarge.setImage(img);
                 });
-            } catch (Exception e) {
-                System.err.println("[DEBUG] Erro ao carregar imagem: " + e.getMessage());
-            }
+            } catch (Exception e) {}
         });
-        t.setDaemon(true); // Não impede a JVM de fechar
+        t.setDaemon(true);
         t.start();
     }
 
     private void updateTypeBadge(String type) {
-        if (type == null) {
-            lblType.setText("???");
-            lblType.setStyle("-fx-background-color: #78909C; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 3 12; -fx-font-weight: bold;");
-            return;
-        }
-        
-        String displayType = type.toUpperCase();
-        String color = "#78909C"; // Default
-
-        switch (type.toLowerCase()) {
-            case "fire": case "fogo": color = "#FF7043"; break;
-            case "water": case "água": color = "#42A5F5"; break;
-            case "lightning": case "elétrico": color = "#FBC02D"; break;
-            case "grass": case "planta": color = "#66BB6A"; break;
-            case "psychic": case "psíquico": color = "#AB47BC"; break;
-            case "darkness": case "sombrio": case "noturno": color = "#263238"; break;
-            case "dragon": case "dragão": color = "#FB8C00"; break;
-            case "metal": color = "#90A4AE"; break;
-            case "fighting": case "lutador": color = "#A1887F"; break;
-            case "fairy": case "fada": color = "#F48FB1"; break;
-            case "colorless": case "incolor": color = "#78909C"; break;
-        }
-
-        lblType.setText(displayType);
-        lblType.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 3 12; -fx-font-weight: bold;");
+        if (type == null) return;
+        lblTypePill.setText(type.toUpperCase());
+        lblTypePill.getStyleClass().removeAll("type-fire", "type-water", "type-grass", "type-electric", "type-psychic", "type-fighting", "type-darkness", "type-metal", "type-fairy", "type-dragon", "type-colorless");
+        lblTypePill.getStyleClass().add("type-" + type.toLowerCase().replace(" ", ""));
     }
 
     @FXML
-    public void handlePrimaryAction() {
-        if (entry != null) {
-            System.out.println("[DEBUG] CardDetailController: Iniciando salvamento -> " + entry.getCardName() + " (Qtd: " + quantity + ")");
-            try {
-                // Atualiza a quantidade e metadados no objeto antes de salvar
-                entry.setQuantity(quantity);
-                if (entry.getStage() == null) entry.setStage("Básico");
-                if (entry.getCategory() == null) entry.setCategory("Pokémon");
-                if (entry.getSeriesId() == null) entry.setSeriesId("base");
-                if (entry.getSeriesName() == null) entry.setSeriesName("Expansão");
-                
-                catalogService.saveEntry(entry);
-                System.out.println("[DEBUG] CardDetailController: Sucesso ao chamar saveEntry!");
-                handleClose();
-            } catch (Exception e) {
-                System.err.println("[DEBUG] CardDetailController: Erro ao salvar card: " + e.getMessage());
-                e.printStackTrace();
-            }
-        } else {
-            System.err.println("[DEBUG] CardDetailController: Erro - entry está NULL no momento do salvamento!");
-        }
+    public void handleCancelAdd() {
+        btnAction.setVisible(true);
+        addOptionsArea.setVisible(false);
     }
 
-    /**
-     * Alterna a visualização para os controles de quantidade e confirmação.
-     */
     @FXML
     public void handleShowAddOptions() {
         btnAction.setVisible(false);
         addOptionsArea.setVisible(true);
-        quantity = 1;
-        lblQuantity.setText("1");
     }
 
-    /**
-     * Incrementa a quantidade.
-     */
     @FXML
     public void handleIncrement() {
         quantity++;
-        lblQuantity.setText("" + quantity);
+        lblQuantity.setText(String.valueOf(quantity));
     }
 
-    /**
-     * Decrementa a quantidade (limite mínimo de 1).
-     */
     @FXML
     public void handleDecrement() {
         if (quantity > 1) {
             quantity--;
-            lblQuantity.setText("" + quantity);
+            lblQuantity.setText(String.valueOf(quantity));
         }
     }
 
-    /**
-     * Cancela a operação de adição e volta ao botão principal.
-     */
     @FXML
-    public void handleCancelAdd() {
-        addOptionsArea.setVisible(false);
-        btnAction.setVisible(true);
+    public void handlePrimaryAction() {
+        if (entry == null) return;
+        entry.setQuantity(quantity);
+        try {
+            catalogService.saveEntry(entry);
+            handleClose();
+        } catch (Exception e) {}
     }
 
     @FXML

@@ -8,7 +8,7 @@
 
 <StackPane fx:id="rootPane" style="-fx-background-color: rgba(0,0,0,0.7);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pokemontcg.controller.CardDetailController">
     <children>
-        <HBox maxHeight="550" maxWidth="850" spacing="40" styleClass="glass-pane" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 30;">
+        <HBox maxHeight="600" maxWidth="880" spacing="40" styleClass="glass-pane" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 30;">
             <children>
                 <!-- Lado Esquerdo: Imagem da Carta -->
                 <VBox alignment="CENTER" HBox.hgrow="NEVER">
@@ -22,7 +22,7 @@
                 </VBox>
 
                 <!-- Lado Direito: Detalhes -->
-                <VBox spacing="15" HBox.hgrow="ALWAYS">
+                <VBox spacing="10" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox alignment="CENTER_RIGHT">
                             <children>
@@ -34,37 +34,48 @@
                             </children>
                         </HBox>
 
-                        <VBox spacing="5">
+                        <VBox spacing="2">
                             <children>
-                                <Label fx:id="lblCardName" text="Nome do Card" styleClass="section-title-xl" style="-fx-font-size: 32;" />
-                                <Label fx:id="lblSetId" text="SÉRIE • ID" styleClass="section-subtitle" />
+                                <Label fx:id="lblCardName" text="Nome do Card" styleClass="section-title-xl" />
+                                <HBox spacing="15" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label fx:id="lblSetId" text="ID: ---" styleClass="section-subtitle" />
+                                        <Label fx:id="lblTypePill" text="---" styleClass="type-badge-pill" />
+                                    </children>
+                                </HBox>
                             </children>
                         </VBox>
 
                         <Separator styleClass="separator-light" />
 
-                        <GridPane hgap="20" vgap="15">
+                        <GridPane hgap="15" vgap="8">
                             <columnConstraints>
-                                <ColumnConstraints minWidth="120" />
+                                <ColumnConstraints minWidth="100" />
                                 <ColumnConstraints hgrow="ALWAYS" />
                             </columnConstraints>
                             <children>
-                                <Label text="RARIDADE" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                <Label fx:id="lblRarity" text="---" style="-fx-text-fill: white; -fx-font-size: 16;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <Label text="ESTÁGIO" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <Label fx:id="lblStage" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                                <Label text="TIPO / CLASSE" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                <Label fx:id="lblType" text="---" styleClass="type-badge-pill" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Label text="HP" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <Label fx:id="lblHp" text="---" styleClass="data-value-hp" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                                <Label text="COLEÇÃO / SÉRIE" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                <Label fx:id="lblSetName" text="---" style="-fx-text-fill: white; -fx-font-size: 16;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <Label text="FRAQUEZA" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <Label fx:id="lblWeakness" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                <Label text="RESISTÊNCIA" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <Label fx:id="lblResistance" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                 
-                                <Label text="PONTOS DE VIDA (HP)" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                <Label fx:id="lblHp" text="---" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-                                <Label text="VALOR ESTIMADO" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                <Label fx:id="lblPrice" text="---" style="-fx-text-fill: #FFD700; -fx-font-size: 20; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                <Label text="RECUO" styleClass="data-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <Label fx:id="lblRetreat" text="---" styleClass="data-value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                             </children>
                         </GridPane>
+                        
+                        <VBox fx:id="attacksContainer" spacing="8" style="-fx-padding: 10 0 10 0;">
+                            <!-- Ataques serão injetados dinamicamente via código -->
+                        </VBox>
+
+                        <Label fx:id="lblFlavorText" text="..." wrapText="true" style="-fx-text-fill: #AAA; -fx-font-style: italic; -fx-font-size: 11px;" />
                         
                         <Region VBox.vgrow="ALWAYS" />
 

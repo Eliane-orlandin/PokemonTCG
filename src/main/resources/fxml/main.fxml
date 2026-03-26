@@ -105,7 +105,7 @@
                 </VBox>
                 
                 <!-- Conteúdo Dinâmico -->
-                <StackPane fx:id="contentArea" styleClass="content-area" VBox.vgrow="ALWAYS">
+                <StackPane fx:id="contentArea" id="contentArea" styleClass="content-area" VBox.vgrow="ALWAYS">
                     <!-- As telas serão injetadas aqui -->
                 </StackPane>
             </children>

@@ -139,30 +139,42 @@ public class MainController {
      * Exibe o modal de detalhes de uma carta (pode vir da busca ou do catálogo).
      */
     public void showCardDetail(com.pokemontcg.model.CatalogEntry entry) {
-        if (entry == null || contentArea == null) return;
-        
+        if (entry == null) {
+            System.err.println("[DEBUG] showCardDetail: entry é nulo!");
+            return;
+        }
+        if (contentArea == null) {
+            System.err.println("[DEBUG] showCardDetail: contentArea é nulo! O ID FXML foi mapeado corretamente?");
+            return;
+        }
+
+        System.out.println("[DEBUG] Abrindo modal para o card: " + entry.getCardName());
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/card_detail_modal.fxml"));
             StackPane modal = loader.load();
             CardDetailController controller = loader.getController();
             
-            // Tenta obter dados completos da API em background
+            // 1. Preenche IMEDIATAMENTE com o que já temos (ID, Nome, Imagem)
+            // Isso evita que o modal apareça vazio enquanto a API responde.
+            controller.setCardData(entry);
+            
+            // 2. Tenta obter dados completos (ataques, etc) da API em background
             Thread t = new Thread(() -> {
                 try {
                     com.pokemontcg.service.CardService cardService = new com.pokemontcg.service.CardService();
                     com.pokemontcg.model.Card fullCard = cardService.getCardDetails(entry.getCardId());
-                    javafx.application.Platform.runLater(() -> {
-                        if (fullCard != null) {
+                    
+                    if (fullCard != null) {
+                        javafx.application.Platform.runLater(() -> {
                             controller.setCardData(fullCard);
-                        } else {
-                            controller.setCardData(entry);
-                        }
-                    });
+                        });
+                    }
                 } catch (Exception e) {
-                    javafx.application.Platform.runLater(() -> controller.setCardData(entry));
+                    System.err.println("[DEBUG] Erro ao buscar detalhes extras: " + e.getMessage());
                 }
             });
-            t.setDaemon(true); // Não impede a JVM de fechar
+            t.setDaemon(true); 
             t.start();
             
             contentArea.getChildren().add(modal);

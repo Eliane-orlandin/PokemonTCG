@@ -160,49 +160,30 @@ public class CardItemController {
         typesContainer.getChildren().add(badge);
     }
 
+    /**
+     * Exibe o modal de detalhes da carta utilizando o controlador principal.
+     */
     @FXML
-    public void handleShowDetail() {
-        cardRoot.setOpacity(0.5);
-        Thread t = new Thread(() -> {
-            try {
-                Card fullCard = cardService.getCardDetails(currentCardId);
-                Platform.runLater(() -> {
-                    try {
-                        cardRoot.setOpacity(1.0);
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/card_detail_modal.fxml"));
-                        StackPane modal = loader.load();
-                        CardDetailController controller = loader.getController();
-                        
-                        if (fullCard != null) {
-                            controller.setCardData(fullCard);
-                        } else {
-                            CatalogEntry entry = new CatalogEntry();
-                            entry.setCardId(currentCardId);
-                            entry.setCardName(lblName.getText());
-                            entry.setImageUrl(currentImageUrl);
-                            entry.setSeriesId(currentSeriesId);
-                            entry.setSeriesName(currentSeriesName);
-                            entry.setType(currentType);
-                            entry.setRarity(currentRarity);
-                            controller.setCardData(entry);
-                        }
-                        
-                        StackPane contentArea = (StackPane) cardRoot.getScene().lookup("#contentArea");
-                        if (contentArea != null) {
-                            contentArea.getChildren().add(modal);
-                            controller.setOnCloseCallback(() -> contentArea.getChildren().remove(modal));
-                        }
-                    } catch (IOException e) {
-                        System.err.println("[DEBUG] Erro ao carregar modal: " + e.getMessage());
-                    }
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> cardRoot.setOpacity(1.0));
-                System.err.println("[DEBUG] Erro ao buscar detalhes: " + e.getMessage());
-            }
-        });
-        t.setDaemon(true);
-        t.start();
+    public void handleShowDetail(javafx.scene.input.MouseEvent event) {
+        if (currentCardId == null) return;
+
+        System.out.println("[DEBUG] Clique detectado no card: " + currentCardId);
+        
+        // Cria uma entrada temporária com os dados que já temos para exibição imediata
+        CatalogEntry entry = new CatalogEntry();
+        entry.setCardId(currentCardId);
+        entry.setCardName(lblName.getText());
+        entry.setImageUrl(currentImageUrl);
+        entry.setLocalId(lblSetId.getText());
+        entry.setSeriesId(currentSeriesId);
+        entry.setSeriesName(currentSeriesName);
+        entry.setType(currentType);
+        entry.setRarity(currentRarity);
+        entry.setStage(lblStage.getText());
+        entry.setCategory(currentCategory);
+        
+        // Solicita ao MainController que exiba o detalhe
+        MainController.getInstance().showCardDetail(entry);
     }
 
     @FXML
