@@ -9,36 +9,52 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!-- Componente individual de carta: exibido nos resultados de busca -->
-<VBox spacing="10" styleClass="card-item-container" fx:id="cardRoot" onMouseClicked="#handleShowDetail" cursor="HAND"
+<VBox spacing="10" styleClass="card-item-container" fx:id="cardRoot"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.pokemontcg.controller.CardItemController">
     <children>
         <!-- Container da Imagem com bordas arredondadas -->
-        <StackPane fx:id="imageContainer" prefWidth="180" prefHeight="250" styleClass="card-image-placeholder">
+        <StackPane fx:id="imageContainer" prefWidth="180" prefHeight="250" styleClass="card-image-placeholder" onMouseClicked="#handleShowDetail">
             <children>
                 <ImageView fx:id="cardImage" fitWidth="180" fitHeight="250" preserveRatio="true" />
             </children>
         </StackPane>
         
-        <!-- Detalhes da Carta: nome, set ID e botão de adicionar -->
-        <HBox alignment="CENTER_LEFT">
-            <VBox HBox.hgrow="ALWAYS">
-                <Label fx:id="lblSetId" text="SET ID • 000/000" styleClass="card-set-id" />
-                <Label fx:id="lblName" text="Pokémon Name" styleClass="card-name" />
-            </VBox>
-            <!-- Botão redondo "+" para adicionar à coleção -->
-            <Button onAction="#handleAddToCollection" styleClass="btn-add-card">
-                <graphic>
-                    <FontIcon iconLiteral="fas-plus" iconSize="12" style="-fx-icon-color: white;" />
-                </graphic>
-            </Button>
-        </HBox>
+        <!-- Detalhes da Carta: nome, set ID e Stage -->
+        <VBox spacing="2">
+            <Label fx:id="lblSetId" text="SET ID • 000/000" styleClass="card-set-id" />
+            <Label fx:id="lblName" text="Pokémon Name" styleClass="card-name" />
+            <Label fx:id="lblStage" text="Básico" styleClass="card-stage" />
+        </VBox>
         
         <!-- Badge de tipo e raridade -->
         <HBox spacing="8" alignment="CENTER_LEFT">
             <children>
-                <Label fx:id="lblType" text="TYPE" styleClass="type-badge-pill" />
+                <HBox fx:id="typesContainer" spacing="5" alignment="CENTER_LEFT" />
                 <Label fx:id="lblRarity" text="Rarity" styleClass="card-rarity" />
+            </children>
+        </HBox>
+
+        <!-- Controles de Quantidade e Botão Salvar (Ação Rápida) -->
+        <HBox spacing="8" alignment="CENTER_LEFT" styleClass="quick-add-container">
+            <children>
+                <HBox alignment="CENTER" spacing="0" styleClass="quantity-selector-mini">
+                    <Button onAction="#handleDecrement" styleClass="btn-qty-mini">
+                        <graphic><FontIcon iconLiteral="fas-minus" iconSize="8"/></graphic>
+                    </Button>
+                    <Label fx:id="lblQuantity" text="1" styleClass="lbl-qty-mini" />
+                    <Button onAction="#handleIncrement" styleClass="btn-qty-mini">
+                        <graphic><FontIcon iconLiteral="fas-plus" iconSize="8"/></graphic>
+                    </Button>
+                </HBox>
+                <Button onAction="#handleAddToCollection" styleClass="btn-save-mini" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <graphic>
+                        <HBox alignment="CENTER" spacing="5">
+                            <FontIcon iconLiteral="fas-save" iconSize="10" style="-fx-icon-color: white;" />
+                            <Label text="SALVAR" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 9px;" />
+                        </HBox>
+                    </graphic>
+                </Button>
             </children>
         </HBox>
     </children>
