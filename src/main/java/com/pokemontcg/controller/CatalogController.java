@@ -23,11 +23,19 @@ public class CatalogController {
 
     @FXML private VBox vboxCatalog;
     @FXML private Label lblCatalogStats;
+    @FXML private Label lblPagination;
     @FXML private javafx.scene.control.ComboBox<String> comboCategoryLocal;
     @FXML private javafx.scene.control.TextField txtSearchLocal;
+    @FXML private javafx.scene.control.Button btnPrevPage;
+    @FXML private javafx.scene.control.Button btnNextPage;
 
     private final CatalogService catalogService;
     private String rarityFilter = null;
+    
+    // Variáveis de Paginação
+    private List<CatalogEntry> fullFilteredList;
+    private int currentPage = 1;
+    private final int PAGE_SIZE = 12; // Sugestão de 12 cards por página
     
     public CatalogController() {
         this.catalogService = new CatalogService();
@@ -69,7 +77,26 @@ public class CatalogController {
     public void handleLocalSearch() {
         String query = txtSearchLocal.getText().toLowerCase().trim();
         System.out.println("[Catalogo] Filtrando por: " + query);
+        this.currentPage = 1; // Reseta para a primeira página ao buscar
         loadCatalogFromDatabase(query); 
+    }
+
+    @FXML
+    public void handleNextPage() {
+        if (fullFilteredList == null) return;
+        int totalPages = (int) Math.ceil((double) fullFilteredList.size() / PAGE_SIZE);
+        if (currentPage < totalPages) {
+            currentPage++;
+            updateViewWithCurrentPage();
+        }
+    }
+
+    @FXML
+    public void handlePrevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            updateViewWithCurrentPage();
+        }
     }
 
     /**
@@ -126,24 +153,50 @@ public class CatalogController {
                 final List<CatalogEntry> filteredEntries = entries;
 
                 Platform.runLater(() -> {
-                    if (vboxCatalog != null) {
-                        // Limpa o container dinâmico (o cabeçalho agora está fixo fora dele no FXML)
-                        vboxCatalog.getChildren().clear();
-                        renderRows(filteredEntries);
-                    }
-                    
-                    if (lblCatalogStats != null) {
-                        int totalCards = filteredEntries.stream().mapToInt(CatalogEntry::getQuantity).sum();
-                        lblCatalogStats.setText("Total de Cartas: " + totalCards);
-                    }
+                    this.fullFilteredList = filteredEntries;
+                    updateViewWithCurrentPage();
                 });
             } catch (Exception e) {
                 System.err.println("[Catalogo] Erro ao carregar banco: " + e.getMessage());
                 e.printStackTrace();
             }
         });
-        t.setDaemon(true); // Não impede a JVM de fechar
+        t.setDaemon(true); 
         t.start();
+    }
+
+    /**
+     * Atualiza a UI baseada na página atual e na lista filtrada.
+     */
+    private void updateViewWithCurrentPage() {
+        if (fullFilteredList == null) return;
+
+        int totalItems = fullFilteredList.size();
+        int totalPages = (int) Math.ceil((double) totalItems / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+
+        // Limite para não passar do total
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        // Cálculo da sublista para a página atual
+        int fromIndex = (currentPage - 1) * PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + PAGE_SIZE, totalItems);
+
+        List<CatalogEntry> pageEntries = fullFilteredList.subList(fromIndex, toIndex);
+
+        // Atualiza a tabela
+        vboxCatalog.getChildren().clear();
+        renderRows(pageEntries);
+
+        // Atualiza Labels e Botões
+        lblPagination.setText(String.format("Página %d de %d (%d itens)", currentPage, totalPages, totalItems));
+        btnPrevPage.setDisable(currentPage == 1);
+        btnNextPage.setDisable(currentPage >= totalPages);
+
+        if (lblCatalogStats != null) {
+            int totalCardsGlobal = fullFilteredList.stream().mapToInt(CatalogEntry::getQuantity).sum();
+            lblCatalogStats.setText("Total de Cartas na Coleção: " + totalCardsGlobal);
+        }
     }
 
     private void renderRows(List<CatalogEntry> entries) {
