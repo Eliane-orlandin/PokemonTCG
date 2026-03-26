@@ -84,10 +84,11 @@ public class CardDetailController {
         entry.setCardId(card.getId());
         entry.setCardName(card.getName());
         entry.setImageUrl(card.getImage());
-        entry.setSeriesId(card.getSeriesId());
-        entry.setSeriesName(card.getSeriesName());
-        entry.setType(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : null);
-        entry.setRarity(card.getRarity());
+        entry.setSeriesId(card.getSeriesId() != null ? card.getSeriesId() : "base");
+        entry.setSeriesName(card.getSeriesName() != null ? card.getSeriesName() : "Expansão");
+        entry.setCategory(card.getCategory() != null ? card.getCategory() : "Pokémon");
+        entry.setType(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : "Colorless");
+        entry.setRarity(card.getRarity() != null ? card.getRarity() : "Common");
         entry.setQuantity(1);
     }
 

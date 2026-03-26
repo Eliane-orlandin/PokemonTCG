@@ -1,124 +1,210 @@
 package com.pokemontcg.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pokemontcg.exception.ApiException;
-import net.tcgdex.sdk.TCGdex;
-import net.tcgdex.sdk.models.CardResume;
-import java.util.Arrays;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Cliente responsável por interagir com o SDK oficial da TCGdex (net.tcgdex.sdk).
- * Comentários explicativos: Atualizado para a versão 2.0.2 com métodos prefixados com 'fetch'
- * e que retornam Arrays convencionais.
+ * Cliente responsável por interagir com a API REST da TCGdex.
+ * Refatorado para usar requisições HTTP diretas com filtros,
+ * superando as limitações de performance do SDK oficial.
  */
 public class TcgDexClient {
 
-    private final TCGdex sdk;
+    private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
+    private final String baseUrl = "https://api.tcgdex.net/v2/pt";
 
     public TcgDexClient() {
-        this(new TCGdex("pt"));
+        this.httpClient = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+        this.objectMapper = new ObjectMapper();
     }
 
     /**
-     * Construtor para injeção de dependência (facilita testes).
+     * Busca cards usando múltiplos filtros combinados no servidor.
      */
-    public TcgDexClient(TCGdex sdk) {
-        this.sdk = sdk;
+    public List<com.pokemontcg.model.Card> searchCards(String name, String category, String type, String rarity, String series) {
+        StringBuilder urlBuilder = new StringBuilder(baseUrl).append("/cards?");
+        boolean first = true;
+
+        // Filtro por nome
+        if (name != null && !name.trim().isEmpty()) {
+            urlBuilder.append("name=like:").append(name.replace(" ", "%20"));
+            first = false;
+        }
+
+        // Filtro por Categoria (Endpoint /pt aceita termos como 'Energia' ou 'Treinador')
+        if (category != null && !category.isEmpty() && !category.toLowerCase().startsWith("tod")) {
+            if (!first) urlBuilder.append("&");
+            urlBuilder.append("category=").append(category.replace(" ", "%20"));
+            first = false;
+        }
+
+        // Filtro por Tipos/Subtipos (Dinâmico por categoria)
+        if (type != null && !type.isEmpty() && !type.toLowerCase().startsWith("tod")) {
+            if (!first) urlBuilder.append("&");
+            
+            // Escolhe o parâmetro correto da API baseado na categoria
+            String paramName = "types"; // Padrão para Pokémon
+            if ("Treinador".equals(category)) {
+                paramName = "trainerType";
+            } else if ("Energia".equals(category)) {
+                paramName = "energyType";
+            }
+            
+            urlBuilder.append(paramName).append("=").append(type.replace(" ", "%20"));
+            first = false;
+        }
+
+        // Filtro por Raridades (Endpoint /pt aceita termos como 'Incomum' ou 'Rara Holo')
+        if (rarity != null && !rarity.isEmpty() && !rarity.toLowerCase().startsWith("tod")) {
+            if (!first) urlBuilder.append("&");
+            urlBuilder.append("rarity=").append(rarity.replace(" ", "%20"));
+            first = false;
+        }
+
+        // Filtro por Séries (Na v2v /pt para cartas, 'set.name=like:' traz resultados globais da série)
+        if (series != null && !series.isEmpty() && !series.toLowerCase().startsWith("tod")) {
+            if (!first) urlBuilder.append("&");
+            urlBuilder.append("set.name=like:").append(series.replace(" ", "%20"));
+            first = false;
+        }
+
+        return fetchCardsFromUrl(urlBuilder.toString());
     }
 
     /**
-     * Busca cards por nome.
+     * Busca cards por nome usando o novo motor de busca genérico.
      */
     public List<com.pokemontcg.model.Card> searchByName(String name) {
-        try {
-            CardResume[] results = sdk.fetchCards(); 
-            if (results == null) return new java.util.ArrayList<>();
-
-            return Arrays.stream(results)
-                .filter(c -> c.getName() != null && c.getName().toLowerCase().contains(name.toLowerCase()))
-                .map(this::mapResumeToInternalCard)
-                .collect(Collectors.toList());
-                
-        } catch (Exception e) {
-            throw new ApiException("Erro ao buscar cards por nome: " + name, e);
-        }
+        return searchCards(name, null, null, null, null);
     }
 
     /**
-     * Busca cards baseados na série (expansion).
-     * Requisito RF-01.3
+     * Busca cards baseados na série usando filtro de servidor.
      */
     public List<com.pokemontcg.model.Card> searchBySeries(String seriesQuery) {
-        try {
-            // No SDK 2.x, para filtrar por série de forma eficiente,
-            // pegamos os detalhes ou filtramos do resumo se disponível.
-            // Como CardResume é limitado, pegamos todos e filtramos (API é leve para resumos).
-            CardResume[] results = sdk.fetchCards();
-            if (results == null) return new java.util.ArrayList<>();
-
-            // Nota: O SDK 2.x resume não tem seriesName diretamente no CardResume.
-            // Para cumprir o requisito RF-01.3 de forma otimizada sem N chamadas extras:
-            return Arrays.stream(results)
-                .map(this::mapResumeToInternalCard)
-                .filter(c -> c.getSeriesName() != null && c.getSeriesName().toLowerCase().contains(seriesQuery.toLowerCase()))
-                .collect(Collectors.toList());
-
-        } catch (Exception e) {
-            throw new ApiException("Erro ao filtrar por série: " + seriesQuery, e);
-        }
+        // Na API v2, filtros de série podem ser feitos via ?set.name=... ou similar
+        String url = baseUrl + "/cards?set.name=like:" + seriesQuery.replace(" ", "%20");
+        return fetchCardsFromUrl(url);
     }
 
     /**
-     * Busca detalhes de um card pelo ID.
+     * Busca detalhes completos de um card pelo ID.
      */
     public com.pokemontcg.model.Card findById(String cardId) {
+        String url = baseUrl + "/cards/" + cardId;
         try {
-            // No SDK 2.0.2, o método é fetchCard(id)
-            net.tcgdex.sdk.models.Card apiCard = sdk.fetchCard(cardId);
-            if (apiCard == null) return null;
-            
-            return mapFullToInternalCard(apiCard);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                return null;
+            }
+
+            JsonNode root = objectMapper.readTree(response.body());
+            return mapFullJsonToCard(root);
+
         } catch (Exception e) {
-            throw new ApiException("Erro ao buscar detalhes do card com ID: " + cardId, e);
+            throw new ApiException("Erro ao buscar detalhes do card: " + cardId, e);
         }
     }
 
-    private com.pokemontcg.model.Card mapResumeToInternalCard(CardResume resume) {
+    private List<com.pokemontcg.model.Card> fetchCardsFromUrl(String url) {
+        List<com.pokemontcg.model.Card> cards = new ArrayList<>();
+        try {
+            System.out.println("[API] Request: " + url);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                JsonNode root = objectMapper.readTree(response.body());
+                if (root.isArray()) {
+                    for (JsonNode node : root) {
+                        cards.add(mapResumeJsonToCard(node));
+                    }
+                }
+            }
+            System.out.println("[API] " + cards.size() + " resultados obtidos.");
+            return cards;
+        } catch (Exception e) {
+            throw new ApiException("Erro na requisição à API: " + url, e);
+        }
+    }
+
+    private com.pokemontcg.model.Card mapResumeJsonToCard(JsonNode node) {
         com.pokemontcg.model.Card card = new com.pokemontcg.model.Card();
-        card.setId(resume.getId());
-        card.setLocalId(resume.getLocalId());
-        card.setName(resume.getName());
-        if (resume.getImage() != null) {
-            card.setImage(resume.getImage() + "/low.jpg");
+        card.setId(node.path("id").asText());
+        card.setLocalId(node.path("localId").asText());
+        card.setName(node.path("name").asText());
+        String image = node.path("image").asText();
+        if (image != null && !image.isEmpty() && !image.equals("null")) {
+            card.setImage(image + "/low.jpg");
         } else {
-            card.setImage(""); 
+            card.setImage("");
         }
         return card;
     }
 
-    private com.pokemontcg.model.Card mapFullToInternalCard(net.tcgdex.sdk.models.Card apiCard) {
+    private com.pokemontcg.model.Card mapFullJsonToCard(JsonNode node) {
         com.pokemontcg.model.Card card = new com.pokemontcg.model.Card();
+        card.setId(node.path("id").asText());
+        card.setLocalId(node.path("localId").asText());
+        card.setName(node.path("name").asText());
         
-        card.setId(apiCard.getId()); 
-        card.setLocalId(apiCard.getLocalId());
-        card.setName(apiCard.getName());
-        card.setImage(apiCard.getImage() + "/high.jpg");
-        
-        if (apiCard.getCategory() != null) {
-            card.setCategory(apiCard.getCategory());
+        String image = node.path("image").asText();
+        if (image != null && !image.isEmpty() && !image.equals("null")) {
+            card.setImage(image + "/high.jpg");
         }
-        
-        card.setRarity(apiCard.getRarity());
-        
-        if (apiCard.getSet() != null) {
-            card.setSetId(apiCard.getSet().getId());
-            card.setSetName(apiCard.getSet().getName());
+
+        card.setCategory(node.path("category").asText());
+        card.setRarity(node.path("rarity").asText());
+        card.setHp(node.path("hp").asInt(0));
+
+        JsonNode setNode = node.path("set");
+        if (!setNode.isMissingNode()) {
+            card.setSetId(setNode.path("id").asText());
+            card.setSetName(setNode.path("name").asText());
+            
+            // A API TCGdex coloca a série dentro do objeto 'set'
+            JsonNode seriesNode = setNode.path("series");
+            if (!seriesNode.isMissingNode()) {
+                card.setSeriesId(seriesNode.path("id").asText("base"));
+                card.setSeriesName(seriesNode.path("name").asText("Expansão"));
+            } else {
+                card.setSeriesId("base");
+                card.setSeriesName("Expansão");
+            }
+        } else {
+            card.setSeriesId("base");
+            card.setSeriesName("Expansão");
         }
-        
-        card.setHp(apiCard.getHp());
-        card.setTypes(apiCard.getTypes());
-        
+
+        List<String> types = new ArrayList<>();
+        JsonNode typesNode = node.path("types");
+        if (typesNode.isArray()) {
+            for (JsonNode t : typesNode) {
+                types.add(t.asText());
+            }
+        }
+        card.setTypes(types);
+
         return card;
     }
 }
