@@ -41,6 +41,9 @@ public class CatalogService {
         entry.setImageUrl(card.getImage());
         entry.setType(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : "Colorless");
         entry.setRarity(card.getRarity());
+        // Campos obrigatórios que estavam faltando — evita null sobrescrevendo DEFAULTs do SQLite
+        entry.setStage(card.getStage() != null ? card.getStage() : "Básico");
+        entry.setCategory(card.getCategory() != null ? card.getCategory() : "Pokémon");
         entry.setQuantity(quantity);
         entry.setNotes(notes);
         

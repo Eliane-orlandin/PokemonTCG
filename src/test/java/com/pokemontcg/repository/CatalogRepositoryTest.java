@@ -32,13 +32,15 @@ public class CatalogRepositoryTest {
             stmt.execute("DROP TABLE IF EXISTS catalog");
             stmt.execute("CREATE TABLE catalog (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "card_id TEXT NOT NULL, " +
+                    "card_id TEXT NOT NULL UNIQUE, " +
                     "card_name TEXT NOT NULL, " +
                     "series_id TEXT NOT NULL, " +
                     "series_name TEXT NOT NULL, " +
                     "image_url TEXT, " +
                     "type TEXT, " +
                     "rarity TEXT, " +
+                    "stage TEXT DEFAULT 'Básico', " +
+                    "category TEXT DEFAULT 'Pokémon', " +
                     "quantity INTEGER NOT NULL DEFAULT 1, " +
                     "language TEXT NOT NULL DEFAULT 'pt', " +
                     "notes TEXT, " +

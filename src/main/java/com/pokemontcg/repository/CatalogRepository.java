@@ -38,8 +38,8 @@ public class CatalogRepository {
             return;
         }
 
-        String sql = "INSERT INTO catalog (card_id, card_name, series_id, series_name, type, rarity, image_url, quantity, language, notes, added_at, updated_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO catalog (card_id, card_name, series_id, series_name, type, rarity, stage, category, image_url, quantity, language, notes, added_at, updated_at) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -64,7 +64,7 @@ public class CatalogRepository {
      * Atualiza os dados de um card existente (quantidade e notas).
      */
     public void update(CatalogEntry entry) {
-        String sql = "UPDATE catalog SET card_name = ?, series_id = ?, series_name = ?, type = ?, rarity = ?, image_url = ?, quantity = ?, language = ?, notes = ?, updated_at = ? " +
+        String sql = "UPDATE catalog SET card_name = ?, series_id = ?, series_name = ?, type = ?, rarity = ?, stage = ?, category = ?, image_url = ?, quantity = ?, language = ?, notes = ?, updated_at = ? " +
                      "WHERE card_id = ?";
 
         try (Connection conn = this.getConnection();
@@ -75,12 +75,14 @@ public class CatalogRepository {
             pstmt.setString(3, entry.getSeriesName());
             pstmt.setString(4, entry.getType());
             pstmt.setString(5, entry.getRarity());
-            pstmt.setString(6, entry.getImageUrl());
-            pstmt.setInt(7, entry.getQuantity());
-            pstmt.setString(8, entry.getLanguage());
-            pstmt.setString(9, entry.getNotes());
-            pstmt.setString(10, LocalDateTime.now().format(DATE_FORMATTER));
-            pstmt.setString(11, entry.getCardId());
+            pstmt.setString(6, entry.getStage());
+            pstmt.setString(7, entry.getCategory());
+            pstmt.setString(8, entry.getImageUrl());
+            pstmt.setInt(9, entry.getQuantity());
+            pstmt.setString(10, entry.getLanguage());
+            pstmt.setString(11, entry.getNotes());
+            pstmt.setString(12, LocalDateTime.now().format(DATE_FORMATTER));
+            pstmt.setString(13, entry.getCardId());
 
             pstmt.executeUpdate();
 
@@ -165,15 +167,17 @@ public class CatalogRepository {
         pstmt.setString(4, entry.getSeriesName());
         pstmt.setString(5, entry.getType());
         pstmt.setString(6, entry.getRarity());
-        pstmt.setString(7, entry.getImageUrl());
-        pstmt.setInt(8, entry.getQuantity());
-        pstmt.setString(9, entry.getLanguage());
-        pstmt.setString(10, entry.getNotes());
+        pstmt.setString(7, entry.getStage());
+        pstmt.setString(8, entry.getCategory());
+        pstmt.setString(9, entry.getImageUrl());
+        pstmt.setInt(10, entry.getQuantity());
+        pstmt.setString(11, entry.getLanguage());
+        pstmt.setString(12, entry.getNotes());
         
         String now = LocalDateTime.now().format(DATE_FORMATTER);
         if (isInsert) {
-            pstmt.setString(11, now); // added_at
-            pstmt.setString(12, now); // updated_at
+            pstmt.setString(13, now); // added_at
+            pstmt.setString(14, now); // updated_at
         }
     }
 
@@ -186,13 +190,19 @@ public class CatalogRepository {
         entry.setSeriesName(rs.getString("series_name"));
         entry.setType(rs.getString("type"));
         entry.setRarity(rs.getString("rarity"));
+        entry.setStage(rs.getString("stage"));
+        entry.setCategory(rs.getString("category"));
         entry.setImageUrl(rs.getString("image_url"));
         entry.setQuantity(rs.getInt("quantity"));
         entry.setLanguage(rs.getString("language"));
         entry.setNotes(rs.getString("notes"));
         
-        entry.setAddedAt(LocalDateTime.parse(rs.getString("added_at"), DATE_FORMATTER));
-        entry.setUpdatedAt(LocalDateTime.parse(rs.getString("updated_at"), DATE_FORMATTER));
+        // Proteção contra datas nulas no banco (dados corrompidos ou antigos)
+        String addedAtStr = rs.getString("added_at");
+        entry.setAddedAt(addedAtStr != null ? LocalDateTime.parse(addedAtStr, DATE_FORMATTER) : LocalDateTime.now());
+        
+        String updatedAtStr = rs.getString("updated_at");
+        entry.setUpdatedAt(updatedAtStr != null ? LocalDateTime.parse(updatedAtStr, DATE_FORMATTER) : LocalDateTime.now());
         
         return entry;
     }
