@@ -38,6 +38,9 @@ public class SearchController {
     private static final Map<String, String> SERIES_TRANSLATIONS = new HashMap<>();
     private static final Map<String, String> TRAINER_SUBTYPES = new HashMap<>();
     private static final Map<String, String> ENERGY_SUBTYPES = new HashMap<>();
+    private static final Map<String, String> POKEMON_RARITIES = new HashMap<>();
+    private static final Map<String, String> TRAINER_RARITIES = new HashMap<>();
+    private static final Map<String, String> ENERGY_RARITIES = new HashMap<>();
 
     static {
         // Categorias
@@ -84,6 +87,41 @@ public class SearchController {
         RARITY_TRANSLATIONS.put("Arte Completa de Treinador", "Arte Completa de Treinador");
         RARITY_TRANSLATIONS.put("ACE SPEC Raro", "ACE SPEC Raro");
 
+        // Raridades específicas de Pokémon
+        POKEMON_RARITIES.put("Comum", "Comum");
+        POKEMON_RARITIES.put("Incomum", "Incomum");
+        POKEMON_RARITIES.put("Rara", "Rara");
+        POKEMON_RARITIES.put("Rara Holo", "Rara Holo");
+        POKEMON_RARITIES.put("Rara Holo V", "Rara Holo V");
+        POKEMON_RARITIES.put("Rara Holo VMAX", "Rara Holo VMAX");
+        POKEMON_RARITIES.put("Rara Holo VSTAR", "Rara Holo VSTAR");
+        POKEMON_RARITIES.put("Rara Radiante", "Rara Radiante");
+        POKEMON_RARITIES.put("Rara Secreta", "Rara Secreta");
+        POKEMON_RARITIES.put("Ultra Rara", "Ultra Rara");
+        POKEMON_RARITIES.put("Hiper Rara", "Hiper Rara");
+        POKEMON_RARITIES.put("Ilustração Rara", "Ilustração Rara");
+        POKEMON_RARITIES.put("ACE SPEC Raro", "ACE SPEC Raro");
+
+        // Raridades específicas de Treinador
+        TRAINER_RARITIES.put("Comum", "Comum");
+        TRAINER_RARITIES.put("Incomum", "Incomum");
+        TRAINER_RARITIES.put("Rara", "Rara");
+        TRAINER_RARITIES.put("Rara Holo", "Rara Holo");
+        TRAINER_RARITIES.put("Rara Secreta", "Rara Secreta");
+        TRAINER_RARITIES.put("Ultra Rara", "Ultra Rara");
+        TRAINER_RARITIES.put("Hiper Rara", "Hiper Rara");
+        TRAINER_RARITIES.put("Ilustração Rara", "Ilustração Rara");
+        TRAINER_RARITIES.put("Arte Completa de Treinador", "Arte Completa de Treinador");
+
+        // Raridades específicas de Energia
+        ENERGY_RARITIES.put("Comum", "Comum");
+        ENERGY_RARITIES.put("Incomum", "Incomum");
+        ENERGY_RARITIES.put("Rara", "Rara");
+        ENERGY_RARITIES.put("Rara Holo", "Rara Holo");
+        ENERGY_RARITIES.put("Rara Secreta", "Rara Secreta");
+        ENERGY_RARITIES.put("Hiper Rara", "Hiper Rara");
+        ENERGY_RARITIES.put("Ilustração Rara", "Ilustração Rara");
+
         // Séries
         SERIES_TRANSLATIONS.put("Base", "Coleção Básica");
         SERIES_TRANSLATIONS.put("Ginásio", "Ginásio");
@@ -117,6 +155,8 @@ public class SearchController {
             comboCategory.valueProperty().addListener((obs, oldVal, newVal) -> {
                 if (txtSearch != null) txtSearch.clear(); // Limpa o input ao mudar o filtro
                 updateTypeOptions(newVal);
+                updateRarityOptions(newVal);
+                updateSetOptions(newVal);
                 handleSearch(); // Busca instantânea
             });
         }
@@ -130,13 +170,11 @@ public class SearchController {
         
         // Inicializa Raridades
         if (comboRarity != null) {
-            comboRarity.getItems().add("Todas as Raridades");
-            comboRarity.getItems().addAll(RARITY_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
-            comboRarity.getSelectionModel().selectFirst();
+            updateRarityOptions("Todas as Categorias"); // Inicia bloqueado
             
             // Listener para limpar busca e pesquisar instantaneamente
             comboRarity.valueProperty().addListener((obs, oldVal, newVal) -> {
-                if (txtSearch != null && newVal != null && !newVal.equals(oldVal)) {
+                if (txtSearch != null && newVal != null && !newVal.equals(oldVal) && !newVal.equals("Selecione Categoria")) {
                     txtSearch.clear();
                     handleSearch();
                 }
@@ -145,18 +183,21 @@ public class SearchController {
         
         // Inicializa Séries
         if (comboSet != null) {
-            comboSet.getItems().add("Todas as Séries");
-            comboSet.getItems().addAll(SERIES_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
-            comboSet.getSelectionModel().selectFirst();
+            updateSetOptions("Todas as Categorias"); // Inicia bloqueado
 
             // Listener para limpar busca e pesquisar instantaneamente
             comboSet.valueProperty().addListener((obs, oldVal, newVal) -> {
-                if (txtSearch != null && newVal != null && !newVal.equals(oldVal)) {
+                if (txtSearch != null && newVal != null && !newVal.equals(oldVal) && !newVal.equals("Selecione Categoria")) {
                     txtSearch.clear();
                     handleSearch();
                 }
             });
         }
+        
+        // Garante estado inicial consistente chamando os updates
+        updateTypeOptions("Todas as Categorias");
+        updateRarityOptions("Todas as Categorias");
+        updateSetOptions("Todas as Categorias");
     }
 
     /**
@@ -216,7 +257,8 @@ public class SearchController {
         System.out.println(String.format("[DEBUG] Parâmetros: Nome=%s, Cat=%s, Tipo=%s, Rar=%s, Sér=%s", 
             query, apiCategory, apiType, apiRarity, apiSet));
         
-        if (flowResults != null) flowResults.getChildren().clear();
+        // A limpeza será feita dentro do Platform.runLater para evitar flickers
+        // if (flowResults != null) flowResults.getChildren().clear();
         
         // Cópias finais para uso dentro da Lambda (Thread)
         final String finalSearchName = searchName;
@@ -233,10 +275,25 @@ public class SearchController {
                 
                 Platform.runLater(() -> {
                     if (results.isEmpty()) {
-                        lblStatus.setText("Nenhum resultado encontrado para \"" + query + "\".");
-                        System.out.println("[DEBUG] Nenhum resultado para os critérios informados.");
+                        lblStatus.setText("Nenhum resultado encontrado para os filtros selecionados.");
                     } else {
-                        lblStatus.setText(results.size() + " resultados encontrados para \"" + query + "\".");
+                        // Constrói mensagem de status baseada nos filtros ativos
+                        StringBuilder status = new StringBuilder();
+                        status.append(results.size()).append(" resultados encontrados");
+                        
+                        if (query != null && !query.isEmpty()) {
+                            status.append(" para \"").append(query).append("\"");
+                        }
+                        if (selectedCategory != null && !selectedCategory.contains("Todas")) {
+                            status.append(" em ").append(selectedCategory);
+                        }
+                        
+                        lblStatus.setText(status.append(".").toString());
+                        
+                        // Limpa e renderiza na UI Thread
+                        if (flowResults != null) {
+                            flowResults.getChildren().clear();
+                        }
                         loadCardsInGrid(results);
                     }
                 });
@@ -256,18 +313,77 @@ public class SearchController {
         if (comboType == null) return;
         
         comboType.getItems().clear();
-        comboType.getItems().add("Todos"); // Termo geral para resetar
+        
+        if (category == null || category.equals("Todas as Categorias")) {
+            comboType.getItems().add("Selecione Categoria");
+            comboType.getSelectionModel().selectFirst();
+            comboType.setDisable(true);
+            return;
+        }
+
+        comboType.setDisable(false);
+        comboType.getItems().add("Todos");
         
         if ("Treinador".equals(category)) {
             comboType.getItems().addAll(TRAINER_SUBTYPES.keySet().stream().sorted().collect(Collectors.toList()));
         } else if ("Energia".equals(category)) {
             comboType.getItems().addAll(ENERGY_SUBTYPES.keySet().stream().sorted().collect(Collectors.toList()));
-        } else {
-            // Padrão ou Pokémon
+        } else if ("Pokémon".equals(category)) {
             comboType.getItems().addAll(TYPE_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
         }
         
         comboType.getSelectionModel().selectFirst();
+    }
+
+    /**
+     * Atualiza as opções do ComboBox de Raridade de acordo com a categoria selecionada.
+     */
+    private void updateRarityOptions(String category) {
+        if (comboRarity == null) return;
+        
+        comboRarity.getItems().clear();
+        
+        if (category == null || category.equals("Todas as Categorias")) {
+            comboRarity.getItems().add("Selecione Categoria");
+            comboRarity.getSelectionModel().selectFirst();
+            comboRarity.setDisable(true);
+            return;
+        }
+
+        comboRarity.setDisable(false);
+        comboRarity.getItems().add("Todas as Raridades");
+        
+        if ("Treinador".equals(category)) {
+            comboRarity.getItems().addAll(TRAINER_RARITIES.keySet().stream().sorted().collect(Collectors.toList()));
+        } else if ("Energia".equals(category)) {
+            comboRarity.getItems().addAll(ENERGY_RARITIES.keySet().stream().sorted().collect(Collectors.toList()));
+        } else if ("Pokémon".equals(category)) {
+            comboRarity.getItems().addAll(POKEMON_RARITIES.keySet().stream().sorted().collect(Collectors.toList()));
+        }
+        
+        comboRarity.getSelectionModel().selectFirst();
+    }
+
+    /**
+     * Atualiza as opções do ComboBox de Série de acordo com a categoria selecionada.
+     */
+    private void updateSetOptions(String category) {
+        if (comboSet == null) return;
+        
+        comboSet.getItems().clear();
+        
+        if (category == null || category.equals("Todas as Categorias")) {
+            comboSet.getItems().add("Selecione Categoria");
+            comboSet.getSelectionModel().selectFirst();
+            comboSet.setDisable(true);
+            return;
+        }
+
+        comboSet.setDisable(false);
+        comboSet.getItems().add("Todas as Séries");
+        comboSet.getItems().addAll(SERIES_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+        
+        comboSet.getSelectionModel().selectFirst();
     }
 
     /**
@@ -324,8 +440,8 @@ public class SearchController {
                 flowResults.getChildren().add(cardNode);
                 
             } catch (Exception e) {
-                System.err.println("❌ Erro ao renderizar card: " + card.getName());
-                break;
+                System.err.println("❌ Erro crítico ao renderizar card \"" + card.getName() + "\": " + e.getMessage());
+                e.printStackTrace(); // Mostra o erro real no console para debug
             }
         }
     }

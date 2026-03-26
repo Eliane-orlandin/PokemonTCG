@@ -56,7 +56,7 @@
                         <VBox spacing="5" alignment="BOTTOM_LEFT">
                             <children>
                                 <Label text=" " styleClass="app-subtitle" />
-                                <Button minHeight="48" maxHeight="48" minWidth="220" maxWidth="220" onAction="#handleClearFilters" styleClass="btn-outline" text="LIMPAR FILTROS">
+                                <Button minHeight="48" maxHeight="48" minWidth="220" maxWidth="220" onAction="#handleClearFilters" styleClass="btn-outline" text="Limpar Filtros">
                                     <graphic>
                                         <FontIcon iconLiteral="fas-filter" iconSize="16" styleClass="card-icon-primary" />
                                     </graphic>
@@ -69,7 +69,7 @@
                 <!-- Barra de Busca Principal - Mover para Baixo e sem Categoria Duplicada -->
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <children>
-                        <TextField fx:id="txtSearch" minHeight="48" maxHeight="48" onAction="#handleSearch" HBox.hgrow="ALWAYS" promptText="Nome ou Número (ex: Pikachu ou 58)..." styleClass="search-field" />
+                        <TextField fx:id="txtSearch" minHeight="48" maxHeight="48" onAction="#handleSearch" HBox.hgrow="ALWAYS" promptText="Nome ou Número (ex: Pikachu ou 58)" styleClass="search-field" />
                         <Button minHeight="48" maxHeight="48" onAction="#handleSearch" styleClass="btn-primary" text="BUSCAR">
                             <graphic>
                                 <FontIcon iconLiteral="fas-search" iconSize="16" />
