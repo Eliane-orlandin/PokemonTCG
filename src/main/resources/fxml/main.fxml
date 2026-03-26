@@ -78,11 +78,11 @@
                 <!-- Rodapé da Sidebar (User Profile) -->
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="sidebar-footer">
                     <children>
-                        <Label text="👤" styleClass="header-icon-profile" />
+                        <Label text="💜" styleClass="header-icon-profile" />
                         <VBox>
                             <children>
-                                <Label text="Ash Ketchum" styleClass="row-card-name" />
-                                <Label text="Mestre Pokémon" styleClass="app-subtitle" />
+                                <Label text="Li Orlandin" styleClass="row-card-name" />
+                                <Label text="Mestra Pokémon" styleClass="app-subtitle" />
                             </children>
                         </VBox>
                     </children>
@@ -99,7 +99,7 @@
                 <!-- Cabeçalho (Header) Sophisticated -->
                 <VBox alignment="CENTER_LEFT" spacing="5" styleClass="header-pane" style="-fx-padding: 25 30 25 40;">
                     <children>
-                        <Label styleClass="header-title" text="Bem-vindo, Treinador" />
+                        <Label styleClass="header-title" text="Bem-vinda, Treinadora" />
                         <Label styleClass="section-subtitle" text="Sua biblioteca lendária de cards aguarda sua exploração e curadoria." />
                     </children>
                 </VBox>
