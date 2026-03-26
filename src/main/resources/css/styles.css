@@ -45,6 +45,7 @@
     /* Dourado mais claro para brilhos */
     -app-danger: #FF5252;
     -app-warning: #FFA000;
+    -app-secondary: #2A75BB; /* Azul Pokémon Vibrante */
 
     /* Cores de texto */
     -app-text-dark: #FFFFFF;
@@ -481,8 +482,7 @@
 }
 
 .btn-outline {
-    -fx-background-color: -app-secondary;
-    /* Azul Pokémon Vibrante */
+    -fx-background-color: transparent;
     -fx-border-color: rgba(255, 255, 255, 0.3);
     -fx-border-radius: 8;
     -fx-background-radius: 8;
@@ -795,4 +795,51 @@
 .export-card:hover {
     -fx-border-color: rgba(255, 215, 0, 0.4);
     -fx-background-color: #1a3a7c; /* Realce sutil no hover */
+}
+
+/* ========================================
+   ESTILOS ADICIONADOS PARA CARD ITEM
+   ======================================== */
+.card-stage {
+    -fx-font-size: 11px;
+    -fx-text-fill: -app-primary;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.9;
+}
+
+.quick-add-container {
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    /* border-width move-se de line shorthand ou separado? em JavaFX é -fx-border-width */
+    -fx-border-width: 1 0 0 0;
+}
+
+.quantity-selector-mini {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-padding: 0 5;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 12;
+}
+
+.btn-qty-mini {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.lbl-qty-mini {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-min-width: 20;
+    -fx-alignment: center;
+}
+
+.btn-save-mini {
+    -fx-background-color: -app-primary;
+    -fx-background-radius: 12;
+    -fx-padding: 4 8;
+}
+
+.btn-save-mini:hover {
+    -fx-background-color: -app-primary-hover;
 }
