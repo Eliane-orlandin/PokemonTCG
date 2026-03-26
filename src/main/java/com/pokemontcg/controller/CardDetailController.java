@@ -28,6 +28,7 @@ public class CardDetailController {
     @FXML private Label lblHp;
     @FXML private Label lblPrice;
     @FXML private Button btnAction;
+    @FXML private StackPane actionArea;
     @FXML private HBox addOptionsArea;
     @FXML private Label lblQuantity;
 
