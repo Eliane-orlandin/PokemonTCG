@@ -51,7 +51,7 @@ public class CardDetailController {
         lblRarity.setText(entry.getRarity() != null ? entry.getRarity() : "Desconhecida");
         lblSetName.setText(entry.getSeriesName());
         lblHp.setText("---");
-        lblPrice.setText("$0.00");
+        lblPrice.setText("0.00");
         
         updateTypeBadge(entry.getType());
 
@@ -71,7 +71,7 @@ public class CardDetailController {
         lblRarity.setText(card.getRarity() != null ? card.getRarity() : "Desconhecida");
         lblSetName.setText(card.getSeriesName());
         lblHp.setText(card.getHp() != null && card.getHp() > 0 ? String.valueOf(card.getHp()) : "---");
-        lblPrice.setText("$0.00"); 
+        lblPrice.setText("0.00"); 
         
         updateTypeBadge(card.getTypes() != null && !card.getTypes().isEmpty() ? card.getTypes().get(0) : null);
 
@@ -159,7 +159,7 @@ public class CardDetailController {
     @FXML
     public void handleIncrement() {
         quantity++;
-        lblQuantity.setText(String.valueOf(quantity));
+        lblQuantity.setText("" + quantity);
     }
 
     /**
@@ -169,7 +169,7 @@ public class CardDetailController {
     public void handleDecrement() {
         if (quantity > 1) {
             quantity--;
-            lblQuantity.setText(String.valueOf(quantity));
+            lblQuantity.setText("" + quantity);
         }
     }
 

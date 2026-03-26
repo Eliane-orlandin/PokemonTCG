@@ -62,7 +62,7 @@
                                 <Label fx:id="lblHp" text="---" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
                                 <Label text="VALOR ESTIMADO" styleClass="app-subtitle" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                <Label fx:id="lblPrice" text="$0.00" style="-fx-text-fill: #FFD700; -fx-font-size: 20; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                <Label fx:id="lblPrice" text="---" style="-fx-text-fill: #FFD700; -fx-font-size: 20; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                             </children>
                         </GridPane>
                         
