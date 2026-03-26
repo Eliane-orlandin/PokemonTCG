@@ -15,43 +15,63 @@ public class CatalogRowController {
     @FXML private ImageView imgMini;
     @FXML private Label lblName;
     @FXML private Label lblSetId;
-    @FXML private Label lblSetName;
+    @FXML private Label lblStage;
     @FXML private Label lblType;
     @FXML private Label lblRarity;
     @FXML private Label lblQty;
+    
     private CatalogEntry entry;
     private Runnable onDeleteCallback;
-    private CatalogService catalogService = new CatalogService();
+    private CatalogService catalogService;
+
+    public void setService(CatalogService service) {
+        this.catalogService = service;
+    }
 
     public void setOnDeleteCallback(Runnable callback) {
         this.onDeleteCallback = callback;
     }
 
     public void setRowData(CatalogEntry entry) {
-        this.entry = entry; // Store the entry
-        lblName.setText(entry.getCardName());
-        lblSetId.setText(entry.getCardId());
-        lblSetName.setText(entry.getSeriesName());
+        if (entry == null) return;
+        this.entry = entry;
+        
+        // Proteção contra campos nulos
+        String name = entry.getCardName() != null ? entry.getCardName() : "Card sem nome";
+        lblName.setText(name);
+        
+        String seriesName = entry.getSeriesName() != null ? entry.getSeriesName() : "Desconhecida";
+        String cardId = entry.getCardId() != null ? entry.getCardId() : "???";
+        lblSetId.setText(seriesName + " • " + cardId);
+        
+        lblStage.setText(entry.getStage() != null ? entry.getStage() : "Básico");
         lblQty.setText(String.format("%02d", entry.getQuantity()));
+        lblRarity.setText(entry.getRarity() != null ? entry.getRarity() : "Comum");
         
-        lblRarity.setText(entry.getRarity() != null ? entry.getRarity() : "Unknown"); 
-        
-        // Carregar imagem miniatura
+        // Carregar imagem miniatura em background
         if (entry.getImageUrl() != null && !entry.getImageUrl().isEmpty()) {
-            new Thread(() -> {
-                Image img = new Image(entry.getImageUrl(), 40, 50, true, true);
-                javafx.application.Platform.runLater(() -> imgMini.setImage(img));
-            }).start();
+            final String url = entry.getImageUrl();
+            Thread t = new Thread(() -> {
+                try {
+                    Image img = com.pokemontcg.api.PersistentImageCache.getImage(url, 40, 50);
+                    javafx.application.Platform.runLater(() -> {
+                        if (img != null && imgMini != null) imgMini.setImage(img);
+                    });
+                } catch (Exception e) {
+                    // Log silencioso para falhas de imagem
+                }
+            });
+            t.setDaemon(true); // Não impede a JVM de fechar
+            t.start();
         }
         
-        // Estilização do badge de tipo
-        updateTypeBadge(entry.getType());
+        updateTypeStyling(entry.getType());
     }
 
     @FXML
-    public void handleDelete() {
-        if (entry != null && entry.getCardId() != null) {
-            System.out.println("[DEBUG] CatalogRowController: Removendo card -> " + entry.getCardName());
+    public void handleDelete(javafx.scene.input.MouseEvent event) {
+        if (event != null) event.consume(); 
+        if (entry != null && entry.getCardId() != null && catalogService != null) {
             try {
                 catalogService.removeCardFromCatalog(entry.getCardId());
                 if (onDeleteCallback != null) {
@@ -63,30 +83,40 @@ public class CatalogRowController {
         }
     }
 
-    private void updateTypeBadge(String type) {
+    @FXML
+    public void handleShowDetail(javafx.scene.input.MouseEvent event) {
+        if (entry != null) {
+            MainController.getInstance().showCardDetail(entry);
+        }
+    }
+
+    private void updateTypeStyling(String type) {
         if (type == null) {
             lblType.setText("???");
-            lblType.setStyle("-fx-background-color: #78909C; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 3 12; -fx-font-weight: bold; -fx-font-size: 9;");
+            lblType.getStyleClass().setAll("type-badge-pill", "type-colorless");
             return;
         }
 
-        String displayType = type.toUpperCase();
-        String color = "#78909C"; // Cinza padrão
-
-        switch (type.toLowerCase()) {
-            case "fire": color = "#FF7043"; displayType = "FOGO"; break;
-            case "water": color = "#42A5F5"; displayType = "ÁGUA"; break;
-            case "lightning": color = "#FBC02D"; displayType = "ELÉTRICO"; break;
-            case "grass": color = "#66BB6A"; displayType = "PLANTA"; break;
-            case "psychic": color = "#AB47BC"; displayType = "PSÍQUICO"; break;
-            case "darkness": color = "#263238"; displayType = "NOTURNO"; break;
-            case "dragon": color = "#FB8C00"; displayType = "DRAGÃO"; break;
-            case "colorless": color = "#B0BEC5"; displayType = "INCOLOR"; break;
-            case "metal": color = "#90A4AE"; displayType = "METAL"; break;
-            case "fighting": color = "#B87333"; displayType = "LUTADOR"; break;
+        String cleanType = type.toLowerCase().trim();
+        lblType.setText(type.toUpperCase());
+        lblType.getStyleClass().clear();
+        lblType.getStyleClass().add("type-badge-pill");
+        
+        String styleClass = "type-colorless";
+        switch (cleanType) {
+            case "fire": case "fogo": styleClass = "type-fire"; break;
+            case "water": case "água": styleClass = "type-water"; break;
+            case "lightning": case "elétrico": styleClass = "type-lightning"; break;
+            case "grass": case "planta": styleClass = "type-grass"; break;
+            case "psychic": case "psíquico": styleClass = "type-psychic"; break;
+            case "darkness": case "noturno": case "sombrio": styleClass = "type-darkness"; break;
+            case "dragon": case "dragão": styleClass = "type-dragon"; break;
+            case "metal": styleClass = "type-metal"; break;
+            case "fighting": case "lutador": styleClass = "type-fighting"; break;
+            case "fairy": case "fada": styleClass = "type-fairy"; break;
         }
-
-        lblType.setText(displayType);
-        lblType.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 3 12; -fx-font-weight: bold; -fx-font-size: 9;");
+        lblType.getStyleClass().add(styleClass);
+        // Remove style inline para usar classes do CSS
+        lblType.setStyle(null);
     }
 }

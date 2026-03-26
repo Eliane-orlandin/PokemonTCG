@@ -92,14 +92,18 @@ public class CardDetailController {
     }
 
     private void loadImage(String url) {
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
-                Image img = new Image(url, 340, 480, true, true);
-                Platform.runLater(() -> imgLarge.setImage(img));
+                Image img = com.pokemontcg.api.PersistentImageCache.getImage(url, 340, 480);
+                Platform.runLater(() -> {
+                    if (img != null) imgLarge.setImage(img);
+                });
             } catch (Exception e) {
                 System.err.println("[DEBUG] Erro ao carregar imagem: " + e.getMessage());
             }
-        }).start();
+        });
+        t.setDaemon(true); // Não impede a JVM de fechar
+        t.start();
     }
 
     private void updateTypeBadge(String type) {
@@ -113,13 +117,17 @@ public class CardDetailController {
         String color = "#78909C"; // Default
 
         switch (type.toLowerCase()) {
-            case "fire": color = "#FF7043"; break;
-            case "water": color = "#42A5F5"; break;
-            case "lightning": color = "#FBC02D"; break;
-            case "grass": color = "#66BB6A"; break;
-            case "psychic": color = "#AB47BC"; break;
-            case "darkness": color = "#263238"; break;
-            case "dragon": color = "#FB8C00"; break;
+            case "fire": case "fogo": color = "#FF7043"; break;
+            case "water": case "água": color = "#42A5F5"; break;
+            case "lightning": case "elétrico": color = "#FBC02D"; break;
+            case "grass": case "planta": color = "#66BB6A"; break;
+            case "psychic": case "psíquico": color = "#AB47BC"; break;
+            case "darkness": case "sombrio": case "noturno": color = "#263238"; break;
+            case "dragon": case "dragão": color = "#FB8C00"; break;
+            case "metal": color = "#90A4AE"; break;
+            case "fighting": case "lutador": color = "#A1887F"; break;
+            case "fairy": case "fada": color = "#F48FB1"; break;
+            case "colorless": case "incolor": color = "#78909C"; break;
         }
 
         lblType.setText(displayType);
@@ -131,8 +139,12 @@ public class CardDetailController {
         if (entry != null) {
             System.out.println("[DEBUG] CardDetailController: Iniciando salvamento -> " + entry.getCardName() + " (Qtd: " + quantity + ")");
             try {
-                // Atualiza a quantidade no objeto antes de salvar
+                // Atualiza a quantidade e metadados no objeto antes de salvar
                 entry.setQuantity(quantity);
+                if (entry.getStage() == null) entry.setStage("Básico");
+                if (entry.getCategory() == null) entry.setCategory("Pokémon");
+                if (entry.getSeriesId() == null) entry.setSeriesId("base");
+                if (entry.getSeriesName() == null) entry.setSeriesName("Expansão");
                 
                 catalogService.saveEntry(entry);
                 System.out.println("[DEBUG] CardDetailController: Sucesso ao chamar saveEntry!");

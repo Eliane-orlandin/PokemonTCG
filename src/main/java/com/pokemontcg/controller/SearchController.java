@@ -77,9 +77,9 @@ public class SearchController {
         RARITY_TRANSLATIONS.put("Rara Holo VMAX", "Rara Holo VMAX");
         RARITY_TRANSLATIONS.put("Rara Holo VSTAR", "Rara Holo VSTAR");
         RARITY_TRANSLATIONS.put("Rara Radiante", "Rara Radiante");
-        RARITY_TRANSLATIONS.put("Rara Secreta", "Rare Secreta");
+        RARITY_TRANSLATIONS.put("Rara Secreta", "Rara Secreta");
         RARITY_TRANSLATIONS.put("Ultra Rara", "Ultra Rara");
-        RARITY_TRANSLATIONS.put("Hiper Rara", "Hiper rara");
+        RARITY_TRANSLATIONS.put("Hiper Rara", "Hiper Rara");
         RARITY_TRANSLATIONS.put("Ilustração Rara", "Ilustração Rara");
         RARITY_TRANSLATIONS.put("Arte Completa de Treinador", "Arte Completa de Treinador");
         RARITY_TRANSLATIONS.put("ACE SPEC Raro", "ACE SPEC Raro");
@@ -226,7 +226,7 @@ public class SearchController {
         final String finalRarity = apiRarity;
         final String finalSet = apiSet;
 
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 // Dispara a busca com todos os filtros ativos (agora incluindo o parâmetro inteligente)
                 List<Card> results = cardService.searchCards(finalSearchName, finalCategory, finalType, finalRarity, finalSet, finalSearchLocalId);
@@ -244,7 +244,9 @@ public class SearchController {
             } catch (Exception e) {
                 System.err.println("❌ Erro na busca: " + e.getMessage());
             }
-        }).start();
+        });
+        t.setDaemon(true); // Não impede a JVM de fechar
+        t.start();
     }
 
     /**

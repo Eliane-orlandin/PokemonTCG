@@ -71,12 +71,21 @@ public class CardItemController {
             addTypeBadge(type);
         }
         
-        // Carrega imagem de forma assíncrona
+        // Carrega imagem de forma assíncrona com cache persistente
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            new Thread(() -> {
-                Image img = new Image(imageUrl, 180, 250, true, true);
-                Platform.runLater(() -> cardImage.setImage(img));
-            }).start();
+            final String url = imageUrl;
+            Thread t = new Thread(() -> {
+                try {
+                    Image img = com.pokemontcg.api.PersistentImageCache.getImage(url, 180, 250);
+                    javafx.application.Platform.runLater(() -> {
+                        if (img != null) cardImage.setImage(img);
+                    });
+                } catch (Exception e) {
+                    System.err.println("Erro ao carregar imagem: " + e.getMessage());
+                }
+            });
+            t.setDaemon(true); // Não impede a JVM de fechar
+            t.start();
         }
 
         // Se dados essenciais estão faltando (comum no resumo da API), busca detalhes em background
@@ -89,7 +98,7 @@ public class CardItemController {
      * Busca detalhes completos do card quando a busca inicial é resumida.
      */
     private void fetchFullDetails() {
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 Card fullCard = cardService.getCardDetails(currentCardId);
                 if (fullCard != null) {
@@ -106,8 +115,8 @@ public class CardItemController {
                         // Atualiza todos os tipos
                         typesContainer.getChildren().clear();
                         if (fullCard.getTypes() != null) {
-                            for (String t : fullCard.getTypes()) {
-                                addTypeBadge(t);
+                            for (String tp : fullCard.getTypes()) {
+                                addTypeBadge(tp);
                             }
                             if (!fullCard.getTypes().isEmpty()) {
                                 this.currentType = fullCard.getTypes().get(0);
@@ -118,7 +127,9 @@ public class CardItemController {
             } catch (Exception e) {
                 System.err.println("[DEBUG] Erro detalhes auto: " + e.getMessage());
             }
-        }).start();
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     private void addTypeBadge(String type) {
@@ -134,7 +145,7 @@ public class CardItemController {
             case "lightning": case "elétrico": styleClass = "type-lightning"; break;
             case "grass": case "planta": styleClass = "type-grass"; break;
             case "psychic": case "psíquico": styleClass = "type-psychic"; break;
-            case "darkness": case "noturno": styleClass = "type-darkness"; break;
+            case "darkness": case "noturno": case "sombrio": styleClass = "type-darkness"; break;
             case "dragon": case "dragão": styleClass = "type-dragon"; break;
             case "metal": styleClass = "type-metal"; break;
             case "fighting": case "lutador": styleClass = "type-fighting"; break;
@@ -148,7 +159,7 @@ public class CardItemController {
     @FXML
     public void handleShowDetail() {
         cardRoot.setOpacity(0.5);
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 Card fullCard = cardService.getCardDetails(currentCardId);
                 Platform.runLater(() -> {
@@ -185,20 +196,30 @@ public class CardItemController {
                 Platform.runLater(() -> cardRoot.setOpacity(1.0));
                 System.err.println("[DEBUG] Erro ao buscar detalhes: " + e.getMessage());
             }
-        }).start();
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     @FXML
     public void handleAddToCollection() {
         try {
+            // Proteção contra campos nulos de race-condition (quando o usuário clica antes de carregar a API)
+            String seriesId = currentSeriesId != null ? currentSeriesId : "base";
+            String seriesName = currentSeriesName != null ? currentSeriesName : "Expansão";
+            String cardType = currentType != null ? currentType : "Pokémon";
+            String cardRarity = currentRarity != null ? currentRarity : "Comum";
+
             CatalogEntry entry = new CatalogEntry();
             entry.setCardId(currentCardId);
             entry.setCardName(lblName.getText());
             entry.setImageUrl(currentImageUrl);
-            entry.setSeriesId(currentSeriesId);
-            entry.setSeriesName(currentSeriesName);
-            entry.setType(currentType);
-            entry.setRarity(currentRarity);
+            entry.setSeriesId(seriesId);
+            entry.setSeriesName(seriesName);
+            entry.setType(cardType);
+            entry.setRarity(cardRarity);
+            entry.setStage(lblStage.getText()); 
+            entry.setCategory(findCategory(cardType)); 
             entry.setQuantity(quantity);
             
             catalogService.saveEntry(entry);
@@ -206,10 +227,12 @@ public class CardItemController {
             // Feedback visual
             String originalText = lblQuantity.getText();
             lblQuantity.setText("✓");
-            new Thread(() -> {
+            Thread t = new Thread(() -> {
                 try { Thread.sleep(2000); } catch (InterruptedException ex) {}
                 Platform.runLater(() -> lblQuantity.setText(String.valueOf(quantity)));
-            }).start();
+            });
+            t.setDaemon(true);
+            t.start();
         } catch (Exception e) {
             System.err.println("[DEBUG] Erro ao salvar card: " + e.getMessage());
         }
@@ -227,5 +250,13 @@ public class CardItemController {
             quantity--;
             lblQuantity.setText(String.valueOf(quantity));
         }
+    }
+
+    private String findCategory(String type) {
+        if (type == null) return "Pokémon";
+        String t = type.toLowerCase();
+        if (t.contains("treinador") || t.contains("trainer")) return "Treinador";
+        if (t.contains("energia") || t.contains("energy")) return "Energia";
+        return "Pokémon";
     }
 }
