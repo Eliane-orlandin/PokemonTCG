@@ -75,7 +75,8 @@
                             <!-- Ataques serão injetados dinamicamente via código -->
                         </VBox>
 
-                        <Label fx:id="lblFlavorText" text="..." wrapText="true" style="-fx-text-fill: #AAA; -fx-font-style: italic; -fx-font-size: 11px;" />
+                        <Label fx:id="lblDescriptionHeader" text="SOBRE" style="-fx-text-fill: #CCC; -fx-font-weight: bold; -fx-font-size: 13px;" />
+                        <Label fx:id="lblFlavorText" text="..." wrapText="true" style="-fx-text-fill: #AAA; -fx-font-style: italic; -fx-font-size: 12px; -fx-line-spacing: 2px;" />
                         
                         <Region VBox.vgrow="ALWAYS" />
 

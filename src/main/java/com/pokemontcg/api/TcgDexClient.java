@@ -106,14 +106,16 @@ public class TcgDexClient {
             card.setImage(image + "/high.jpg");
         }
 
-        card.setCategory(node.path("category").asText());
-        card.setRarity(node.path("rarity").asText());
-        card.setStage(node.path("stage").asText("Básico"));
+        card.setCategory(node.path("category").asText("---"));
+        card.setRarity(node.path("rarity").asText("---"));
         
-        // Se for Treinador ou Energia, o stage na verdade representa o tipo (Item, Suporte, etc.)
-        if (!card.getCategory().equalsIgnoreCase("Pokémon")) {
+        // Em TCGdex v2: trainerType contém o subtipo (Item, Suporte)
+        if (node.has("trainerType")) {
+            card.setTrainerType(node.path("trainerType").asText());
+        } else {
             card.setTrainerType(node.path("stage").asText("---"));
         }
+        card.setStage(card.getTrainerType());
 
         JsonNode setNode = node.path("set");
         if (!setNode.isMissingNode()) {
@@ -192,7 +194,9 @@ public class TcgDexClient {
         card.setRetreatCost(retreatNode.asText());
 
         // Flavor Text
-        if (node.has("description")) {
+        if (node.has("effect")) {
+            card.setFlavorText(node.path("effect").asText());
+        } else if (node.has("description")) {
             card.setFlavorText(node.path("description").asText());
         } else if (node.has("flavorText")) {
             card.setFlavorText(node.path("flavorText").asText());

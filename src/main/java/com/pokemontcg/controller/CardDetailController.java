@@ -72,7 +72,7 @@ public class CardDetailController {
             loadImage(entry.getImageUrl());
         }
 
-        applyCategoryLayout(entry.getCategory(), entry.getRarity(), entry.getStage());
+        applyCategoryLayout(entry.getCategory(), entry.getRarity(), entry.getStage(), entry.getTrainerType());
     }
 
     public void setCardData(Card card) {
@@ -102,6 +102,8 @@ public class CardDetailController {
     }
 
     private void applyCategoryLayout(String category, String rarity, String stage, String trainerType) {
+        if (lblStageLabel == null || lblHpLabel == null || lblDescriptionHeader == null) return;
+
         boolean isPokemon = category == null || category.equalsIgnoreCase("Pokémon") || category.equalsIgnoreCase("Pokemon");
 
         if (isPokemon) {
@@ -121,25 +123,32 @@ public class CardDetailController {
             lblRetreat.setVisible(true);
         } else {
             // Layout Especial: Treinador / Energia
-            lblStageLabel.setText("ESTÁGIO"); // Mantém conforme pedido "Keep estagio"
-            lblStage.setText(stage != null ? stage : "---");
+            lblStageLabel.setText("ESTÁGIO");
+            lblStage.setText(stage != null && !stage.isEmpty() ? stage : "---");
+            lblTypePill.setText(stage != null && !stage.isEmpty() ? stage : "---");
             
             lblHpLabel.setText("CATEGORIA");
             lblHp.setText(category != null ? category : "---");
-            lblHp.getStyleClass().remove("data-value-hp");
+            lblHp.getStyleClass().removeAll("data-value-hp");
             lblHp.getStyleClass().add("data-value");
+            lblHp.setVisible(true);
+            lblHpLabel.setVisible(true);
             
             lblWeaknessLabel.setText("RARIDADE");
-            lblWeakness.setText(rarity != null ? rarity : "---");
+            lblWeakness.setText(rarity != null && !rarity.equalsIgnoreCase("None") ? rarity : "Comum");
+            lblWeaknessLabel.setVisible(true);
+            lblWeakness.setVisible(true);
 
             lblResistanceLabel.setText("TIPO TREINADOR");
-            lblResistance.setText(trainerType != null ? trainerType : "---");
+            lblResistance.setText(trainerType != null && !trainerType.isEmpty() ? trainerType : "---");
             lblResistanceLabel.setVisible(true);
             lblResistance.setVisible(true);
 
             lblDescriptionHeader.setText("DESCRIÇÃO");
+            lblDescriptionHeader.setVisible(true);
+            lblFlavorText.setVisible(true);
 
-            // Esconder atributos de batalha
+            // Esconder atributos de batalha irrelevantes
             lblRetreatLabel.setVisible(false);
             lblRetreat.setVisible(false);
         }
