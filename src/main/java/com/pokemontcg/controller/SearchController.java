@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import java.util.HashMap;
@@ -22,100 +23,80 @@ import java.util.stream.Collectors;
 public class SearchController {
 
     @FXML private TextField txtSearch;
-    @FXML private ComboBox<String> comboCategoryMain; // Categoria na barra superior
     @FXML private ComboBox<String> comboCategory;     // Categoria na área de filtros
     @FXML private ComboBox<String> comboType;
     @FXML private ComboBox<String> comboRarity;
     @FXML private ComboBox<String> comboSet;
     @FXML private FlowPane flowResults;
+    @FXML private Label lblStatus;
 
     private final CardService cardService;
     
-    // Mapeamentos para tradução (Exibição -> API)
     private static final Map<String, String> CATEGORY_TRANSLATIONS = new HashMap<>();
     private static final Map<String, String> TYPE_TRANSLATIONS = new HashMap<>();
     private static final Map<String, String> RARITY_TRANSLATIONS = new HashMap<>();
     private static final Map<String, String> SERIES_TRANSLATIONS = new HashMap<>();
+    private static final Map<String, String> TRAINER_SUBTYPES = new HashMap<>();
+    private static final Map<String, String> ENERGY_SUBTYPES = new HashMap<>();
 
     static {
         // Categorias
         CATEGORY_TRANSLATIONS.put("Pokémon", "Pokemon");
-        CATEGORY_TRANSLATIONS.put("Treinador", "Trainer");
-        CATEGORY_TRANSLATIONS.put("Energia", "Energy");
+        CATEGORY_TRANSLATIONS.put("Treinador", "Treinador");
+        CATEGORY_TRANSLATIONS.put("Energia", "Energia");
 
-        // Tipos
-        TYPE_TRANSLATIONS.put("Incolor", "Colorless");
-        TYPE_TRANSLATIONS.put("Noturno", "Darkness");
-        TYPE_TRANSLATIONS.put("Dragão", "Dragon");
-        TYPE_TRANSLATIONS.put("Fada", "Fairy");
-        TYPE_TRANSLATIONS.put("Lutador", "Fighting");
-        TYPE_TRANSLATIONS.put("Fogo", "Fire");
-        TYPE_TRANSLATIONS.put("Planta", "Grass");
-        TYPE_TRANSLATIONS.put("Raio", "Lightning");
+        // Tipos de Pokémon
+        TYPE_TRANSLATIONS.put("Incolor", "Incolor");
+        TYPE_TRANSLATIONS.put("Sombrio", "Sombrio");
+        TYPE_TRANSLATIONS.put("Dragão", "Dragão");
+        TYPE_TRANSLATIONS.put("Fada", "Fada");
+        TYPE_TRANSLATIONS.put("Lutador", "Lutador");
+        TYPE_TRANSLATIONS.put("Fogo", "Fogo");
+        TYPE_TRANSLATIONS.put("Planta", "Planta");
+        TYPE_TRANSLATIONS.put("Elétrico", "Elétrico");
         TYPE_TRANSLATIONS.put("Metal", "Metal");
-        TYPE_TRANSLATIONS.put("Psíquico", "Psychic");
-        TYPE_TRANSLATIONS.put("Água", "Water");
+        TYPE_TRANSLATIONS.put("Psíquico", "Psíquico");
+        TYPE_TRANSLATIONS.put("Água", "Água");
+
+        // Subtipos de Treinador (trainerType na API)
+        TRAINER_SUBTYPES.put("Apoiador", "Apoiador");
+        TRAINER_SUBTYPES.put("Estádio", "Estádio");
+        TRAINER_SUBTYPES.put("Ferramenta", "Ferramenta");
+        TRAINER_SUBTYPES.put("Item", "Item");
+
+        // Tipos de Energia (energyType na API)
+        ENERGY_SUBTYPES.put("Básica", "Normal");
+        ENERGY_SUBTYPES.put("Especial", "Especial");
 
         // Raridades
-        RARITY_TRANSLATIONS.put("Rara ACE SPEC", "ACE SPEC Rare");
-        RARITY_TRANSLATIONS.put("Rara Incrível", "Amazing Rare");
-        RARITY_TRANSLATIONS.put("Rara B&W", "Black White Rare");
-        RARITY_TRANSLATIONS.put("Coleção Clássica", "Classic Collection");
-        RARITY_TRANSLATIONS.put("Comum", "Common");
-        RARITY_TRANSLATIONS.put("Coroa", "Crown");
-        RARITY_TRANSLATIONS.put("Dupla Rara", "Double rare");
-        RARITY_TRANSLATIONS.put("Quatro Diamantes", "Four Diamond");
-        RARITY_TRANSLATIONS.put("Treinador Full Art", "Full Art Trainer");
-        RARITY_TRANSLATIONS.put("Holo Rara", "Holo Rare");
-        RARITY_TRANSLATIONS.put("Holo Rara V", "Holo Rare V");
-        RARITY_TRANSLATIONS.put("Holo Rara VMAX", "Holo Rare VMAX");
-        RARITY_TRANSLATIONS.put("Holo Rara VSTAR", "Holo Rare VSTAR");
-        RARITY_TRANSLATIONS.put("Hiper Rara", "Hyper rare");
-        RARITY_TRANSLATIONS.put("Ilustração Rara", "Illustration rare");
-        RARITY_TRANSLATIONS.put("LENDA", "LEGEND");
-        RARITY_TRANSLATIONS.put("Mega Hiper Rara", "Mega Hyper Rare");
-        RARITY_TRANSLATIONS.put("Um Diamante", "One Diamond");
-        RARITY_TRANSLATIONS.put("Um Brilhante", "One Shiny");
-        RARITY_TRANSLATIONS.put("Uma Estrela", "One Star");
-        RARITY_TRANSLATIONS.put("Rara Radiante", "Radiant Rare");
-        RARITY_TRANSLATIONS.put("Rara", "Rare");
-        RARITY_TRANSLATIONS.put("Rara Holo", "Rare Holo");
-        RARITY_TRANSLATIONS.put("Rara Holo LV.X", "Rare Holo LV.X");
-        RARITY_TRANSLATIONS.put("Rara PRIME", "Rare PRIME");
-        RARITY_TRANSLATIONS.put("Rara Secreta", "Secret Rare");
-        RARITY_TRANSLATIONS.put("Ultra Rara Brilhante", "Shiny Ultra Rare");
-        RARITY_TRANSLATIONS.put("Rara Brilhante", "Shiny rare");
-        RARITY_TRANSLATIONS.put("Rara Brilhante V", "Shiny rare V");
-        RARITY_TRANSLATIONS.put("Rara Brilhante VMAX", "Shiny rare VMAX");
-        RARITY_TRANSLATIONS.put("Ilustração Especial Rara", "Special illustration rare");
-        RARITY_TRANSLATIONS.put("Três Diamantes", "Three Diamond");
-        RARITY_TRANSLATIONS.put("Três Estrelas", "Three Star");
-        RARITY_TRANSLATIONS.put("Dois Diamantes", "Two Diamond");
-        RARITY_TRANSLATIONS.put("Dois Brilhantes", "Two Shiny");
-        RARITY_TRANSLATIONS.put("Duas Estrelas", "Two Star");
-        RARITY_TRANSLATIONS.put("Ultra Rara", "Ultra Rare");
-        RARITY_TRANSLATIONS.put("Incomum", "Uncommon");
+        RARITY_TRANSLATIONS.put("Comum", "Comum");
+        RARITY_TRANSLATIONS.put("Incomum", "Incomum");
+        RARITY_TRANSLATIONS.put("Rara", "Rara");
+        RARITY_TRANSLATIONS.put("Rara Holo", "Rara Holo");
+        RARITY_TRANSLATIONS.put("Rara Holo V", "Rara Holo V");
+        RARITY_TRANSLATIONS.put("Rara Holo VMAX", "Rara Holo VMAX");
+        RARITY_TRANSLATIONS.put("Rara Holo VSTAR", "Rara Holo VSTAR");
+        RARITY_TRANSLATIONS.put("Rara Radiante", "Rara Radiante");
+        RARITY_TRANSLATIONS.put("Rara Secreta", "Rare Secreta");
+        RARITY_TRANSLATIONS.put("Ultra Rara", "Ultra Rara");
+        RARITY_TRANSLATIONS.put("Hiper Rara", "Hiper rara");
+        RARITY_TRANSLATIONS.put("Ilustração Rara", "Ilustração Rara");
+        RARITY_TRANSLATIONS.put("Arte Completa de Treinador", "Arte Completa de Treinador");
+        RARITY_TRANSLATIONS.put("ACE SPEC Raro", "ACE SPEC Raro");
 
         // Séries
-        SERIES_TRANSLATIONS.put("Base", "Base");
-        SERIES_TRANSLATIONS.put("Ginásio", "Gym");
+        SERIES_TRANSLATIONS.put("Base", "Coleção Básica");
+        SERIES_TRANSLATIONS.put("Ginásio", "Ginásio");
         SERIES_TRANSLATIONS.put("Neo", "Neo");
-        SERIES_TRANSLATIONS.put("Coleção Lendária", "Legendary Collection");
         SERIES_TRANSLATIONS.put("EX", "EX");
-        SERIES_TRANSLATIONS.put("POP", "POP");
-        SERIES_TRANSLATIONS.put("Kits de Treinador", "Trainer kits");
-        SERIES_TRANSLATIONS.put("Diamante & Pérola", "Diamond & Pearl");
-        SERIES_TRANSLATIONS.put("Platina", "Platinum");
-        SERIES_TRANSLATIONS.put("HeartGold & SoulSilver", "HeartGold & SoulSilver");
-        SERIES_TRANSLATIONS.put("Chamado das Lendas", "Call of Legends");
+        SERIES_TRANSLATIONS.put("Diamante & Pérola", "Diamante & Pérola");
+        SERIES_TRANSLATIONS.put("HeartGold & SoulSilver", "HeartGold SoulSilver");
         SERIES_TRANSLATIONS.put("Preto & Branco", "Black & White");
-        SERIES_TRANSLATIONS.put("Coleção McDonald's", "McDonald's Collection");
         SERIES_TRANSLATIONS.put("XY", "XY");
-        SERIES_TRANSLATIONS.put("Sol & Lua", "Sun & Moon");
-        SERIES_TRANSLATIONS.put("Espada & Escudo", "Sword & Shield");
-        SERIES_TRANSLATIONS.put("Escarlate & Violeta", "Scarlet & Violet");
-        SERIES_TRANSLATIONS.put("TCG Pocket", "Pokémon TCG Pocket");
-        SERIES_TRANSLATIONS.put("Mega Evolução", "Mega Evolution");
+        SERIES_TRANSLATIONS.put("Sol & Lua", "Sol e Lua");
+        SERIES_TRANSLATIONS.put("Espada & Escudo", "Espada e Escudo");
+        SERIES_TRANSLATIONS.put("Escarlate & Violeta", "Escarlate e Violeta");
+        SERIES_TRANSLATIONS.put("Megaevolução", "Megaevolução");
     }
 
     public SearchController() {
@@ -124,56 +105,55 @@ public class SearchController {
 
     @FXML
     public void initialize() {
-        // Inicializa Categorias (e sincroniza os dois menus)
-        setupCategoryCombos();
+        // Inicializa Categoria
+        if (comboCategory != null) {
+            comboCategory.getItems().add("Todas as Categorias");
+            comboCategory.getItems().addAll(CATEGORY_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+            comboCategory.getSelectionModel().selectFirst();
+        }
 
-        // Inicializa Tipos
+        // Listener para o ComboBox de Categoria (Integração de Filtros)
+        if (comboCategory != null) {
+            comboCategory.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (txtSearch != null) txtSearch.clear(); // Limpa o input ao mudar o filtro
+                updateTypeOptions(newVal);
+                handleSearch(); // Busca instantânea
+            });
+        }
+
+        // Listeners para os demais filtros
         if (comboType != null) {
-            comboType.getItems().add("Todos os Tipos");
-            comboType.getItems().addAll(TYPE_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+            comboType.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) handleSearch(); // Dispara busca ao mudar
+            });
         }
         
         // Inicializa Raridades
         if (comboRarity != null) {
             comboRarity.getItems().add("Todas as Raridades");
             comboRarity.getItems().addAll(RARITY_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+            comboRarity.getSelectionModel().selectFirst();
+            
+            // Listener para limpar busca e pesquisar instantaneamente
+            comboRarity.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (txtSearch != null && newVal != null && !newVal.equals(oldVal)) {
+                    txtSearch.clear();
+                    handleSearch();
+                }
+            });
         }
         
         // Inicializa Séries
         if (comboSet != null) {
             comboSet.getItems().add("Todas as Séries");
             comboSet.getItems().addAll(SERIES_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
-        }
-    }
+            comboSet.getSelectionModel().selectFirst();
 
-    /**
-     * Configura as categorias e garante que os dois menus (superior e inferior) fiquem em sincronia.
-     */
-    private void setupCategoryCombos() {
-        List<String> categories = CATEGORY_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList());
-        
-        // Inicializa Superior
-        if (comboCategoryMain != null) {
-            comboCategoryMain.getItems().add("Todas as Categorias");
-            comboCategoryMain.getItems().addAll(categories);
-            
-            // Listener para sincronizar com o inferior
-            comboCategoryMain.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (comboCategory != null && (comboCategory.getValue() == null || !comboCategory.getValue().equals(newVal))) {
-                    comboCategory.setValue(newVal);
-                }
-            });
-        }
-
-        // Inicializa Inferior
-        if (comboCategory != null) {
-            comboCategory.getItems().add("Todas as Categorias");
-            comboCategory.getItems().addAll(categories);
-            
-            // Listener para sincronizar com o superior
-            comboCategory.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-                if (comboCategoryMain != null && (comboCategoryMain.getValue() == null || !comboCategoryMain.getValue().equals(newVal))) {
-                    comboCategoryMain.setValue(newVal);
+            // Listener para limpar busca e pesquisar instantaneamente
+            comboSet.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (txtSearch != null && newVal != null && !newVal.equals(oldVal)) {
+                    txtSearch.clear();
+                    handleSearch();
                 }
             });
         }
@@ -184,85 +164,166 @@ public class SearchController {
      */
     @FXML
     public void handleSearch() {
-        String query = txtSearch.getText().trim();
-        System.out.println("[DEBUG] SearchController: Iniciando busca por -> " + query);
+        System.out.println(">>> handleSearch: Iniciando busca... <<<");
+        String query = (txtSearch != null) ? txtSearch.getText().trim() : "";
+
+        // 1. Captura seleção dos filtros primeiro (retorna null se for "Todas/Todos")
+        String selectedCategory = comboCategory != null ? comboCategory.getValue() : null;
+        String apiCategory = CATEGORY_TRANSLATIONS.get(selectedCategory); // null se não estiver no Map
         
-        if (query.isEmpty()) {
-            System.out.println("[Warn] Query vazia.");
+        String selectedType = comboType != null ? comboType.getValue() : null;
+        String apiType = null;
+        
+        // Mapeia o tipo/subtipo baseado na categoria ativa
+        if ("Treinador".equals(selectedCategory)) {
+            apiType = TRAINER_SUBTYPES.get(selectedType);
+        } else if ("Energia".equals(selectedCategory)) {
+            apiType = ENERGY_SUBTYPES.get(selectedType);
+        } else {
+            apiType = TYPE_TRANSLATIONS.get(selectedType);
+        }
+        
+        String selectedRarity = comboRarity != null ? comboRarity.getValue() : null;
+        String apiRarity = RARITY_TRANSLATIONS.get(selectedRarity);
+
+        String selectedSet = (comboSet != null) ? comboSet.getValue() : null;
+        String apiSet = SERIES_TRANSLATIONS.get(selectedSet);
+
+        // 2. Verifica se há pelo menos um critério de busca ativo (Texto ou Filtros)
+        boolean hasFilter = (apiCategory != null) || (apiType != null) || (apiRarity != null) || (apiSet != null);
+        
+        if (query.isEmpty() && !hasFilter) {
+            lblStatus.setText("Por favor, insira um nome/número ou selecione um filtro.");
+            if (flowResults != null) flowResults.getChildren().clear();
             return;
         }
 
-        flowResults.getChildren().clear();
-        System.out.println("🔍 Searching for \"" + query + "\"... Please wait.");
+        lblStatus.setText("Buscando cartas... Aguarde.");
+        
+        String searchName = null;
+        String searchLocalId = null;
+
+        // 3. Regex para detectar se é um localId (números ou formato n/n)
+        if (query.matches("\\d+(/\\d+)?")) {
+            searchLocalId = query;
+            System.out.println("[DEBUG] Detectada busca por LocalID: " + searchLocalId);
+        } else if (!query.isEmpty()) {
+            searchName = query;
+            System.out.println("[DEBUG] Detectada busca por Nome: " + searchName);
+        }
+
+        // Debug dos parâmetros enviados
+        System.out.println(String.format("[DEBUG] Parâmetros: Nome=%s, Cat=%s, Tipo=%s, Rar=%s, Sér=%s", 
+            query, apiCategory, apiType, apiRarity, apiSet));
+        
+        if (flowResults != null) flowResults.getChildren().clear();
+        
+        // Cópias finais para uso dentro da Lambda (Thread)
+        final String finalSearchName = searchName;
+        final String finalSearchLocalId = searchLocalId;
+        final String finalCategory = apiCategory;
+        final String finalType = apiType;
+        final String finalRarity = apiRarity;
+        final String finalSet = apiSet;
 
         new Thread(() -> {
             try {
-                System.out.println("[DEBUG] SearchController: Chamando CardService...");
-                // Para simplificar agora, buscamos sempre por nome por padrão
-                List<Card> results = cardService.searchByName(query);
-                
-                System.out.println("[DEBUG] SearchController: Service retornou " + results.size() + " resultados");
+                // Dispara a busca com todos os filtros ativos (agora incluindo o parâmetro inteligente)
+                List<Card> results = cardService.searchCards(finalSearchName, finalCategory, finalType, finalRarity, finalSet, finalSearchLocalId);
                 
                 Platform.runLater(() -> {
                     if (results.isEmpty()) {
-                        System.out.println("[DEBUG] SearchController: Nenhum card encontrado");
+                        lblStatus.setText("Nenhum resultado encontrado para \"" + query + "\".");
+                        System.out.println("[DEBUG] Nenhum resultado para os critérios informados.");
                     } else {
+                        lblStatus.setText(results.size() + " resultados encontrados para \"" + query + "\".");
                         loadCardsInGrid(results);
                     }
                 });
                 
             } catch (Exception e) {
-                System.err.println("❌ Error during search: " + e.getMessage());
-                e.printStackTrace();
+                System.err.println("❌ Erro na busca: " + e.getMessage());
             }
         }).start();
+    }
+
+    /**
+     * Atualiza as opções do ComboBox de Tipo de acordo com a categoria selecionada.
+     */
+    private void updateTypeOptions(String category) {
+        if (comboType == null) return;
+        
+        comboType.getItems().clear();
+        comboType.getItems().add("Todos"); // Termo geral para resetar
+        
+        if ("Treinador".equals(category)) {
+            comboType.getItems().addAll(TRAINER_SUBTYPES.keySet().stream().sorted().collect(Collectors.toList()));
+        } else if ("Energia".equals(category)) {
+            comboType.getItems().addAll(ENERGY_SUBTYPES.keySet().stream().sorted().collect(Collectors.toList()));
+        } else {
+            // Padrão ou Pokémon
+            comboType.getItems().addAll(TYPE_TRANSLATIONS.keySet().stream().sorted().collect(Collectors.toList()));
+        }
+        
+        comboType.getSelectionModel().selectFirst();
+    }
+
+    /**
+     * Reseta todos os filtros e o campo de busca.
+     */
+    @FXML
+    public void handleClearFilters() {
+        System.out.println("[DEBUG] Limpando todos os filtros...");
+        if (txtSearch != null) txtSearch.clear();
+        if (comboCategory != null) comboCategory.getSelectionModel().selectFirst();
+        if (comboType != null) comboType.getSelectionModel().selectFirst();
+        if (comboRarity != null) comboRarity.getSelectionModel().selectFirst();
+        if (comboSet != null) comboSet.getSelectionModel().selectFirst();
+        if (lblStatus != null) lblStatus.setText("Filtros limpos. Insira um nome ou número para pesquisar.");
+        
+        if (flowResults != null) flowResults.getChildren().clear();
     }
 
     /**
      * Carrega cada card encontrado injetando o componente card_item.fxml na grade.
      */
     private void loadCardsInGrid(List<Card> cards) {
-        // Limita a exibição inicial para performance
-        int limit = Math.min(cards.size(), 40); 
-        System.out.println("[App] Iniciando renderização de " + limit + " cards...");
+        // Limita a exibição inicial para performance (v2 API retorna muitos itens)
+        int limit = Math.min(cards.size(), 50); 
+        System.out.println("[App] Renderizando " + limit + " cards...");
 
         for (int i = 0; i < limit; i++) {
             Card card = cards.get(i);
             try {
-                System.out.println("[DEBUG] SearchController: Carregando card_item.fxml para -> " + card.getName());
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/card_item.fxml"));
                 Node cardNode = loader.load();
                 
                 CardItemController controller = loader.getController();
                 
-                // Formata os dados com segurança
-                String cardName = (card.getName() != null) ? card.getName() : "Unknown Card";
-                String type = (card.getTypes() != null && !card.getTypes().isEmpty()) ? card.getTypes().get(0) : "Colorless";
-                String rarity = (card.getRarity() != null) ? card.getRarity() : "Common";
-                
-                // Monta o ID de exibição (SetId • LocalId)
-                String displaySetId = (card.getSetId() != null ? card.getSetId() : "API") 
-                                     + " • " + 
-                                     (card.getLocalId() != null ? card.getLocalId() : "???");
+                // Formatação e tratamento de valores nulos
+                String type = (card.getTypes() != null && !card.getTypes().isEmpty()) ? card.getTypes().get(0) : "N/A";
+                String rarity = (card.getRarity() != null) ? card.getRarity() : "Comum";
+                String displayId = String.format("%s • %s", 
+                    (card.getSetId() != null ? card.getSetId() : "API"),
+                    (card.getLocalId() != null ? card.getLocalId() : "?"));
 
                 controller.setCardData(
-                    cardName,
-                    card.getId(), // ID Único Real (ex: swsh1-1)
-                    displaySetId,  // String de Exibição (ex: swsh1 • 1)
+                    card.getName(),
+                    card.getId(),
+                    displayId,
                     card.getImage(),
                     type,
                     rarity,
                     card.getSeriesId(),
-                    card.getSeriesName()
+                    card.getSeriesName(),
+                    card.getStage()
                 );
                 
                 flowResults.getChildren().add(cardNode);
-                System.out.println("[DEBUG] SearchController: Card injetado visualmente.");
                 
             } catch (Exception e) {
-                System.err.println("❌ Erro crítico ao renderizar card: " + e.getMessage());
-                e.printStackTrace();
-                break; // Para no primeiro erro para não inundar o log
+                System.err.println("❌ Erro ao renderizar card: " + card.getName());
+                break;
             }
         }
     }

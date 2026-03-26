@@ -3,7 +3,6 @@ package com.pokemontcg.controller;
 import com.pokemontcg.model.CatalogEntry;
 import com.pokemontcg.service.CatalogService;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,7 +12,6 @@ import javafx.scene.image.ImageView;
  */
 public class CatalogRowController {
 
-    @FXML private CheckBox checkSelect;
     @FXML private ImageView imgMini;
     @FXML private Label lblName;
     @FXML private Label lblSetId;

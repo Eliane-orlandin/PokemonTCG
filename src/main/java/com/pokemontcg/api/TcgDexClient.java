@@ -31,13 +31,20 @@ public class TcgDexClient {
     /**
      * Busca cards usando múltiplos filtros combinados no servidor.
      */
-    public List<com.pokemontcg.model.Card> searchCards(String name, String category, String type, String rarity, String series) {
+    public List<com.pokemontcg.model.Card> searchCards(String name, String category, String type, String rarity, String series, String localId) {
         StringBuilder urlBuilder = new StringBuilder(baseUrl).append("/cards?");
         boolean first = true;
 
         // Filtro por nome
         if (name != null && !name.trim().isEmpty()) {
             urlBuilder.append("name=like:").append(name.replace(" ", "%20"));
+            first = false;
+        }
+
+        // Filtro por LocalId (Número da carta no set)
+        if (localId != null && !localId.trim().isEmpty()) {
+            if (!first) urlBuilder.append("&");
+            urlBuilder.append("localId=").append(localId.replace(" ", "%20"));
             first = false;
         }
 
@@ -85,7 +92,7 @@ public class TcgDexClient {
      * Busca cards por nome usando o novo motor de busca genérico.
      */
     public List<com.pokemontcg.model.Card> searchByName(String name) {
-        return searchCards(name, null, null, null, null);
+        return searchCards(name, null, null, null, null, null);
     }
 
     /**
@@ -153,12 +160,26 @@ public class TcgDexClient {
         card.setId(node.path("id").asText());
         card.setLocalId(node.path("localId").asText());
         card.setName(node.path("name").asText());
+        
         String image = node.path("image").asText();
         if (image != null && !image.isEmpty() && !image.equals("null")) {
             card.setImage(image + "/low.jpg");
         } else {
             card.setImage("");
         }
+
+        // Mapeia campos adicionais se presentes no resumo
+        if (node.has("rarity")) card.setRarity(node.path("rarity").asText());
+        if (node.has("stage")) card.setStage(node.path("stage").asText());
+        
+        if (node.has("types") && node.path("types").isArray()) {
+            List<String> types = new java.util.ArrayList<>();
+            for (JsonNode t : node.path("types")) {
+                types.add(t.asText());
+            }
+            card.setTypes(types);
+        }
+
         return card;
     }
 
@@ -176,6 +197,7 @@ public class TcgDexClient {
         card.setCategory(node.path("category").asText());
         card.setRarity(node.path("rarity").asText());
         card.setHp(node.path("hp").asInt(0));
+        card.setStage(node.path("stage").asText("Básico")); // Mapeia o estágio (Básico, Estágio 1, etc.)
 
         JsonNode setNode = node.path("set");
         if (!setNode.isMissingNode()) {

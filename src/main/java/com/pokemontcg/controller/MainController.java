@@ -5,7 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,6 +27,7 @@ public class MainController {
     @FXML private Button btnSearch;
     @FXML private Button btnCatalog;
     @FXML private Button btnExport;
+    @FXML private MediaView mediaViewLogo;
 
     private List<Button> menuButtons;
 
@@ -33,6 +38,23 @@ public class MainController {
     public void initialize() {
         menuButtons = Arrays.asList(btnHome, btnSearch, btnCatalog, btnExport);
         handleNavigateHome();
+        setupLogoAnimation();
+    }
+
+    private void setupLogoAnimation() {
+        try {
+            URL resource = getClass().getResource("/images/icone-animado.mp4");
+            if (resource != null) {
+                Media media = new Media(resource.toExternalForm());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+                mediaPlayer.setMute(true); // Remove o som da animação
+                mediaPlayer.play();
+                mediaViewLogo.setMediaPlayer(mediaPlayer);
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar animação do logo: " + e.getMessage());
+        }
     }
 
     /**

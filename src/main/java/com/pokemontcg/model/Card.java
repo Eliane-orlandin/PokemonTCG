@@ -63,6 +63,10 @@ public class Card {
     public List<String> getTypes() { return types; }
     public void setTypes(List<String> types) { this.types = types; }
 
+    private String stage; // Estágio do Pokémon (Básico, Estágio 1, etc.)
+    public String getStage() { return stage; }
+    public void setStage(String stage) { this.stage = stage; }
+
     @Override
     public String toString() {
         return "Card{" + "name='" + name + '\'' + ", id='" + id + '\'' + '}';

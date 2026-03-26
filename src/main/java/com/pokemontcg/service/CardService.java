@@ -26,28 +26,28 @@ public class CardService {
     }
 
     /**
-     * Busca cards pelo nome, utilizando o cache para evitar chamadas duplicadas.
+     * Busca cards utilizando múltiplos filtros (nome, categoria, tipo, series, etc).
      */
     @SuppressWarnings("unchecked")
-    public List<Card> searchByName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return new java.util.ArrayList<>();
-        }
+    public List<Card> searchCards(String name, String category, String type, String rarity, String series, String localId) {
+        // Gera uma chave de cache única baseada em todos os parâmetros, incluindo localId
+        String cacheKey = String.format("SEARCH_%s_%s_%s_%s_%s_%s", 
+            name, category, type, rarity, series, localId).toLowerCase();
 
-        String cacheKey = "SEARCH_" + name.toLowerCase();
-
-        // 1. Tenta recuperar do cache
         if (CacheManager.has(cacheKey)) {
             return (List<Card>) CacheManager.get(cacheKey);
         }
 
-        // 2. Se não estiver no cache, busca na API
-        List<Card> results = apiClient.searchByName(name);
-
-        // 3. Salva no cache para a próxima busca
+        List<Card> results = apiClient.searchCards(name, category, type, rarity, series, localId);
         CacheManager.put(cacheKey, results);
-
         return results;
+    }
+
+    /**
+     * Busca cards pelo nome (mantido para compatibilidade).
+     */
+    public List<Card> searchByName(String name) {
+        return searchCards(name, null, null, null, null, null);
     }
     /**
      * Busca cards baseados na série (expansion) com uso de cache.
