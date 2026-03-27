@@ -29,7 +29,7 @@ public class TcgDexClientTest {
     @Test
     void deveRealizarBuscaPorNomeNaApiReal() {
         try {
-            List<com.pokemontcg.model.Card> results = client.searchByName("Pikachu");
+            List<com.pokemontcg.model.Card> results = client.searchCards("Pikachu");
             // Se houver internet, deve retornar algo. Se não, o teste apenas passa se não estourar Exception.
             assertNotNull(results);
             System.out.println("[Test] Busca por 'Pikachu' retornou " + results.size() + " itens.");

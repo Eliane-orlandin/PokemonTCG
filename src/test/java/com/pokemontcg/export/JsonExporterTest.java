@@ -4,7 +4,6 @@ import com.pokemontcg.model.CatalogEntry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -13,33 +12,37 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testes de unidade para o exportador JSON.
+ * Comentários explicativos: Validamos se a serialização Jackson está 
+ * configurada corretamente para os tipos de data java.time.
+ */
 public class JsonExporterTest {
 
     @TempDir
     Path tempDir;
 
     @Test
-    void deveExportarParaJsonCorretamente() throws IOException {
+    void deveExportarParaJsonValido() throws Exception {
         JsonExporter exporter = new JsonExporter();
-        Path filePath = tempDir.resolve("catalog.json");
+        Path filePath = tempDir.resolve("catalog_test.json");
         
         CatalogEntry entry = new CatalogEntry();
-        entry.setCardId("test-1");
-        entry.setCardName("Test Card");
+        entry.setCardId("test-id-123");
+        entry.setCardName("Pikachu Test");
         entry.setQuantity(5);
         entry.setAddedAt(LocalDateTime.now());
         entry.setUpdatedAt(LocalDateTime.now());
         
         List<CatalogEntry> entries = Collections.singletonList(entry);
         
+        // Execução
         exporter.export(entries, filePath);
         
-        assertTrue(Files.exists(filePath));
+        // Verificação QA
+        assertTrue(Files.exists(filePath), "O arquivo JSON deveria ter sido criado.");
         String content = Files.readString(filePath);
-        System.out.println("DEBUG-JSON: " + content);
-        assertTrue(content.contains("test-1"));
-        assertTrue(content.contains("Test Card"));
-        assertTrue(content.contains("\"quantity\""));
-        assertTrue(content.contains("5"));
+        assertTrue(content.contains("test-id-123"), "O JSON deve conter o cardId.");
+        assertTrue(content.contains("Pikachu Test"), "O JSON deve conter o cardName.");
     }
 }

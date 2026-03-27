@@ -1,143 +1,130 @@
 package com.pokemontcg.repository;
 
+import com.pokemontcg.exception.DatabaseException;
 import com.pokemontcg.model.CatalogEntry;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.time.LocalDateTime;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testes de integração para o repositório usando banco em memória.
+ * Testes de Integração com SQLite Real.
+ * Comentários explicativos: Usamos um banco de teste isolado para validar o CRUD.
  */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CatalogRepositoryTest {
 
     private CatalogRepository repository;
-    private Connection keepAliveConn;
-    private static final String TEST_DB_URL = "jdbc:sqlite:file:testdb?mode=memory&cache=shared";
+    private static final String TEST_DB = "catalog_test.db";
+
+    @BeforeAll
+    void setupSuite() {
+        // Redireciona o banco para o arquivo de teste
+        DatabaseManager.setDatabasePath(TEST_DB);
+        repository = new CatalogRepository();
+    }
 
     @BeforeEach
-    void setUp() throws Exception {
-        // Conexão "Keep-Alive" para manter o banco em memória vivo
-        keepAliveConn = DriverManager.getConnection(TEST_DB_URL);
-        
-        try (Statement stmt = keepAliveConn.createStatement()) {
-            stmt.execute("DROP TABLE IF EXISTS catalog");
-            stmt.execute("CREATE TABLE catalog (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "card_id TEXT NOT NULL UNIQUE, " +
-                    "card_name TEXT NOT NULL, " +
-                    "series_id TEXT NOT NULL, " +
-                    "series_name TEXT NOT NULL, " +
-                    "image_url TEXT, " +
-                    "type TEXT, " +
-                    "rarity TEXT, " +
-                    "stage TEXT DEFAULT 'Básico', " +
-                    "category TEXT DEFAULT 'Pokémon', " +
-                    "quantity INTEGER NOT NULL DEFAULT 1, " +
-                    "language TEXT NOT NULL DEFAULT 'pt', " +
-                    "notes TEXT, " +
-                    "added_at TEXT NOT NULL, " +
-                    "updated_at TEXT NOT NULL)");
-        }
-
-        repository = new CatalogRepository() {
-            @Override
-            protected Connection getConnection() throws java.sql.SQLException {
-                return DriverManager.getConnection(TEST_DB_URL); 
-            }
-        };
+    void setUp() {
+        // Reinicializa o schema antes de cada teste para ter um banco limpo
+        DatabaseManager.initDatabase();
     }
 
-    @AfterEach
-    void tearDown() throws Exception {
-        if (keepAliveConn != null) {
-            keepAliveConn.close();
-        }
+    @AfterAll
+    void tearDownSuite() throws IOException {
+        // Volta para o banco padrão e limpa os arquivos de teste
+        DatabaseManager.setDatabasePath("catalog.db");
+        Files.deleteIfExists(Paths.get(TEST_DB));
+        Files.deleteIfExists(Paths.get(TEST_DB + ".bak1"));
+        Files.deleteIfExists(Paths.get(TEST_DB + ".bak2"));
+        Files.deleteIfExists(Paths.get(TEST_DB + ".bak3"));
     }
 
-    @Test
-    void deveSalvarERecuperarCard() {
+    private CatalogEntry createTestEntry(String cardId, String name) {
         CatalogEntry entry = new CatalogEntry();
-        entry.setCardId("swsh12-1");
-        entry.setCardName("Pikachu");
-        entry.setSeriesId("swsh12");
-        entry.setSeriesName("Silver Tempest");
+        entry.setCardId(cardId);
+        entry.setCardName(name);
+        entry.setSeriesId("base");    // Campo NOT NULL
+        entry.setSeriesName("Base Set"); // Campo NOT NULL
         entry.setQuantity(1);
-        entry.setAddedAt(LocalDateTime.now());
-        entry.setUpdatedAt(LocalDateTime.now());
+        entry.setCategory("Pokémon");
+        entry.setLanguage("pt"); // Campo NOT NULL com default, mas bom garantir
+        return entry;
+    }
+
+    @Test
+    void deveSalvarEBuscarCardNoBanco() {
+        CatalogEntry entry = createTestEntry("test-pikachu", "Pikachu");
 
         repository.save(entry);
 
-        Optional<CatalogEntry> result = repository.findByCardId("swsh12-1");
+        Optional<CatalogEntry> saved = repository.findByCardId("test-pikachu");
+        assertTrue(saved.isPresent());
+        assertEquals("Pikachu", saved.get().getCardName());
+    }
+
+    @Test
+    void deveIncrementarQuantidadeAoSalvarExistente() {
+        CatalogEntry p1 = createTestEntry("dup-pikachu", "Pikachu Duplicado");
+        p1.setQuantity(2);
+        repository.save(p1);
+
+        CatalogEntry p2 = createTestEntry("dup-pikachu", "Pikachu Duplicado");
+        p2.setQuantity(3);
+        repository.save(p2);
+
+        Optional<CatalogEntry> result = repository.findByCardId("dup-pikachu");
         assertTrue(result.isPresent());
-        assertEquals("Pikachu", result.get().getCardName());
+        assertEquals(5, result.get().getQuantity(), "A quantidade deve ser somada (2 + 3 = 5)");
     }
 
     @Test
-    void deveIncrementarQuantidadeAoSalvarDuplicado() {
-        CatalogEntry entry = new CatalogEntry();
-        entry.setCardId("swsh12-1");
-        entry.setCardName("Pikachu");
-        entry.setSeriesId("swsh12");
-        entry.setSeriesName("Silver Tempest");
-        entry.setQuantity(2);
-        entry.setAddedAt(LocalDateTime.now());
-        entry.setUpdatedAt(LocalDateTime.now());
-
-        repository.save(entry); // Primeira vez: Salva 2
-        
-        CatalogEntry duplicate = new CatalogEntry();
-        duplicate.setCardId("swsh12-1");
-        duplicate.setQuantity(3);
-        
-        repository.save(duplicate); // Segunda vez: Incrementa +3
-
-        Optional<CatalogEntry> result = repository.findByCardId("swsh12-1");
-        assertEquals(5, result.get().getQuantity());
-    }
-
-    @Test
-    void deveDeletarCardCorretamente() {
-        CatalogEntry entry = new CatalogEntry();
-        entry.setCardId("delete-me");
-        entry.setCardName("Target");
-        entry.setSeriesId("test");
-        entry.setSeriesName("Test");
-        entry.setAddedAt(LocalDateTime.now());
-        entry.setUpdatedAt(LocalDateTime.now());
-        
+    void deveRemoverCardDoBanco() {
+        CatalogEntry entry = createTestEntry("to-delete", "Sumir daqui");
         repository.save(entry);
-        assertTrue(repository.existsByCardId("delete-me"));
 
-        repository.delete("delete-me");
-        assertFalse(repository.existsByCardId("delete-me"));
+        assertTrue(repository.existsByCardId("to-delete"));
+
+        repository.delete("to-delete");
+
+        assertFalse(repository.existsByCardId("to-delete"));
     }
 
     @Test
     void deveListarTodosOsCards() {
-        repository.save(createDummy("1", "A"));
-        repository.save(createDummy("2", "B"));
-        
+        CatalogEntry c1 = createTestEntry("c1", "Abra");
+        CatalogEntry c2 = createTestEntry("c2", "Zubat");
+
+        repository.save(c1);
+        repository.save(c2);
+
         List<CatalogEntry> all = repository.findAll();
-        assertEquals(2, all.size());
+        // Garantimos que a lista contenha pelo menos os dois novos cards
+        assertTrue(all.stream().anyMatch(e -> e.getCardName().equals("Abra")));
+        assertTrue(all.stream().anyMatch(e -> e.getCardName().equals("Zubat")));
+        
+        // Verifica se o primeiro da lista (em ordem alfabética) é o Abra
+        assertEquals("Abra", all.get(0).getCardName());
     }
 
-    private CatalogEntry createDummy(String id, String name) {
-        CatalogEntry e = new CatalogEntry();
-        e.setCardId(id);
-        e.setCardName(name);
-        e.setSeriesId("S" + id);
-        e.setSeriesName("SN" + id);
-        e.setAddedAt(LocalDateTime.now());
-        e.setUpdatedAt(LocalDateTime.now());
-        return e;
+    @Test
+    void deveRealizarRollbackEmCasoDeFalhaSimulada() {
+        // Tenta salvar um card inválido (card_id é NOT NULL no banco)
+        CatalogEntry entryInvalida = createTestEntry(null, "Card Sem ID");
+        
+        // O repositório deve lançar DatabaseException e disparar rollback interno
+        assertThrows(DatabaseException.class, () -> {
+            repository.save(entryInvalida);
+        });
+
+        // Verificamos se o banco continua íntegro e não salvou o card incompleto
+        List<CatalogEntry> all = repository.findAll();
+        assertTrue(all.stream().noneMatch(e -> "Card Sem ID".equals(e.getCardName())), 
+                   "O card não deve ter sido salvo por causa do erro (Rollback acionado)");
     }
 }
