@@ -1,6 +1,7 @@
 package com.pokemontcg.export;
 
 import com.opencsv.CSVWriter;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.pokemontcg.exception.ExportException;
@@ -12,8 +13,8 @@ import java.util.List;
 
 /**
  * Ferramenta oficial para exportar o catálogo pessoal em formato CSV.
- * Comentários explicativos: Usamos a biblioteca OpenCSV para que o processo de 
- * mapear os nomes das colunas e os dados seja automático.
+ * Comentários explicativos: Forçamos a escrita do cabeçalho manualmente para 
+ * garantir compatibilidade total com Excel e Google Sheets.
  */
 public class CsvExporter {
 
@@ -23,9 +24,16 @@ public class CsvExporter {
     public void export(List<CatalogEntry> entries, Path destination) {
         try (Writer writer = Files.newBufferedWriter(destination)) {
             
-            // O StatefulBeanToCsvBuilder facilita o mapeamento automático para a planilha
+            // Escrita manual do cabeçalho para garantir que ele apareça no início do arquivo
+            writer.write("Card ID,Nome,Série,Tipo,Raridade,Quantidade,Data de Adição\n");
+
+            // Configuração da estratégia de mapeamento para os dados
+            HeaderColumnNameMappingStrategy<CatalogEntry> strategy = new HeaderColumnNameMappingStrategy<>();
+            strategy.setType(CatalogEntry.class);
+
             StatefulBeanToCsv<CatalogEntry> beanToCsv = new StatefulBeanToCsvBuilder<CatalogEntry>(writer)
-                    .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
+                    .withMappingStrategy(strategy)
+                    .withSeparator(',')
                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                     .build();
 
@@ -33,7 +41,7 @@ public class CsvExporter {
             System.out.println("[Export] Catálogo exportado para CSV: " + destination.toAbsolutePath());
             
         } catch (Exception e) {
-            throw new ExportException("Não conseguimos salvar seu arquivo CSV (Excel). O caminho é válido ou o arquivo está aberto?", e);
+            throw new ExportException("Não conseguimos salvar seu arquivo CSV. O caminho é válido ou o arquivo está aberto?", e);
         }
     }
 }
