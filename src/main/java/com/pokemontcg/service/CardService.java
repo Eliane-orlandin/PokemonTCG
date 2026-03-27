@@ -83,12 +83,27 @@ public class CardService {
         try {
             Card card = apiClient.findById(cardId);
             if (card != null) {
+                // Proteção: caso a API retorne o objeto mas o campo name esteja nulo
+                if (card.getName() == null) {
+                    card.setName("Dados indisponíveis");
+                }
                 CacheManager.put(cacheKey, card);
+                return card;
             }
-            return card;
+            return createFallbackCard(cardId);
         } catch (Exception e) {
             System.err.println("[CardService] Erro ao buscar detalhes do card: " + e.getMessage());
-            return null;
+            return createFallbackCard(cardId);
         }
+    }
+
+    /**
+     * Cria um card padrão para evitar crashes na interface quando a API falha.
+     */
+    private Card createFallbackCard(String id) {
+        Card fallback = new Card();
+        fallback.setId(id);
+        fallback.setName("Dados indisponíveis");
+        return fallback;
     }
 }
