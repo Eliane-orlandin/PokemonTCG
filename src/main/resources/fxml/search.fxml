@@ -85,10 +85,20 @@
                 <!-- Grade de Resultados -->
                 <FlowPane fx:id="flowResults" hgap="25" vgap="40" alignment="CENTER" prefWrapLength="1000">
                     <padding>
-                        <Insets top="10" right="10" bottom="30" left="10" />
+                        <Insets top="10" right="10" bottom="10" left="10" />
                     </padding>
                     <!-- Os componentes card_item.fxml serão injetados aqui via controlador -->
                 </FlowPane>
+
+                <!-- Botão Carregar Mais -->
+                <VBox alignment="CENTER" spacing="20">
+                    <padding>
+                        <Insets bottom="50" />
+                    </padding>
+                    <children>
+                        <Button fx:id="btnLoadMore" onAction="#handleLoadMore" text="CARREGAR MAIS (+50)" styleClass="btn-outline" visible="false" minHeight="48" minWidth="280" />
+                    </children>
+                </VBox>
             </children>
         </VBox>
     </content>
