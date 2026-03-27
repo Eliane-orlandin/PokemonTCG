@@ -6,10 +6,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +31,12 @@ public class SearchController {
     @FXML private ComboBox<String> comboSet;
     @FXML private FlowPane flowResults;
     @FXML private Label lblStatus;
-
-    private final CardService cardService;
+    @FXML private Button btnLoadMore;
+    
+    private CardService cardService = new CardService();
+    private List<Card> fullResults = new java.util.ArrayList<>();
+    private int currentIndex = 0;
+    private static final int PAGE_SIZE = 50;
     
     private static final Map<String, String> CATEGORY_TRANSLATIONS = new HashMap<>();
     private static final Map<String, String> TYPE_TRANSLATIONS = new HashMap<>();
@@ -138,7 +144,7 @@ public class SearchController {
     }
 
     public SearchController() {
-        this.cardService = new CardService();
+        // this.cardService = new CardService(); // Removed as cardService is now initialized directly
     }
 
     @FXML
@@ -198,6 +204,11 @@ public class SearchController {
         updateTypeOptions("Todas as Categorias");
         updateRarityOptions("Todas as Categorias");
         updateSetOptions("Todas as Categorias");
+
+        // Inicializa o botão "Carregar Mais" como invisível
+        if (btnLoadMore != null) {
+            btnLoadMore.setVisible(false);
+        }
     }
 
     /**
@@ -236,10 +247,12 @@ public class SearchController {
         if (query.isEmpty() && !hasFilter) {
             lblStatus.setText("Por favor, insira um nome/número ou selecione um filtro.");
             if (flowResults != null) flowResults.getChildren().clear();
+            if (btnLoadMore != null) btnLoadMore.setVisible(false);
             return;
         }
 
         lblStatus.setText("Buscando cartas... Aguarde.");
+        if (btnLoadMore != null) btnLoadMore.setVisible(false);
         
         String searchName = null;
         String searchLocalId = null;
@@ -276,6 +289,8 @@ public class SearchController {
                 Platform.runLater(() -> {
                     if (results.isEmpty()) {
                         lblStatus.setText("Nenhum resultado encontrado para os filtros selecionados.");
+                        if (flowResults != null) flowResults.getChildren().clear();
+                        if (btnLoadMore != null) btnLoadMore.setVisible(false);
                     } else {
                         // Constrói mensagem de status baseada nos filtros ativos
                         StringBuilder status = new StringBuilder();
@@ -288,18 +303,23 @@ public class SearchController {
                             status.append(" em ").append(selectedCategory);
                         }
                         
-                        lblStatus.setText(status.append(".").toString());
+                        // Atualiza o estado para o "Carregar Mais"
+                        this.fullResults = results;
+                        this.currentIndex = 0;
+                        if (flowResults != null) flowResults.getChildren().clear();
                         
-                        // Limpa e renderiza na UI Thread
-                        if (flowResults != null) {
-                            flowResults.getChildren().clear();
-                        }
-                        loadCardsInGrid(results);
+                        lblStatus.setText(String.format("Encontrados %d cards para sua pesquisa.", results.size()));
+                        loadNextPage();
                     }
                 });
                 
             } catch (Exception e) {
                 System.err.println("❌ Erro na busca: " + e.getMessage());
+                Platform.runLater(() -> {
+                    lblStatus.setText("Erro ao buscar cartas: " + e.getMessage());
+                    if (flowResults != null) flowResults.getChildren().clear();
+                    if (btnLoadMore != null) btnLoadMore.setVisible(false);
+                });
             }
         });
         t.setDaemon(true); // Não impede a JVM de fechar
@@ -400,18 +420,41 @@ public class SearchController {
         if (lblStatus != null) lblStatus.setText("Filtros limpos. Insira um nome ou número para pesquisar.");
         
         if (flowResults != null) flowResults.getChildren().clear();
+        if (btnLoadMore != null) btnLoadMore.setVisible(false);
+        fullResults.clear();
+        currentIndex = 0;
     }
 
-    /**
-     * Carrega cada card encontrado injetando o componente card_item.fxml na grade.
-     */
-    private void loadCardsInGrid(List<Card> cards) {
-        // Limita a exibição inicial para performance (v2 API retorna muitos itens)
-        int limit = Math.min(cards.size(), 50); 
-        System.out.println("[App] Renderizando " + limit + " cards...");
+    @FXML
+    public void handleLoadMore() {
+        loadNextPage();
+    }
 
-        for (int i = 0; i < limit; i++) {
-            Card card = cards.get(i);
+    private void loadNextPage() {
+        if (fullResults == null || fullResults.isEmpty()) {
+            if (btnLoadMore != null) btnLoadMore.setVisible(false);
+            return;
+        }
+        
+        int nextLimit = Math.min(currentIndex + PAGE_SIZE, fullResults.size());
+        List<Card> nextBatch = fullResults.subList(currentIndex, nextLimit);
+        
+        loadBatchToGrid(nextBatch);
+        
+        currentIndex = nextLimit;
+        
+        // Atualiza visibilidade do botão
+        if (btnLoadMore != null) {
+            btnLoadMore.setVisible(currentIndex < fullResults.size());
+        }
+    }
+
+    private void loadBatchToGrid(List<Card> cards) {
+        if (cards == null) return;
+        
+        System.out.println("[DEBUG] Carregando lote de " + cards.size() + " cards. Total exibido: " + (currentIndex + cards.size()));
+
+        for (Card card : cards) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/card_item.fxml"));
                 Node cardNode = loader.load();

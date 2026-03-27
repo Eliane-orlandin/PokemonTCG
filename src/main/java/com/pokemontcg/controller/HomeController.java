@@ -44,16 +44,22 @@ public class HomeController {
     @FXML
     public void handleNavigateCatalog() {
         System.out.println("[Dashboard] Redirecionando para Coleção...");
-        if (MainController.getInstance() != null) {
-            MainController.getInstance().navigateCatalog(null);
+        MainController main = MainController.getInstance();
+        if (main != null) {
+            main.navigateCatalog(null);
+        } else {
+            System.err.println("[Dashboard] Alerta: MainController não disponível.");
         }
     }
 
     @FXML
     public void handleNavigateRareCards() {
         System.out.println("[Dashboard] Redirecionando para Cartas Raras...");
-        if (MainController.getInstance() != null) {
-            MainController.getInstance().navigateCatalog("rare");
+        MainController main = MainController.getInstance();
+        if (main != null) {
+            main.navigateCatalog("rare");
+        } else {
+            System.err.println("[Dashboard] Alerta: MainController não disponível.");
         }
     }
 
