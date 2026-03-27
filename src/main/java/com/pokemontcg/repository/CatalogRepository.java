@@ -27,37 +27,83 @@ public class CatalogRepository {
      * Salva um novo card ou incrementa a quantidade se já existir.
      */
     public void save(CatalogEntry entry) {
-        Optional<CatalogEntry> existing = findByCardId(entry.getCardId());
-        
-        if (existing.isPresent()) {
-            CatalogEntry toUpdate = existing.get();
-            toUpdate.setQuantity(toUpdate.getQuantity() + entry.getQuantity());
-            toUpdate.setUpdatedAt(LocalDateTime.now());
-            update(toUpdate);
-            System.out.println("[App] Quantidade incrementada para: " + toUpdate.getCardName() + " (Qtd: " + toUpdate.getQuantity() + ")");
-            return;
-        }
+        try (Connection conn = this.getConnection()) {
+            conn.setAutoCommit(false); // Inicia a transação
 
+            try {
+                Optional<CatalogEntry> existing = findByCardId(entry.getCardId(), conn);
+                
+                if (existing.isPresent()) {
+                    CatalogEntry toUpdate = existing.get();
+                    toUpdate.setQuantity(toUpdate.getQuantity() + entry.getQuantity());
+                    toUpdate.setUpdatedAt(LocalDateTime.now());
+                    update(toUpdate, conn);
+                } else {
+                    insert(entry, conn);
+                }
+                
+                conn.commit(); // Salva permanentemente
+                System.out.println("[App] Operação de salvamento concluída para: " + entry.getCardName());
+                
+            } catch (Exception e) {
+                conn.rollback(); // Desfaz tudo se der erro no meio
+                throw new DatabaseException("Erro ao processar transação para o card: " + entry.getCardName(), e);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Falha crítica no banco de dados", e);
+        }
+    }
+
+    private void insert(CatalogEntry entry, Connection conn) throws SQLException {
         String sql = "INSERT INTO catalog (card_id, card_name, series_id, series_name, type, rarity, stage, category, image_url, quantity, language, notes, added_at, updated_at) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             mapEntryToStatement(entry, pstmt, true);
-            int rows = pstmt.executeUpdate();
-            System.out.println("[App] Novo card salvo com sucesso: " + entry.getCardName() + " (Rows affected: " + rows + ")");
+            pstmt.executeUpdate();
 
-            // Pega o ID gerado automaticamente
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     entry.setId(rs.getInt(1));
                 }
             }
-
-        } catch (SQLException e) {
-            throw new DatabaseException("Erro ao salvar o card no catálogo pessoal: " + entry.getCardName(), e);
         }
+    }
+
+    private void update(CatalogEntry entry, Connection conn) throws SQLException {
+        String sql = "UPDATE catalog SET card_name = ?, series_id = ?, series_name = ?, type = ?, rarity = ?, stage = ?, category = ?, image_url = ?, quantity = ?, language = ?, notes = ?, updated_at = ? " +
+                     "WHERE card_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, entry.getCardName());
+            pstmt.setString(2, entry.getSeriesId());
+            pstmt.setString(3, entry.getSeriesName());
+            pstmt.setString(4, entry.getType());
+            pstmt.setString(5, entry.getRarity());
+            pstmt.setString(6, entry.getStage());
+            pstmt.setString(7, entry.getCategory());
+            pstmt.setString(8, entry.getImageUrl());
+            pstmt.setInt(9, entry.getQuantity());
+            pstmt.setString(10, entry.getLanguage());
+            pstmt.setString(11, entry.getNotes());
+            pstmt.setString(12, LocalDateTime.now().format(DATE_FORMATTER));
+            pstmt.setString(13, entry.getCardId());
+
+            pstmt.executeUpdate();
+        }
+    }
+
+    private Optional<CatalogEntry> findByCardId(String cardId, Connection conn) throws SQLException {
+        String sql = "SELECT * FROM catalog WHERE card_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, cardId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapResultSetToEntry(rs));
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     /**

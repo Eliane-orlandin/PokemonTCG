@@ -21,37 +21,66 @@ import java.util.Scanner;
 public class DatabaseManager {
 
     // Nome físico do arquivo do banco de dados no computador
-    private static final String DB_NAME = "catalog.db";
-    private static final String CONNECTION_URL = "jdbc:sqlite:" + DB_NAME;
+    private static String dbName = "catalog.db";
+    private static String connectionUrl = "jdbc:sqlite:" + dbName;
+
+    /**
+     * Permite alterar o caminho do banco de dados (útil para testes isolados).
+     */
+    public static void setDatabasePath(String newPath) {
+        dbName = newPath;
+        connectionUrl = "jdbc:sqlite:" + dbName;
+    }
 
     /**
      * Inicializa o banco de dados e cria as tabelas se necessário.
      * Este método deve ser chamado no início de aplicação (Main).
      */
     public static void initDatabase() {
-        // Passo 1: Realizar o backup para segurança
+        System.out.println("[Database] Iniciando processo de inicialização segura...");
         performBackup();
 
-        // Passo 2: Executar o schema para criar as tabelas
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-            
-            String schema = loadSchema();
-            
-            // O SQLite executa vários comandos separados por ponto e vírgula
-            for (String sql : schema.split(";")) {
-                if (!sql.trim().isEmpty()) {
-                    stmt.execute(sql);
+        try {
+            // Passo 1: Criação de tabelas (conexão curta dedicada)
+            try (Connection conn = getConnection();
+                 Statement stmt = conn.createStatement()) {
+                
+                String schema = loadSchema();
+                StringBuilder currentCommand = new StringBuilder();
+                int commandCount = 0;
+                
+                // Parser robusto: ignora comentários e quebras de linha antes de executar
+                for (String line : schema.split("\n")) {
+                    String trimmedLine = line.trim();
+                    if (trimmedLine.isEmpty() || trimmedLine.startsWith("--")) continue;
+                    
+                    currentCommand.append(line).append(" ");
+                    if (trimmedLine.endsWith(";")) {
+                        String sql = currentCommand.toString().trim();
+                        if (!sql.isEmpty()) {
+                            stmt.execute(sql);
+                            commandCount++;
+                        }
+                        currentCommand.setLength(0);
+                    }
                 }
+                System.out.println("[Database] Tabelas verificadas/criadas. Comandos: " + commandCount);
             }
-            
-            System.out.println("Banco de dados inicializado com sucesso!");
-            
-            // Passo 3: Conserta categorias dos cards antigos
-            fixLegacyCategories(conn);
+
+            // Passo 2: Correções de dados (nova conexão para garantir que o schema foi gravado)
+            try (Connection conn = getConnection()) {
+                fixLegacyCategories(conn);
+            }
+
+            System.out.println("[Database] Inicialização concluída com sucesso! 🚀");
             
         } catch (SQLException e) {
-            throw new DatabaseException("Erro ao inicializar o banco de dados", e);
+            System.err.println("[Database] ERRO DE SCHEMA: " + e.getMessage());
+            // Se o erro for "no such table", o SQLite pode estar em estado inconsistente
+            if (e.getMessage().contains("no such table")) {
+                System.err.println("[Database] Alerta: Inconsistência detectada. Tente remover o arquivo catalog.db e reiniciar.");
+            }
+            throw new DatabaseException("Falha na estrutura do banco", e);
         }
     }
 
@@ -61,7 +90,7 @@ public class DatabaseManager {
      * (de preferência via try-with-resources).
      */
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(CONNECTION_URL);
+        return DriverManager.getConnection(connectionUrl);
     }
 
     /**
@@ -108,21 +137,21 @@ public class DatabaseManager {
      * Requisito RNF-06: Cópia automática mantendo os últimos 3 backups.
      */
     private static void performBackup() {
-        Path dbPath = Paths.get(DB_NAME);
+        Path dbPath = Paths.get(dbName);
         if (!Files.exists(dbPath)) return;
 
         try {
             // Rotacionar backups existentes: 2 -> 3, 1 -> 2
             for (int i = 2; i >= 1; i--) {
-                Path oldSource = Paths.get(DB_NAME + ".bak" + i);
+                Path oldSource = Paths.get(dbName + ".bak" + i);
                 if (Files.exists(oldSource)) {
-                    Path newDest = Paths.get(DB_NAME + ".bak" + (i + 1));
+                    Path newDest = Paths.get(dbName + ".bak" + (i + 1));
                     Files.move(oldSource, newDest, StandardCopyOption.REPLACE_EXISTING);
                 }
             }
 
             // Criar o backup mais recente como .bak1
-            Path backupPath = Paths.get(DB_NAME + ".bak1");
+            Path backupPath = Paths.get(dbName + ".bak1");
             Files.copy(dbPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
             
             System.out.println("[Database] Backup rotativo realizado com sucesso (.bak1, .bak2, .bak3)");
