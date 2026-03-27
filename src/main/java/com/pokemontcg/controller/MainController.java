@@ -44,11 +44,20 @@ public class MainController {
     public void initialize() {
         instance = this;
         menuButtons = Arrays.asList(btnHome, btnSearch, btnCatalog, btnExport);
-        handleNavigateHome();
+        
+        // Atrasar levemente o carregamento da Home para garantir que a instância principal esteja estável
+        javafx.application.Platform.runLater(this::handleNavigateHome);
+        
         setupLogoAnimation();
     }
 
     private void setupLogoAnimation() {
+        // Proteção: Monocle (Headless) não suporta JavaFX Media
+        if (Boolean.getBoolean("testfx.headless")) {
+            System.out.println("[UI Test] Pulando animação do logo (Modo Headless)");
+            return;
+        }
+
         try {
             URL resource = getClass().getResource("/images/icone-animado.mp4");
             if (resource != null) {
@@ -100,6 +109,7 @@ public class MainController {
                 controller.setInitialRarityFilter(rarityFilter);
             }
             
+            contentArea.getChildren().clear(); // Limpeza agressiva para evitar cache visual
             contentArea.getChildren().setAll(view);
             updateActiveButton(btnCatalog);
             
@@ -139,6 +149,10 @@ public class MainController {
      * Exibe o modal de detalhes de uma carta (pode vir da busca ou do catálogo).
      */
     public void showCardDetail(com.pokemontcg.model.CatalogEntry entry) {
+        showCardDetail(entry, null);
+    }
+
+    public void showCardDetail(com.pokemontcg.model.CatalogEntry entry, Runnable onCardAddedCallback) {
         if (entry == null) {
             System.err.println("[DEBUG] showCardDetail: entry é nulo!");
             return;
@@ -158,6 +172,7 @@ public class MainController {
             // 1. Preenche IMEDIATAMENTE com o que já temos (ID, Nome, Imagem)
             // Isso evita que o modal apareça vazio enquanto a API responde.
             controller.setCardData(entry);
+            controller.setOnCardAddedCallback(onCardAddedCallback);
             
             // 2. Tenta obter dados completos (ataques, etc) da API em background
             Thread t = new Thread(() -> {

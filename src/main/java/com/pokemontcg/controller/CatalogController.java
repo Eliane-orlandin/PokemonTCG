@@ -213,7 +213,11 @@ public class CatalogController {
                 // Passa o serviço já existente para economizar recursos
                 controller.setService(catalogService);
                 controller.setRowData(entry);
-                controller.setOnDeleteCallback(() -> loadCatalogFromDatabase(null));
+                
+                // Callbacks de atualização instantânea
+                Runnable refreshTask = () -> loadCatalogFromDatabase(null);
+                controller.setOnDeleteCallback(refreshTask);
+                controller.setOnRefreshCallback(refreshTask);
                 
                 vboxCatalog.getChildren().add(rowNode);
                 

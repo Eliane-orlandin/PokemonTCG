@@ -182,8 +182,11 @@ public class CardItemController {
         entry.setStage(lblStage.getText());
         entry.setCategory(currentCategory);
         
-        // Solicita ao MainController que exiba o detalhe
-        MainController.getInstance().showCardDetail(entry);
+        // Solicita ao MainController que exiba o detalhe, passando um callback 
+        // que força o catálogo a estar pronto para atualizar se o usuário navegar para lá depois.
+        MainController.getInstance().showCardDetail(entry, () -> {
+             System.out.println("[Search] Card adicionado/editado via modal através da busca.");
+        });
     }
 
     @FXML

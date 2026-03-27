@@ -25,7 +25,12 @@ public class CatalogRowController {
     
     private CatalogEntry entry;
     private Runnable onDeleteCallback;
+    private Runnable onRefreshCallback;
     private CatalogService catalogService;
+
+    public void setOnRefreshCallback(Runnable callback) {
+        this.onRefreshCallback = callback;
+    }
 
     public void setService(CatalogService service) {
         this.catalogService = service;
@@ -97,7 +102,7 @@ public class CatalogRowController {
     @FXML
     public void handleShowDetail(javafx.scene.input.MouseEvent event) {
         if (entry != null) {
-            MainController.getInstance().showCardDetail(entry);
+            MainController.getInstance().showCardDetail(entry, onRefreshCallback);
         }
     }
 

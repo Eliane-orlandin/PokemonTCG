@@ -50,9 +50,14 @@ public class CardDetailController {
     private int quantity = 1;
     private final CatalogService catalogService = new CatalogService();
     private Runnable onCloseCallback;
+    private Runnable onCardAddedCallback;
 
     public void setOnCloseCallback(Runnable callback) {
         this.onCloseCallback = callback;
+    }
+
+    public void setOnCardAddedCallback(Runnable callback) {
+        this.onCardAddedCallback = callback;
     }
 
     public void setCardData(CatalogEntry entry) {
@@ -269,6 +274,9 @@ public class CardDetailController {
         entry.setQuantity(quantity);
         try {
             catalogService.saveEntry(entry);
+            if (onCardAddedCallback != null) {
+                onCardAddedCallback.run();
+            }
             handleClose();
         } catch (Exception e) {}
     }
