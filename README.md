@@ -23,6 +23,14 @@ O projeto foi construído seguindo o padrão **MVC (Model-View-Controller)** e b
 
 ---
 
+## 🎥 Demonstração
+
+Confira o vídeo abaixo mostrando a interface e as funcionalidades da aplicação na prática:
+
+[![Demonstração Pokémon TCG Catalog](https://img.youtube.com/vi/ao_w_NYM-Oc/maxresdefault.jpg)](https://youtu.be/ao_w_NYM-Oc)
+
+---
+
 ## ✨ Funcionalidades
 
 - 🔍 **Busca de Cartas** — Pesquisa por nome, categoria, tipo e raridade via API TCGdex
